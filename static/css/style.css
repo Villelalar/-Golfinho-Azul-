@@ -1,0 +1,94 @@
+.post-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px;
+    background-color: #fff;
+    text-align: center;
+    width: 300px;
+    flex-shrink: 0;
+}
+
+.post-item img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+}
+
+.post-item a {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.post-item a:hover {
+    background-color: #0056b3;
+}
+
+.posts-table {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 20px;
+}
+
+/*tabela interativa*/
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+.users-table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.users-table th, .users-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.users-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+form {
+    text-align: center;
+    margin: 20px;
+}
+
+input[type="text"], input[type="email"] {
+    padding: 8px;
+    margin: 5px;
+    width: 150px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}

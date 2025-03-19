@@ -1,26 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Lista de Usuários</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME - OCEANO AZUL</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+
 <h1>Usuários Cadastrados</h1>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-    </tr>
-    {% for user in output_data %}
-    <tr>
-        <td>{{ user.id }}</td>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.phone }}</td>
-    </tr>
-    {% endfor %}
+<table class="users-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+<h2>Adicionar Novo Usuário</h2>
+<form id="addUserForm">
+    <input type="text" id="user_id" name="user_id" placeholder="ID" required>
+    <input type="text" id="name" name="name" placeholder="Nome" required>
+    <input type="email" id="email" name="email" placeholder="Email" required>
+    <input type="text" id="phone" name="phone" placeholder="Telefone" required>
+    <button type="submit">Adicionar</button>
+</form>
+
+<script>
+$(document).ready(function() {
+    $('#addUserForm').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/add_user',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Adiciona a nova linha na tabela
+                    $('.users-table tbody').append(
+                        `<tr>
+                            <td>${response.user.id}</td>
+                            <td>${response.user.name}</td>
+                            <td>${response.user.email}</td>
+                            <td>${response.user.phone}</td>
+                        </tr>`
+                    );
+                    // Limpa o formulário
+                    $('#addUserForm')[0].reset();
+                } else {
+                    alert(response.message);
+                }
+            }
+        });
+    });
+});
+</script>
 
 </body>
 </html>
