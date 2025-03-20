@@ -1,3 +1,18 @@
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+h1, h2 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Estilos para os itens da lista de tabelas */
 .post-item {
     border: 1px solid #ddd;
     padding: 15px;
@@ -35,21 +50,7 @@
     padding-bottom: 20px;
 }
 
-/*tabela interativa*/
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-
-h1 {
-    text-align: center;
-    margin-top: 20px;
-    color: #333;
-}
-
+/* Estilos para a tabela de usuários */
 .users-table {
     width: 80%;
     margin: 20px auto;
@@ -70,6 +71,20 @@ h1 {
     color: white;
 }
 
+/* Estilo para a linha de destaque "PESQUISA" */
+#dataTable th[colspan] {
+    text-align: center;
+    font-size: 1.2em;
+    padding: 10px;
+    background-color: darkslategray;
+}
+
+/* Estilo para a tabela de pesquisa */
+#searchResults {
+    margin-top: 20px;
+}
+
+/* Estilos para formulários */
 form {
     text-align: center;
     margin: 20px;
@@ -91,4 +106,25 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+
+/* Estilos para popups */
+.popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+.popup.error {
+    background-color: red;
+}
+.popup.success {
+    background-color: green;
 }

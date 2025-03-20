@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Tabela: {{ table_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>
+    <h1>Visualizando Tabela: {{ table_name }}</h1>
+
+    <!-- Formulário de busca -->
+    <form id="searchForm">
+        <input type="text" id="search_query" name="search_query" placeholder="Digite sua busca..." required>
+        <button type="submit">Buscar</button>
+    </form>
+
+    <!-- Div para envolver a tabela de pesquisa (inicialmente invisível) -->
+    <div id="searchResults" style="display: none;">
+        <h2>Resultados da Pesquisa</h2>
+        <table id="dataTable" class="users-table">
+            <thead>
+                <tr>
+                    {% for column in data[0].keys() %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Resultados da pesquisa serão inseridos aqui dinamicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tabela de dados original -->
+    <h2>Dados da Tabela</h2>
+    <table id="dataTable" class="users-table">
+        <thead>
+            <tr>
+                {% for column in data[0].keys() %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+                <th>Ações</th> <!-- Coluna para o botão de edição -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr data-id="{{ row.id }}">
+                    {% for value in row.values() %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                    <td>
+                        <button class="edit-btn">Editar</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Formulário para adicionar dados -->
+    <h2>Adicionar Novo Registro</h2>
+    <form id="addDataForm">
+        {% for column in data[0].keys() %}
+            <input type="text" id="{{ column }}" name="{{ column }}" placeholder="{{ column }}" required>
+        {% endfor %}
+        <button type="submit">Adicionar</button>
+    </form>
+</body>
+</html>
