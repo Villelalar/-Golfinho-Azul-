@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="post-item">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="post-item">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="post-item">
+                <button type="submit">Login</button>
+            </div>
+        </form>
+
+        <!-- Flash messages for errors or success -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="popup">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+<script>
+    // Automatically fade out flash messages after 5 seconds
+    document.addEventListener('DOMContentLoaded', function () {
+        const popups = document.querySelectorAll('.popup');
+        popups.forEach(popup => {
+            setTimeout(() => {
+                popup.classList.add('fade-out');
+            }, 2000); // 5 seconds
+            setTimeout(() => {
+                popup.remove();
+            }, 2500); // Remove after fade-out completes
+        });
+    });
+</script>
+
+</body>
+</html>

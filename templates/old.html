@@ -43,6 +43,8 @@
     <button type="submit">Adicionar</button>
 </form>
 
+
+{#script específico para esta página para adicionar uma nova linha à tabela de usuários sem recarregar a página:#}
 <script>
 $(document).ready(function() {
     // Coletar dados da tabela
@@ -131,6 +133,11 @@ $(document).ready(function() {
     });
 });
 </script>
+
+{#logout button#}
+    <div class="logout-button-container">
+        <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+    </div>
 
 </body>
 </html>

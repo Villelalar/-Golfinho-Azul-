@@ -121,10 +121,102 @@ button:hover {
     z-index: 1000;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
+    background-color: #007BFF; /* Blue background */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
+
 .popup.error {
     background-color: red;
 }
 .popup.success {
     background-color: green;
+}
+
+/*estilo para página de login e seus items*/
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.login-container .post-item {
+    margin: 10px 0;
+}
+
+.login-container .post-item label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.login-container .post-item input {
+    padding: 8px;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.login-container .post-item button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-container .post-item button:hover {
+    background-color: #0056b3;
+}
+
+/* Popup styles */
+.popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.popup.error {
+    background-color: red;
+}
+
+.popup.success {
+    background-color: green;
+}
+
+/* Logout Button */
+.logout-button-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin: 20px; /* Add some margin for spacing */
+}
+
+.logout-button {
+    display: inline-block;
+    padding: 10px 20px; /* Padding for the button */
+    background-color: #dc3545; /* Red color for logout */
+    color: white; /* White text */
+    text-decoration: none; /* Remove underline */
+    border-radius: 25px; /* Rounded corners */
+    font-weight: bold; /* Bold text */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+    border: none; /* Remove default border */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.logout-button:hover {
+    background-color: #c82333; /* Darker red on hover */
 }
