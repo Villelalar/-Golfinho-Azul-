@@ -296,6 +296,7 @@ body, html {
 
 .logo-container {
     text-align: center;
+    height: 100px;
     margin-bottom: 1.5rem;
 }
 
