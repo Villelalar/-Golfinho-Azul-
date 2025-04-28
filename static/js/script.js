@@ -1,4 +1,18 @@
 $(document).ready(function() {
+
+    // Function to load table content
+    function loadTable(tableName) {
+        $.ajax({
+            url: '/view_table/' + tableName,
+            type: 'GET',
+            success: function(response) {
+                $('#tableContent').html(response);
+            },
+            error: function() {
+                showPopup('Erro ao carregar tabela.', true);
+            }
+        });
+    }
     // Função para exibir popups
     function showPopup(message, isError) {
         const popup = $('<div>').addClass('popup').text(message);
@@ -44,52 +58,53 @@ $(document).ready(function() {
     $('#searchForm').on('submit', function(event) {
         event.preventDefault();
         const searchQuery = $('#search_query').val();
-        const tableName = getTableNameFromURL(); // Obtém o nome da tabela da URL
+        const tableName = $('#searchForm').data('table-name'); // Get the table name from data attribute
 
         if (!searchQuery) {
-            showPopup('Por favor, preencha o campo de busca.', true);
+            showPopup('Por favor, digite um termo de busca.', true);
             return;
         }
 
         $.ajax({
             url: '/search',
             type: 'POST',
-            data: { table_name: tableName, search_query: searchQuery },
+            data: {
+                table_name: tableName,
+                search_query: searchQuery
+            },
+            // In the success callback of the search AJAX call
             success: function(response) {
-                if (response.status === 'success') {
-                    const results = response.results;
-                    const searchTbody = $('#searchResults table tbody');
-                    searchTbody.empty(); // Limpa os dados atuais da tabela
-
-                    if (results.length > 0) {
-                        // Adiciona os novos resultados à tabela
-                        results.forEach(row => {
-                            const tr = $('<tr>').data('id', row.id);
-                            
-                            const headers = searchTbody.closest('table').find('thead th');
-                            headers.each(function(index) {
-                                const headerText = $(this).text();
-                                if (headerText !== 'Ações') {
-                                    tr.append($('<td>').text(row[headerText]));
-                                }
-                            });
-                            tr.append($('<td>').html('<button class="edit-btn">Editar</button>'));
-                            searchTbody.append(tr);
+                if (response.success) {
+                    // Clear existing table body
+                    $('#searchResultsTable tbody').empty();
+                    
+                    // Create table headers if needed
+                    if ($('#searchResultsTable thead tr').length === 0) {
+                        const headerRow = $('<tr>');
+                        response.columns.forEach(column => {
+                            headerRow.append($('<th>').text(column));
                         });
-                    } else {
-                        // Exibe uma mensagem se nenhum resultado for encontrado
-                        searchTbody.append($('<tr>').append($('<td colspan="100%">').text('Nenhum resultado encontrado.')));
+                        $('#searchResultsTable thead').append(headerRow);
                     }
 
-                    // Exibe a tabela de pesquisa
+                    // Add search results to table
+                    response.data.forEach(row => {
+                        const tr = $('<tr>');
+                        response.columns.forEach(column => {
+                            tr.append($('<td>').text(row[column] || ''));
+                        });
+                        tr.append($('<td>').html(`
+                            <button class="edit-btn">Editar</button>
+                            <button class="delete-btn">Excluir</button>
+                        `));
+                        $('#searchResultsTable tbody').append(tr);
+                    });
+
+                    // Show search results section
                     $('#searchResults').show();
                 } else {
-                    showPopup('Erro na busca: ' + response.message, true);
+                    showPopup('Erro na busca: ' + response.error, true);
                 }
-            },
-            error: function(error) {
-                console.error('Erro ao buscar:', error);
-                showPopup('Erro ao buscar. Tente novamente.', true);
             }
         });
     });
@@ -228,5 +243,10 @@ $(document).ready(function() {
                 showPopup('Erro ao atualizar dados. Tente novamente.', true);
             }
         });
+    });
+            
+    $(document).on('click', '.table-button', function() {
+        const tableName = $(this).data('table');
+        loadTable(tableName);
     });
 });
