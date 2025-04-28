@@ -143,7 +143,7 @@ def get_data(database_name, table_name):
         )
         with connection.cursor() as cursor:
             cursor.execute(f"SELECT * FROM {table_name}")
-            data = cursor.fetchall()  # This should return a list of dictionaries
+            data = cursor.fetchall()
         return data
     except Exception as e:
         print(f"Erro ao conectar na tabela {table_name} do banco {database_name}: {e}")
@@ -151,7 +151,8 @@ def get_data(database_name, table_name):
     finally:
         if 'connection' in locals():
             connection.close()
-            
+
+
 ## ROTAS PARA PÁGINAS REAIS #
 # pagina inicial : lista tabelas
 @app.route('/')
@@ -164,10 +165,7 @@ def index():
 @app.route('/view_table/<table_name>')
 @login_required
 def view_table(table_name):
-    data = get_data("defaultdb", table_name)
-    # Convert tuple to list of dictionaries if needed
-    if isinstance(data, tuple):
-        data = [dict(row) for row in data]
+    data = get_data("defaultdb", table_name)  # Obter dados da tabela selecionada
     return render_template('view_table.html', table_name=table_name, data=data)
 
 # rota interna que possibilita pesquisa de linha na tabela e retorna o resultado
