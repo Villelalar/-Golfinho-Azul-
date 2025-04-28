@@ -208,6 +208,7 @@ body, html {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    width: 100%;
     background-image: url('/static/features/loginPage.png');
     background-size: cover;
     background-position: center;
@@ -215,6 +216,8 @@ body, html {
     background-attachment: fixed;
     margin: 0;
     padding: 0;
+    position: relative;
+    overflow: hidden;
 }
 
 .login-container form {
@@ -262,11 +265,31 @@ body, html {
 
 .login-page {
     min-height: 100vh;
-    background: url('../features/background.jpg') center/cover no-repeat fixed;
+    background: linear-gradient(-45deg,
+        #001F3F,  /* Navy Blue */
+        #003366,  /* Deep Blue */
+        #21648e,  /* Ocean Blue */
+        #1B9CFC,  /* Sky Blue */
+        #4FB4F8,  /* Light Blue */
+        #00A8FF,  /* Bright Blue */
+        #21648e,  /* Ocean Blue */
+        #001F3F   /* Back to Navy Blue */
+    );
+    background-size: 400% 400%;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    overflow: hidden;
+    animation: gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    25% { background-position: 100% 50%; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0% 100%; }
+    100% { background-position: 0% 50%; }
 }
 
 .login-page::before {
