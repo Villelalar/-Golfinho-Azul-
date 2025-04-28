@@ -27,7 +27,7 @@ def load_user(user_id):
             cursorclass=pymysql.cursors.DictCursor,
             db="logins",
             host="projweb3-projweb3.g.aivencloud.com",
-            password="senha",
+            password="AVNS_J6HaV0sCEBEwuvqBeGP",
             port=19280,
             user="avnadmin",
         )
@@ -58,7 +58,7 @@ def login():
                 cursorclass=pymysql.cursors.DictCursor,
                 db="logins",
                 host="projweb3-projweb3.g.aivencloud.com",
-                password="senha",
+                password="AVNS_J6HaV0sCEBEwuvqBeGP",
                 port=19280,
                 user="avnadmin",
             )
@@ -110,7 +110,7 @@ def get_tables(database_name):
             cursorclass=pymysql.cursors.DictCursor,
             db=database_name,
             host="projweb3-projweb3.g.aivencloud.com",
-            password="senha",
+            password="AVNS_J6HaV0sCEBEwuvqBeGP",
             port=19280,
             user="avnadmin",
         )
@@ -137,7 +137,7 @@ def get_data(database_name, table_name):
             cursorclass=pymysql.cursors.DictCursor,
             db=database_name,
             host="projweb3-projweb3.g.aivencloud.com",
-            password="senha",
+            password="AVNS_J6HaV0sCEBEwuvqBeGP",
             port=19280,
             user="avnadmin",
         )
@@ -182,7 +182,7 @@ def search():
                 cursorclass=pymysql.cursors.DictCursor,
                 db="defaultdb",
                 host="projweb3-projweb3.g.aivencloud.com",
-                password="senha",
+                password="AVNS_J6HaV0sCEBEwuvqBeGP",
                 port=19280,
                 user="avnadmin",
             )
@@ -217,7 +217,7 @@ def add_data():
                 cursorclass=pymysql.cursors.DictCursor,
                 db="defaultdb",
                 host="projweb3-projweb3.g.aivencloud.com",
-                password="senha",
+                password="AVNS_J6HaV0sCEBEwuvqBeGP",
                 port=19280,
                 user="avnadmin",
             )
@@ -259,7 +259,7 @@ def update_data():
             cursorclass=pymysql.cursors.DictCursor,
             db="defaultdb",
             host="projweb3-projweb3.g.aivencloud.com",
-            password="senha",
+            password="AVNS_J6HaV0sCEBEwuvqBeGP",
             port=19280,
             user="avnadmin",
         )
@@ -294,7 +294,7 @@ def register():
                 cursorclass=pymysql.cursors.DictCursor,
                 db="logins",
                 host="projweb3-projweb3.g.aivencloud.com",
-                password="senha",
+                password="AVNS_J6HaV0sCEBEwuvqBeGP",
                 port=19280,
                 user="avnadmin",
             )
