@@ -309,9 +309,9 @@ body, html {
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     width: 100%;
-    max-width: 400px;
+    max-width: 480px;
     min-height: 500px;
-    padding: 2rem;
+    padding: 2.5rem;
     margin: 1rem;
     position: relative;
     z-index: 2;
@@ -336,10 +336,12 @@ body, html {
 
 .login-box h2 {
     color: #333;
-    font-size: 1.75rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
     text-align: center;
+    margin-bottom: 35px;
+    font-size: 34px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    padding: 0 10px;
 }
 
 .input-group {
@@ -349,29 +351,30 @@ body, html {
 
 .input-group input {
     width: 100%;
-    padding: 10px 0;
-    font-size: 1rem;
+    padding: 12px 0;
+    font-size: 16px;
     color: #333;
     border: none;
     border-bottom: 2px solid #ddd;
     outline: none;
     background: transparent;
-    transition: 0.3s;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #007bff;
 }
 
 .input-group label {
     position: absolute;
-    top: 10px;
+    top: 12px;
     left: 0;
-    font-size: 1rem;
-    color: #999;
+    font-size: 16px;
+    color: #666;
     pointer-events: none;
     transition: 0.3s ease all;
-}
-
-.input-group input:focus,
-.input-group input.filled {
-    border-bottom-color: #3498db;
+    font-family: 'Poppins', sans-serif;
 }
 
 .input-group input:focus ~ label,
@@ -384,29 +387,32 @@ body, html {
 .login-btn {
     width: 100%;
     padding: 12px;
-    background: #3498db;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 25px;
-    font-size: 1rem;
-    font-weight: 500;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s ease;
-    margin-top: 1rem;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 25px;
+    transition: background-color 0.3s ease;
 }
 
 .login-btn:hover {
-    background: #2980b9;
+    background-color: #0056b3;
 }
 
 .register-link {
     text-align: center;
-    margin-top: 1.5rem;
+    margin-top: 20px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .register-link p {
     color: #666;
-    margin: 0;
+    font-size: 14px;
 }
 
 .register-link a {

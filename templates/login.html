@@ -18,15 +18,15 @@
                 <form method="POST" action="{{ url_for('login') }}">
                     <div class="input-group">
                         <input type="text" id="username" name="username" required>
-                        <label for="username">Username</label>
+                        <label for="username">Nome</label>
                     </div>
                     <div class="input-group">
                         <input type="password" id="password" name="password" required>
-                        <label for="password">Password</label>
+                        <label for="password">Senha</label>
                     </div>
-                    <button type="submit" class="login-btn">Sign In</button>
+                    <button type="submit" class="login-btn">Enviar</button>
                     <div class="register-link">
-                        <p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+                        <p>Você não tem uma conta? <a href="{{ url_for('register') }}">Register</a></p>
                     </div>
                 </form>
             </div>
