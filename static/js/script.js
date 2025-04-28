@@ -58,21 +58,27 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.status === 'success') {
                     const results = response.results;
-                    const tbody = $('#dataTable tbody');
-                    tbody.empty(); // Limpa os dados atuais da tabela
+                    const searchTbody = $('#searchResults table tbody');
+                    searchTbody.empty(); // Limpa os dados atuais da tabela
 
                     if (results.length > 0) {
                         // Adiciona os novos resultados à tabela
                         results.forEach(row => {
-                            const tr = $('<tr>');
-                            Object.values(row).forEach(value => {
-                                tr.append($('<td>').text(value));
+                            const tr = $('<tr>').data('id', row.id);
+                            
+                            const headers = searchTbody.closest('table').find('thead th');
+                            headers.each(function(index) {
+                                const headerText = $(this).text();
+                                if (headerText !== 'Ações') {
+                                    tr.append($('<td>').text(row[headerText]));
+                                }
                             });
-                            tbody.append(tr);
+                            tr.append($('<td>').html('<button class="edit-btn">Editar</button>'));
+                            searchTbody.append(tr);
                         });
                     } else {
                         // Exibe uma mensagem se nenhum resultado for encontrado
-                        tbody.append($('<tr>').append($('<td colspan="100%">').text('Nenhum resultado encontrado.')));
+                        searchTbody.append($('<tr>').append($('<td colspan="100%">').text('Nenhum resultado encontrado.')));
                     }
 
                     // Exibe a tabela de pesquisa
@@ -188,27 +194,31 @@ $(document).ready(function() {
     // Evento de clique no botão "Salvar"
     $(document).on('click', '.save-btn', function() {
         const row = $(this).closest('tr');
-        const id = row.data('id'); // Obtém o ID da linha
-        const tableName = getTableNameFromURL(); // Obtém o nome da tabela da URL
+        const id = row.data('id');
+        const tableName = getTableNameFromURL();
         const updatedData = {};
-
-        // Coleta os dados editados
+    
+        // Get column names from the table header
+        const table = row.closest('table');
+        const headers = table.find('thead th');
+        
+        // Collect the edited data
         row.find('td:not(:last-child)').each(function(index) {
-            const columnName = $('#dataTable thead th').eq(index).text(); // Nome da coluna
-            const value = $(this).find('input').val(); // Valor editado
+            const columnName = headers.eq(index).text();
+            const value = $(this).find('input').val();
             updatedData[columnName] = value;
         });
-
-        // Envia os dados atualizados para o backend
+    
+        // Send the updated data to the backend
         $.ajax({
             url: '/update_data',
             type: 'POST',
-            contentType: 'application/json', // Define o tipo de conteúdo como JSON
-            data: JSON.stringify({ id: id, table_name: tableName, ...updatedData }), // Converte os dados para JSON
+            contentType: 'application/json',
+            data: JSON.stringify({ id: id, table_name: tableName, ...updatedData }),
             success: function(response) {
                 if (response.status === 'success') {
                     showPopup('Dados atualizados com sucesso!', false);
-                    disableEditMode(row); // Sai do modo de edição
+                    disableEditMode(row);
                 } else {
                     showPopup('Erro ao atualizar dados: ' + response.message, true);
                 }

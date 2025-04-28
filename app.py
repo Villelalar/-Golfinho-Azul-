@@ -193,15 +193,28 @@ def search():
                 query = " OR ".join([f"{column} LIKE %s" for column in columns])
                 cursor.execute(f"SELECT * FROM {table_name} WHERE {query}", (f"%{search_query}%",) * len(columns))
                 results = cursor.fetchall()
-            return jsonify({'status': 'success', 'results': results})
+            return app.response_class(
+                response=json.dumps({'status': 'success', 'results': results}),
+                status=200,
+                mimetype='application/json'
+            )
         except Exception as e:
             print(f"Erro ao buscar na tabela {table_name}: {e}")
-            return jsonify({'status': 'error', 'message': str(e)})
+            return app.response_class(
+                response=json.dumps({'status': 'error', 'message': str(e)}),
+                status=500,
+                mimetype='application/json'
+            )
         finally:
             if 'connection' in locals():
                 connection.close()
     else:
-        return jsonify({'status': 'error', 'message': 'Tabela ou consulta inválida.'})
+        return app.response_class(
+            response=json.dumps({'status': 'error', 'message': 'Tabela ou consulta inválida.'}),
+            status=400,
+            mimetype='application/json'
+        )
+    
 
 # rota interna para adicionar novas linhas
 @app.route('/add_data', methods=['POST'])
