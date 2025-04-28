@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify #simplesmente o flask
+from flask import Flask, render_template, request, redirect, url_for, flash, json #simplesmente o flask
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 import pymysql # uso de banco de dados
@@ -226,16 +226,28 @@ def add_data():
                 values = ", ".join([f"%({key})s" for key in form_data])
                 cursor.execute(f"INSERT INTO {table_name} ({columns}) VALUES ({values})", form_data)
                 connection.commit()
-            return jsonify({'status': 'success'})
+            return app.response_class(
+                response=json.dumps({'status': 'success'}),
+                status=200,
+                mimetype='application/json'
+            )
         except Exception as e:
             print(f"Erro ao adicionar registro na tabela {table_name}: {e}")
-            return jsonify({'status': 'error', 'message': str(e)})
+            return app.response_class(
+                response=json.dumps({'status': 'error', 'message': str(e)}),
+                status=200,
+                mimetype='application/json'
+            )
         finally:
             if 'connection' in locals():
                 connection.close()
     else:
-        return jsonify({'status': 'error', 'message': 'Dados inválidos.'})
-
+        return app.response_class(
+            response=json.dumps({'status': 'error', 'message': 'Dados inválidos.'}),
+            status=200,
+            mimetype='application/json'
+        )
+    
 # rota interna que possibilita alterar linhas
 @app.route('/update_data', methods=['POST'])
 @login_required
@@ -244,15 +256,23 @@ def update_data():
         # Obtém os dados JSON da requisição
         data = request.get_json()
         if not data:
-            return jsonify({'status': 'error', 'message': 'Nenhum dado fornecido.'}), 400
+            return app.response_class(
+                response=json.dumps({'status': 'error', 'message': 'Nenhum dado fornecido.'}),
+                status=400,
+                mimetype='application/json'
+            )
 
         id = data.get('id')
         table_name = data.get('table_name')
         if not id or not table_name:
-            return jsonify({'status': 'error', 'message': 'ID ou nome da tabela não fornecido.'}), 400
-
+            return app.response_class(
+                    response=json.dumps({'status': 'error', 'message': 'ID ou nome da tabela não fornecido.'}),
+                    status=400,
+                    mimetype='application/json'
+            )
+        
         updated_data = {key: value for key, value in data.items() if key not in ['id', 'table_name']}
-
+        
         connection = pymysql.connect(
             charset="utf8mb4",
             connect_timeout=10,
@@ -268,10 +288,18 @@ def update_data():
             query = f"UPDATE {table_name} SET {set_clause} WHERE id = %s"
             cursor.execute(query, list(updated_data.values()) + [id])
             connection.commit()
-        return jsonify({'status': 'success'})
+        return app.response_class(
+            response=json.dumps({'status': 'success'}),
+            status=200,
+            mimetype='application/json'
+        )
     except Exception as e:
         print(f"Erro ao atualizar dados: {e}")
-        return jsonify({'status': 'error', 'message': str(e)})
+        return app.response_class(
+            response=json.dumps({'status': 'error', 'message': str(e)}),
+            status=500,
+            mimetype='application/json'
+        )
     finally:
         if 'connection' in locals():
             connection.close()
