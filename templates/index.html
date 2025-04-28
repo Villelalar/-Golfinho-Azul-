@@ -8,32 +8,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h2>Tabelas Disponíveis no Banco de Dados</h2>
-        <div class="posts-table">
-            {% for table in tables %}
-                <div class="post-item">
-                    <h3>{{ table }}</h3>
-                    <button class="table-button" data-table="{{ table }}">
-                        Ver Tabela
-                    </button>
-                </div>
-            {% endfor %}
-        </div>
-    
-        <div class="content">
-            <div id="tableContent">
-                <!-- Table content will be loaded here -->
+    <h1>Tabelas Disponíveis no Banco de Dados</h1>
+    <div class="posts-table">
+        {% for table in tables %}
+            <div class="post-item">
+                <h3>{{ table }}</h3>
+                <a href="{{ url_for('view_table', table_name=table) }}">Ver Tabela</a>
             </div>
-    
-            <div class="logout-button-container">
-                <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 
-    <!-- Add these script tags -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{#logout button#}
+    <div class="logout-button-container">
+        <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+    </div>
 </body>
 </html>
