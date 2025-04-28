@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='features/logoTransparent.png') }}" alt="Logo" class="logo">
+        </div>
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="post-item">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="post-item">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="post-item">
+                <button type="submit">Register</button>
+            </div>
+            <div class="post-item">
+                <a href="{{ url_for('login') }}">Already have an account? Login</a>
+            </div>
+        </form>
+        <div class="background-overlay"></div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="popup {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="overlay"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const popups = document.querySelectorAll('.popup');
+            popups.forEach(popup => {
+                setTimeout(() => {
+                    popup.style.opacity = '0';
+                }, 2000);
+                setTimeout(() => {
+                    popup.remove();
+                }, 2500);
+            });
+        });
+    </script>
+</body>
+</html>

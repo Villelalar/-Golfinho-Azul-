@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, flash #simplesmente o flask
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify #simplesmente o flask
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 import pymysql # uso de banco de dados
 
 app = Flask(__name__)
@@ -275,6 +275,56 @@ def update_data():
     finally:
         if 'connection' in locals():
             connection.close()
+
+# Registration route
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if not username or not password:
+            flash('Username and password are required.', 'error')
+            return render_template('register.html')
+
+        try:
+            connection = pymysql.connect(
+                charset="utf8mb4",
+                connect_timeout=10,
+                cursorclass=pymysql.cursors.DictCursor,
+                db="logins",
+                host="projweb3-projweb3.g.aivencloud.com",
+                password="senha",
+                port=19280,
+                user="avnadmin",
+            )
+            with connection.cursor() as cursor:
+                # Check if username already exists
+                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+                if cursor.fetchone():
+                    flash('Username already exists.', 'error')
+                    return render_template('register.html')
+
+                # Create new user
+                password_hash = generate_password_hash(password)
+                cursor.execute(
+                    "INSERT INTO users (username, password_hash) VALUES (%s, %s)",
+                    (username, password_hash)
+                )
+                connection.commit()
+
+            flash('Registration successful! Please login.', 'success')
+            return redirect(url_for('login'))
+
+        except Exception as e:
+            print(f"Error during registration: {e}")
+            flash('An error occurred during registration.', 'error')
+            return render_template('register.html')
+        finally:
+            if 'connection' in locals():
+                connection.close()
+
+    return render_template('register.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
