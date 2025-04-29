@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - ONG</title>
+    <title>Login - ONG</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='features/OIP.jpeg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -15,19 +15,19 @@
                 <img src="{{ url_for('static', filename='features/logo.png') }}" alt="Logo" class="logo">
             </div>
             <div class="login-box">
-                <h2>Criar nova conta</h2>
-                <form method="POST" action="{{ url_for('register') }}">
+                <h2>Bem-vindo(a) de volta, Admin!</h2>
+                <form method="POST" action="{{ url_for('loginadmin') }}">
                     <div class="input-group">
-                        <input type="text" id="username" name="username" required>
-                        <label for="username">Nome</label>
+                        <input type="text" id="identifier" name="identifier" required>
+                        <label for="identifier">Identificador</label>
                     </div>
                     <div class="input-group">
                         <input type="password" id="password" name="password" required>
                         <label for="password">Senha</label>
                     </div>
-                    <button type="submit" class="login-btn">REGISTRAR</button>
+                    <button type="submit" class="login-btn">Enviar</button>
                     <div class="register-link">
-                        <p>Você já tem uma conta? <a href="{{ url_for('login') }}">Login</a></p>
+                        <p>Você não tem uma conta? <a href="{{ url_for('registeradmin') }}">Register</a></p>
                     </div>
                 </form>
             </div>
@@ -47,11 +47,23 @@
             const popups = document.querySelectorAll('.popup');
             popups.forEach(popup => {
                 setTimeout(() => {
-                    popup.style.opacity = '0';
+                    popup.classList.add('fade-out');
                 }, 2000);
                 setTimeout(() => {
                     popup.remove();
                 }, 2500);
+            });
+
+            // Add filled class to inputs with values
+            const inputs = document.querySelectorAll('.input-group input');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value) {
+                        this.classList.add('filled');
+                    } else {
+                        this.classList.remove('filled');
+                    }
+                });
             });
         });
     </script>
