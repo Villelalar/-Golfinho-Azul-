@@ -1,4 +1,17 @@
 $(document).ready(function() {
+    function getUserRole() {
+        // Check if we're in an admin route
+        const path = window.location.pathname;
+        if (path.includes('/admin/')) {
+            return 'admin';
+        }
+        // Check if we're in a client route
+        if (path.includes('/client/')) {
+            return 'client';
+        }
+        // Default to admin if unsure
+        return 'admin';
+    }
     // Função para exibir popups
     function showPopup(message, isError) {
         const popup = $('<div>').addClass('popup').text(message);
@@ -16,7 +29,7 @@ $(document).ready(function() {
 
     // Função para extrair o nome da tabela da URL
     function getTableNameFromURL() {
-        const path = window.location.pathname; // Obtém o caminho da URL (ex: "/sistema/view_table/users")
+        const path = window.location.pathname; // Obtém o caminho da URL (ex: "/admin/view_table/users")
         const parts = path.split('/'); // Divide o caminho em partes
         return parts[parts.length - 1]; // Retorna a última parte (ex: "users")
     }
@@ -44,7 +57,8 @@ $(document).ready(function() {
     $('#searchForm').on('submit', function(event) {
         event.preventDefault();
         const searchQuery = $('#search_query').val();
-        const tableName = getTableNameFromURL(); // Obtém o nome da tabela da URL
+        const tableName = getTableNameFromURL();
+        const userRole = getUserRole();
 
         if (!searchQuery) {
             showPopup('Por favor, preencha o campo de busca.', true);
@@ -52,45 +66,47 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '/sistema/search',
+            url: `/${userRole}/search`,
             type: 'POST',
             data: { table_name: tableName, search_query: searchQuery },
-            success: function(response) {
-                if (response.status === 'success') {
-                    const results = response.results;
-                    const searchTbody = $('#searchResults table tbody');
-                    searchTbody.empty(); // Limpa os dados atuais da tabela
+            // ... rest of the code ...
+        });
+    });
 
-                    if (results.length > 0) {
-                        // Adiciona os novos resultados à tabela
-                        results.forEach(row => {
-                            const tr = $('<tr>').data('id', row.id);
-                            
-                            const headers = searchTbody.closest('table').find('thead th');
-                            headers.each(function(index) {
-                                const headerText = $(this).text();
-                                if (headerText !== 'Ações') {
-                                    tr.append($('<td>').text(row[headerText]));
-                                }
-                            });
-                            tr.append($('<td>').html('<button class="edit-btn">Editar</button>'));
-                            searchTbody.append(tr);
-                        });
-                    } else {
-                        // Exibe uma mensagem se nenhum resultado for encontrado
-                        searchTbody.append($('<tr>').append($('<td colspan="100%">').text('Nenhum resultado encontrado.')));
-                    }
+    // Update add data function
+    $('#addDataForm').on('submit', function(event) {
+        event.preventDefault();
+        const tableName = getTableNameFromURL();
+        const formData = $(this).serializeArray();
+        const newData = {};
+        const userRole = getUserRole();
 
-                    // Exibe a tabela de pesquisa
-                    $('#searchResults').show();
-                } else {
-                    showPopup('Erro na busca: ' + response.message, true);
-                }
-            },
-            error: function(error) {
-                console.error('Erro ao buscar:', error);
-                showPopup('Erro ao buscar. Tente novamente.', true);
-            }
+        // ... rest of the validation code ...
+
+        $.ajax({
+            url: `/${userRole}/add_data`,
+            type: 'POST',
+            data: { ...newData, table_name: tableName },
+            // ... rest of the code ...
+        });
+    });
+
+    // Update update data function
+    $(document).on('click', '.save-btn', function() {
+        const row = $(this).closest('tr');
+        const id = row.data('id');
+        const tableName = getTableNameFromURL();
+        const updatedData = {};
+        const userRole = getUserRole();
+
+        // ... rest of the code ...
+
+        $.ajax({
+            url: `/${userRole}/update_data`,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ id: id, table_name: tableName, ...updatedData }),
+            // ... rest of the code ...
         });
     });
 
@@ -130,7 +146,7 @@ $(document).ready(function() {
 
         // Envia os dados para o backend
         $.ajax({
-            url: '/sistema/add_data',
+            url: '/admin/add_data',
             type: 'POST',
             data: { ...newData, table_name: tableName },
             success: function(response) {
@@ -211,7 +227,7 @@ $(document).ready(function() {
     
         // Send the updated data to the backend
         $.ajax({
-            url: '/sistema/update_data',
+            url: '/admin/update_data',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ id: id, table_name: tableName, ...updatedData }),

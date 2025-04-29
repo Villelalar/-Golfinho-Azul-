@@ -11,16 +11,35 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# User model
+# modelo de usuário
 class User(UserMixin):
-    def __init__(self, id, username):
+    def __init__(self, id, username, role):
         self.id = id
         self.username = username
+        self.role = role  # 'admin' or 'client'
 
-# User loader callback
+# loader para usuários
 @login_manager.user_loader
 def load_user(user_id):
     try:
+        # Try clients database first
+        connection = pymysql.connect(
+            charset="utf8mb4",
+            connect_timeout=10,
+            cursorclass=pymysql.cursors.DictCursor,
+            db="clientes",
+            host="projweb3-projweb3.g.aivencloud.com",
+            password="AVNS_J6HaV0sCEBEwuvqBeGP",
+            port=19280,
+            user="avnadmin",
+        )
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM clientes WHERE id = %s", (user_id,))
+            client_data = cursor.fetchone()
+            if client_data:
+                return User(id=client_data['id'], username=client_data['email'], role='client')
+        
+        # If not found, try admins database
         connection = pymysql.connect(
             charset="utf8mb4",
             connect_timeout=10,
@@ -33,11 +52,10 @@ def load_user(user_id):
         )
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
-            user_data = cursor.fetchone()
-        if user_data:
-            return User(id=user_data['id'], username=user_data['username'])
-        else:
-            return None
+            admin_data = cursor.fetchone()
+            if admin_data:
+                return User(id=admin_data['id'], username=admin_data['username'], role='admin')
+        return None
     except Exception as e:
         print(f"Error loading user: {e}")
         return None
@@ -76,7 +94,7 @@ def login():
 
                 # Verify the password
                 if check_password_hash(user_data['password_hash'],password):  # Compare hashed DB password with plain-text password
-                    user = User(id=user_data['id'], username=user_data['username'])
+                    user = User(id=user_data['id'], username=user_data['username'], role='admin')
                     login_user(user)
                     flash('Logged in successfully.')
                     return redirect(url_for('index'))
@@ -91,6 +109,149 @@ def login():
             if 'connection' in locals():
                 connection.close()
     return render_template('login.html')
+
+@app.route('/logincliente', methods=['GET', 'POST'])
+def logincliente():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')  # This should be plain text
+        try:
+            connection = pymysql.connect(
+                charset="utf8mb4",
+                connect_timeout=10,
+                cursorclass=pymysql.cursors.DictCursor,
+                db="clientes",
+                host="projweb3-projweb3.g.aivencloud.com",
+                password="AVNS_J6HaV0sCEBEwuvqBeGP",
+                port=19280,
+                user="avnadmin",
+            )
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM clientes WHERE email = %s", (email,))
+                client_data = cursor.fetchone()
+
+            # Debugging: Print user data and provided password
+            print("Client Data:", client_data)
+            print("Provided Password (Plain Text):", password)  # Ensure this is plain text
+
+            if client_data:
+                # Debugging: Print the hashed password from the database
+                print("Hashed Password from DB:", client_data['password_hash'])
+
+                # Verify the password
+                if check_password_hash(client_data['password_hash'],password):  # Compare hashed DB password with plain-text password
+                    user = User(id=client_data['id'], username=client_data['email'], role='client')
+                    login_user(user)
+                    flash('Logged in successfully.')
+                    return redirect(url_for('consultas_cliente'))
+                else:
+                    flash('Invalid username or password.')
+            else:
+                flash('Invalid username or password.')
+        except Exception as e:
+            print(f"Error during login: {e}")
+            flash('An error occurred during login.')
+        finally:
+            if 'connection' in locals():
+                connection.close()
+    return render_template('logincliente.html')
+
+# Registration route
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if not username or not password:
+            flash('Username and password are required.', 'error')
+            return render_template('register.html')
+
+        try:
+            connection = pymysql.connect(
+                charset="utf8mb4",
+                connect_timeout=10,
+                cursorclass=pymysql.cursors.DictCursor,
+                db="clientes",
+                host="projweb3-projweb3.g.aivencloud.com",
+                password="AVNS_J6HaV0sCEBEwuvqBeGP",
+                port=19280,
+                user="avnadmin",
+            )
+            with connection.cursor() as cursor:
+                # Check if username already exists
+                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+                if cursor.fetchone():
+                    flash('Username already exists.', 'error')
+                    return render_template('register.html')
+
+                # Create new user
+                password_hash = generate_password_hash(password)
+                cursor.execute(
+                    "INSERT INTO users (username, password_hash) VALUES (%s, %s)",
+                    (username, password_hash)
+                )
+                connection.commit()
+
+            flash('Registration successful! Please login.', 'success')
+            return redirect(url_for('login'))
+
+        except Exception as e:
+            print(f"Error during registration: {e}")
+            flash('An error occurred during registration.', 'error')
+            return render_template('register.html')
+        finally:
+            if 'connection' in locals():
+                connection.close()
+
+    return render_template('register.html')
+
+# Registration route
+@app.route('/registercliente', methods=['GET', 'POST'])
+def registercliente():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if not email or not password:
+            flash('Email and password are required.', 'error')
+            return render_template('registercliente.html')
+
+        try:
+            connection = pymysql.connect(
+                charset="utf8mb4",
+                connect_timeout=10,
+                cursorclass=pymysql.cursors.DictCursor,
+                db="logins",
+                host="projweb3-projweb3.g.aivencloud.com",
+                password="AVNS_J6HaV0sCEBEwuvqBeGP",
+                port=19280,
+                user="avnadmin",
+            )
+            with connection.cursor() as cursor:
+                # Check if username already exists
+                cursor.execute("SELECT * FROM clientes WHERE email = %s", (email))
+                if cursor.fetchone():
+                    flash('Email already exists.', 'error')
+                    return render_template('registercliente.html')
+                # Create new user
+                password_hash = generate_password_hash(password)
+                cursor.execute(
+                    "INSERT INTO clientes (email, password_hash) VALUES (%s, %s)",
+                    (email, password_hash)
+                )
+                connection.commit()
+            flash('Registration successful! Please login.', 'success')
+            return redirect(url_for('login'))
+
+        except Exception as e:
+            print(f"Error during registration: {e}")
+            flash('An error occurred during registration.', 'error')
+            return render_template('registercliente.html')
+        finally:
+            if 'connection' in locals():
+                connection.close()
+    return render_template('registercliente.html')
 
 # e o logout
 @app.route('/logout')
@@ -155,23 +316,32 @@ def get_data(database_name, table_name):
 
 ## ROTAS PARA PÁGINAS REAIS #
 # pagina inicial : lista tabelas
-@app.route('/sistema')
+@app.route('/admin')
 @login_required
-def index():
+def admin():
+    if current_user.role != 'admin':
+        flash('Access denied')
+        return redirect(url_for('login'))
     tables = get_tables("defaultdb")  # Listar tabelas do banco defaultdb
-    return render_template('sistema.html', tables=tables)
+    return render_template('admin.html', tables=tables)
 
 # pagina de tabela específica : exibe dados da tabela
-@app.route('/sistema/view_table/<table_name>')
+@app.route('/admin/view_table/<table_name>')
 @login_required
 def view_table(table_name):
+    if current_user.role != 'admin':
+        flash('Access denied')
+        return redirect(url_for('login'))
     data = get_data("defaultdb", table_name)  # Obter dados da tabela selecionada
     return render_template('view_table.html', table_name=table_name, data=data)
 
 # rota interna que possibilita pesquisa de linha na tabela e retorna o resultado
-@app.route('/sistema/search', methods=['POST'])
+@app.route('/admin/search', methods=['POST'])
 @login_required
 def search():
+    if current_user.role != 'admin':
+        flash('Access denied')
+        return redirect(url_for('login'))
     table_name = request.form.get('table_name')
     search_query = request.form.get('search_query')
     if table_name and search_query:
@@ -217,9 +387,12 @@ def search():
     
 
 # rota interna para adicionar novas linhas
-@app.route('/sistema/add_data', methods=['POST'])
+@app.route('/admin/add_data', methods=['POST'])
 @login_required
 def add_data():
+    if current_user.role != 'admin':
+        flash('Access denied')
+        return redirect(url_for('login'))
     table_name = request.form.get('table_name')
     form_data = {key: request.form.get(key) for key in request.form if key != 'table_name'}
     if table_name and form_data:
@@ -262,9 +435,12 @@ def add_data():
         )
     
 # rota interna que possibilita alterar linhas
-@app.route('/sistema/update_data', methods=['POST'])
+@app.route('/admin/update_data', methods=['POST'])
 @login_required
 def update_data():
+    if current_user.role != 'admin':
+        flash('Access denied')
+        return redirect(url_for('login'))
     try:
         # Obtém os dados JSON da requisição
         data = request.get_json()
@@ -317,55 +493,40 @@ def update_data():
         if 'connection' in locals():
             connection.close()
 
-# Registration route
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
 
-        if not username or not password:
-            flash('Username and password are required.', 'error')
-            return render_template('register.html')
-
-        try:
-            connection = pymysql.connect(
-                charset="utf8mb4",
-                connect_timeout=10,
-                cursorclass=pymysql.cursors.DictCursor,
-                db="logins",
-                host="projweb3-projweb3.g.aivencloud.com",
-                password="AVNS_J6HaV0sCEBEwuvqBeGP",
-                port=19280,
-                user="avnadmin",
-            )
-            with connection.cursor() as cursor:
-                # Check if username already exists
-                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
-                if cursor.fetchone():
-                    flash('Username already exists.', 'error')
-                    return render_template('register.html')
-
-                # Create new user
-                password_hash = generate_password_hash(password)
-                cursor.execute(
-                    "INSERT INTO users (username, password_hash) VALUES (%s, %s)",
-                    (username, password_hash)
-                )
-                connection.commit()
-
-            flash('Registration successful! Please login.', 'success')
-            return redirect(url_for('login'))
-
-        except Exception as e:
-            print(f"Error during registration: {e}")
-            flash('An error occurred during registration.', 'error')
-            return render_template('register.html')
-        finally:
-            if 'connection' in locals():
-                connection.close()
-
-    return render_template('register.html')
+@app.route('/client/consultas')
+@login_required
+def consultas_cliente():
+    if current_user.role != 'client':
+        flash('Access denied')
+        return redirect(url_for('logincliente'))
+    try:
+        connection = pymysql.connect(
+            charset="utf8mb4",
+            connect_timeout=10,
+            cursorclass=pymysql.cursors.DictCursor,
+            db="clientes",
+            host="projweb3-projweb3.g.aivencloud.com",
+            password="AVNS_J6HaV0sCEBEwuvqBeGP",
+            port=19280,
+            user="avnadmin",
+        )
+        with connection.cursor() as cursor:
+            # Get client ID from logged in user
+            cursor.execute("SELECT id FROM clientes WHERE email = %s", (current_user.username,))
+            client_data = cursor.fetchone()
+            if client_data:
+                # Get appointments for this client
+                cursor.execute("SELECT * FROM consultas WHERE client_id = %s", (client_data['id'],))
+                appointments = cursor.fetchall()
+                return render_template('client_appointments.html', appointments=appointments)
+    except Exception as e:
+        print(f"Error getting appointments: {e}")
+        flash('Error loading appointments')
+        return redirect(url_for('logincliente'))
+    finally:
+        if 'connection' in locals():
+            connection.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
