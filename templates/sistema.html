@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecionar Tabela</title>
+    <link rel="icon" href="{{ url_for('static', filename='features/OIP.jpeg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Tabelas Disponíveis no Banco de Dados</h1>
+    <div class="posts-table">
+        {% for table in tables %}
+            <div class="post-item">
+                <h3>{{ table }}</h3>
+                <a href="{{ url_for('view_table', table_name=table) }}">Ver Tabela</a>
+            </div>
+        {% endfor %}
+    </div>
+
+{#logout button#}
+    <div class="logout-button-container">
+        <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+    </div>
+</body>
+</html>

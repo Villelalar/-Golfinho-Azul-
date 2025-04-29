@@ -20,7 +20,7 @@
     <!-- Div para envolver a tabela de pesquisa (inicialmente invisível) -->
     <div id="searchResults" style="display: none;">
         <h2>Resultados da Pesquisa</h2>
-        <table id="dataTable" class="users-table">
+        <table id="searchTable" class="users-table">
             <thead>
                 <tr>
                     {% for column in data[0].keys() %}
@@ -64,7 +64,9 @@
     <h2>Adicionar Novo Registro</h2>
     <form id="addDataForm">
         {% for column in data[0].keys() %}
-            <input type="text" id="{{ column }}" name="{{ column }}" placeholder="{{ column }}" required>
+            {% if not column.lower().startswith('id') and column.lower() != 'created_at' %}
+                <input type="text" id="{{ column }}" name="{{ column }}" placeholder="{{ column }}" required>
+            {% endif %}
         {% endfor %}
         <button type="submit">Adicionar</button>
     </form>

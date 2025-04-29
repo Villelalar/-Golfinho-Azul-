@@ -13,6 +13,47 @@ body {
     width: 100%;
 }
 
+/* Action buttons styles */
+.edit-btn, .save-btn, .cancel-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.button-spacer {
+    display: inline-block;
+    width: 12px;
+}
+
+.edit-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.save-btn {
+    background-color: #2196F3;
+    color: white;
+}
+
+.cancel-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+.save-btn:hover {
+    background-color: #1976D2; /* Darker blue */
+}
+
+.cancel-btn:hover {
+    background-color: #d32f2f; /* Darker red */
+}
+
 h1, h2 {
     text-align: center;
     margin-top: 20px;
