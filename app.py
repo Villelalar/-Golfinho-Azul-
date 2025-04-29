@@ -73,6 +73,46 @@ def load_user(user_id):
 # ROTA PARA PÁGINA INICIAL
 @app.route('/')
 def index():
+    return render_template('index.html')
+
+@app.route('/loginadmin', methods=['GET', 'POST'])
+def loginadmin():
+    if request.method == 'POST':
+        identifier = request.form['identifier']
+        password = request.form['password']
+        
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT * FROM admins WHERE email = %s', (identifier,))
+            user = cursor.fetchone()
+            
+        if user and check_password_hash(user['password'], password):
+            user_obj = User(user['id'], user['email'], user['name'], user['phone'], 'admin')
+            login_user(user_obj)
+            return redirect(url_for('tables'))
+        else:
+            flash('Credenciais inválidas!', 'error')
+    
+    return render_template('login.html')
+
+@app.route('/logincliente', methods=['GET', 'POST'])
+def logincliente():
+    if request.method == 'POST':
+        identifier = request.form['identifier']
+        password = request.form['password']
+        
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT * FROM clients WHERE email = %s', (identifier,))
+            user = cursor.fetchone()
+            
+        if user and check_password_hash(user['password'], password):
+            user_obj = User(user['id'], user['email'], user['name'], user['phone'], 'client')
+            login_user(user_obj)
+            return redirect(url_for('consultas_cliente'))
+        else:
+            flash('Credenciais inválidas!', 'error')
+    
     return render_template('login.html')
 
 # Unified login route
