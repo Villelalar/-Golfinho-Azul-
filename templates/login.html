@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ONG</title>
+    <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='features/OIP.jpeg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -15,49 +15,51 @@
                 <img src="{{ url_for('static', filename='features/logoBlue.png') }}" alt="Logo" class="logo">
             </div>
             <div class="login-box">
-                <h2>Bem-vindo(a) de volta!</h2>
-                <form method="POST" action="{{ url_for('login') }}">
+                <h2>{{ 'Login Administrativo' if request.endpoint == 'loginadmin' else 'Login Cliente' }}</h2>
+                <form method="POST" action="{{ url_for(request.endpoint) }}">
                     <div class="input-group">
-                        <input type="text" id="identifier" name="identifier" required>
-                        <label for="identifier">Identificador</label>
+                        <input type="email" id="identifier" name="identifier" required
+                               aria-label="Email" title="Digite seu email"
+                               placeholder="Digite seu email">
+                        <label for="identifier">Email</label>
                     </div>
                     <div class="input-group">
-                        <input type="password" id="password" name="password" required>
+                        <input type="password" id="password" name="password" required
+                               aria-label="Senha" title="Digite sua senha"
+                               placeholder="Digite sua senha">
                         <label for="password">Senha</label>
                     </div>
-                    <button type="submit" class="login-btn">Enviar</button>
-                    <div class="register-link">
-                        <p>Você não tem uma conta? <a href="{{ url_for('register') }}">Registrar</a></p>
-                    </div>
+                    <button type="submit" class="login-btn">Entrar</button>
                 </form>
+                <div class="register-link">
+                    <p>Não tem uma conta? 
+                    {% if request.endpoint == 'loginadmin' %}
+                        <a href="{{ url_for('registeradmin') }}">Registre-se como Admin</a>
+                    {% else %}
+                        <a href="{{ url_for('register') }}">Registre-se como Cliente</a>
+                    {% endif %}
+                    </p>
+                </div>
+                <div class="register-link">
+                    <p><a href="{{ url_for('index') }}">Voltar para Página Inicial</a></p>
+                </div>
             </div>
         </div>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const popups = document.querySelectorAll('.popup');
-            popups.forEach(popup => {
-                setTimeout(() => {
-                    popup.classList.add('fade-out');
-                }, 2000);
-                setTimeout(() => {
-                    popup.remove();
-                }, 2500);
-            });
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-            // Add filled class to inputs with values
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
             const inputs = document.querySelectorAll('.input-group input');
             inputs.forEach(input => {
-                input.addEventListener('blur', function() {
+                input.addEventListener('input', function() {
                     if (this.value) {
                         this.classList.add('filled');
                     } else {
