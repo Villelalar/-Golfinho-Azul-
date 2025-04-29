@@ -11,6 +11,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'loginadmin'  
 
+# ------------------- L O G I N S -----------------------------------------------
 # modelo de usuário
 class User(UserMixin):
     def __init__(self, id, email, name, phone, role):
@@ -245,6 +246,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+# ------------------- R O T A S &&& P A G I N A S -----------------------------------------------
 # sistema route
 @app.route('/admin/tables', methods=['GET'])
 @login_required
