@@ -9,7 +9,7 @@ app.secret_key = 'institutooceanoazulXunilasalle'
 # Initialize Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'loginadmin'  
+login_manager.login_view = 'login'
 
 # ------------------- L O G I N S -----------------------------------------------
 # modelo de usuário
