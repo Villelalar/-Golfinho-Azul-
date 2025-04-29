@@ -163,8 +163,12 @@ def logincliente():
                 )
                 user._authenticated = True
                 login_user(user)
-                print(f"Client user logged in: {user}")
-                return redirect(url_for('consultas_cliente'))
+                print(f"User logged in: {user}")
+                
+                if user.role == 'client':
+                    return redirect(url_for('consultas_cliente'))
+                else:
+                    return redirect(url_for('logincliente'))
             
             flash('Invalid identifier or password')
             return redirect(url_for('logincliente'))
