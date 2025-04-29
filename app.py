@@ -683,7 +683,7 @@ def search_data(table_name, search_query):
             port=19280,
             user="avnadmin",
         )
-        with connection.cursor() as cursor:
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # Get all columns
             cursor.execute(f"SHOW COLUMNS FROM {table_name}")
             columns = [column['Field'] for column in cursor.fetchall()]
@@ -694,6 +694,7 @@ def search_data(table_name, search_query):
             
             cursor.execute(f"SELECT * FROM {table_name} WHERE {query}", (search_term,) * len(columns))
             results = cursor.fetchall()
+            print(results)
             
             return app.response_class(
                 response=json.dumps({'status': 'success', 'results': results}),

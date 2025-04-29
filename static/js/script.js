@@ -75,25 +75,45 @@ $(document).ready(function() {
                     table_name: tableName,
                     search_query: searchQuery
                 },
-                success: function(response) {
+                dataType: 'text',
+                success: function(responseText) {
+                    const response = JSON.parse(responseText);
                     if (response.status === 'error') {
                         showPopup(response.message, true);
                         return;
                     }
 
-                    // Show search results section
-                    $('#searchResults').show();
-                    const searchTableBody = $('#searchTable tbody');
-                    searchTableBody.empty();
-
+                    const tbody = $('#searchTable tbody');
+                    tbody.empty();
+                    // Get column headers from the table
+                    const headers = $('#searchTable thead th').map(function() {
+                        return $(this).text();
+                    }).get();
+                    
                     response.results.forEach(row => {
                         const tr = $('<tr>');
-                        Object.values(row).forEach(value => {
-                            tr.append($('<td>').text(value));
+                        headers.forEach(header => {
+                            const cellValue = row[header];
+                            if (cellValue !== undefined && cellValue !== null) {
+                                // Check if the value is an ISO string and convert it to MySQL format
+                                if (typeof cellValue === 'string' && cellValue.includes('T')) {
+                                    const isoDate = new Date(cellValue);
+                                    const mysqlFormat = isoDate.getFullYear() + '-' + 
+                                        String(isoDate.getMonth() + 1).padStart(2, '0') + '-' +
+                                        String(isoDate.getDate()).padStart(2, '0') + ' ' +
+                                        String(isoDate.getHours()).padStart(2, '0') + ':' +
+                                        String(isoDate.getMinutes()).padStart(2, '0') + ':' +
+                                        String(isoDate.getSeconds()).padStart(2, '0');
+                                    tr.append($('<td>').text(mysqlFormat));
+                                } else {
+                                    tr.append($('<td>').text(cellValue));
+                                }
+                            }
                         });
-                        tr.append($('<td>').html('<button class="edit-btn">Editar</button>'));
-                        searchTableBody.append(tr);
+                        tr.append($('<td>').append($('<button>').addClass('edit-btn').text('Editar')));
+                        tbody.append(tr);
                     });
+                    $('#searchResults').show();
                 },
                 error: function(xhr, status, error) {
                     console.error("Search error:", error);
