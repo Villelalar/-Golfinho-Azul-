@@ -16,7 +16,7 @@ $(document).ready(function() {
 
     // Função para extrair o nome da tabela da URL
     function getTableNameFromURL() {
-        const path = window.location.pathname; // Obtém o caminho da URL (ex: "/view_table/users")
+        const path = window.location.pathname; // Obtém o caminho da URL (ex: "/sistema/view_table/users")
         const parts = path.split('/'); // Divide o caminho em partes
         return parts[parts.length - 1]; // Retorna a última parte (ex: "users")
     }
@@ -52,7 +52,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '/search',
+            url: '/sistema/search',
             type: 'POST',
             data: { table_name: tableName, search_query: searchQuery },
             success: function(response) {
@@ -130,7 +130,7 @@ $(document).ready(function() {
 
         // Envia os dados para o backend
         $.ajax({
-            url: '/add_data',
+            url: '/sistema/add_data',
             type: 'POST',
             data: { ...newData, table_name: tableName },
             success: function(response) {
@@ -211,7 +211,7 @@ $(document).ready(function() {
     
         // Send the updated data to the backend
         $.ajax({
-            url: '/update_data',
+            url: '/sistema/update_data',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ id: id, table_name: tableName, ...updatedData }),

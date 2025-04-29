@@ -155,21 +155,21 @@ def get_data(database_name, table_name):
 
 ## ROTAS PARA PÁGINAS REAIS #
 # pagina inicial : lista tabelas
-@app.route('/')
+@app.route('/sistema')
 @login_required
 def index():
     tables = get_tables("defaultdb")  # Listar tabelas do banco defaultdb
-    return render_template('index.html', tables=tables)
+    return render_template('sistema.html', tables=tables)
 
 # pagina de tabela específica : exibe dados da tabela
-@app.route('/view_table/<table_name>')
+@app.route('/sistema/view_table/<table_name>')
 @login_required
 def view_table(table_name):
     data = get_data("defaultdb", table_name)  # Obter dados da tabela selecionada
     return render_template('view_table.html', table_name=table_name, data=data)
 
 # rota interna que possibilita pesquisa de linha na tabela e retorna o resultado
-@app.route('/search', methods=['POST'])
+@app.route('/sistema/search', methods=['POST'])
 @login_required
 def search():
     table_name = request.form.get('table_name')
@@ -217,7 +217,7 @@ def search():
     
 
 # rota interna para adicionar novas linhas
-@app.route('/add_data', methods=['POST'])
+@app.route('/sistema/add_data', methods=['POST'])
 @login_required
 def add_data():
     table_name = request.form.get('table_name')
@@ -262,7 +262,7 @@ def add_data():
         )
     
 # rota interna que possibilita alterar linhas
-@app.route('/update_data', methods=['POST'])
+@app.route('/sistema/update_data', methods=['POST'])
 @login_required
 def update_data():
     try:
