@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, json 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-import pymysql 
-import json
+import pymysql
 
 app = Flask(__name__)
 app.secret_key = 'institutooceanoazulXunilasalle'
@@ -73,14 +72,16 @@ def load_user(user_id):
 # ROTA PARA PÁGINA INICIAL
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('login.html')
 
-# ROTA PARA PÁGINA DE LOGIN
-@app.route('/admin/login', methods=['GET', 'POST'])
-def loginadmin():
+# Unified login route
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
         identifier = request.form.get('identifier')
         password = request.form.get('password')
+        print(f"Login attempt - Identifier: {identifier}")
+        print(f"Password entered: {password}")  # Debug - will show in logs
         
         try:
             connection = pymysql.connect(
@@ -95,136 +96,58 @@ def loginadmin():
             )
             with connection.cursor() as cursor:
                 # Try to find user by email first, then by username
+                print(f"Searching for user with email: {identifier}")
                 cursor.execute("SELECT * FROM users WHERE email = %s", (identifier,))
                 user_data = cursor.fetchone()
                 if not user_data:
+                    print(f"No user found with email, searching for username: {identifier}")
                     cursor.execute("SELECT * FROM users WHERE username = %s", (identifier,))
                     user_data = cursor.fetchone()
 
-            if user_data and check_password_hash(user_data['password_hash'], password):
-                user = User(
-                    id=user_data['id'],
-                    email=user_data['email'],
-                    name=user_data['name'],
-                    phone=user_data['phone'],
-                    role=user_data['role']
-                )
-                user._authenticated = True
-                login_user(user)
-                print(f"User logged in: {user}")
-                
-                if user.role == 'admin':
-                    return redirect(url_for('tables'))
+            if user_data:
+                print(f"Found user: {user_data}")
+                print(f"Password hash: {user_data['password_hash']}")
+                print(f"Password entered: {password}")  # Debug - will show in logs
+                if check_password_hash(user_data['password_hash'], password):
+                    print("Password check succeeded")
+                    user = User(
+                        id=user_data['id'],
+                        email=user_data['email'],
+                        name=user_data['name'],
+                        phone=user_data['phone'],
+                        role=user_data['role']
+                    )
+                    user._authenticated = True
+                    login_user(user)
+                    print(f"User logged in: {user}")
+                    
+                    # Redirect based on user role
+                    if user.role == 'admin':
+                        return redirect(url_for('tables'))
+                    elif user.role == 'client':
+                        print(f"Redirecting client {user.email} to consultas_cliente")
+                        return redirect(url_for('consultas_cliente'))
+                    else:
+                        print(f"Invalid role: {user.role}")
+                        flash('Invalid user role')
+                        return redirect(url_for('login'))
                 else:
-                    return redirect(url_for('consultas_cliente'))
+                    print(f"Password check failed for password: {password}")
+            else:
+                print("No user found in database")
             
             flash('Invalid identifier or password')
-            return redirect(url_for('loginadmin'))
+            return redirect(url_for('login'))
         
         except Exception as e:
             print(f"Error during login: {e}")
             flash('Error during login')
-            return redirect(url_for('loginadmin'))
-    return render_template('loginadmin.html')
-
-# Client login route
-@app.route('/client/login', methods=['GET', 'POST'])
-def logincliente():
-    if request.method == 'POST':
-        identifier = request.form.get('identifier')
-        password = request.form.get('password')
-        
-        try:
-            connection = pymysql.connect(
-                charset="utf8mb4",
-                connect_timeout=10,
-                cursorclass=pymysql.cursors.DictCursor,
-                db="defaultdb",
-                host="projweb3-projweb3.g.aivencloud.com",
-                password="AVNS_J6HaV0sCEBEwuvqBeGP",
-                port=19280,
-                user="avnadmin",
-            )
-            with connection.cursor() as cursor:
-                # Try to find user by email first, then by username
-                cursor.execute("SELECT * FROM users WHERE email = %s", (identifier,))
-                user_data = cursor.fetchone()
-                if not user_data:
-                    cursor.execute("SELECT * FROM users WHERE username = %s", (identifier,))
-                    user_data = cursor.fetchone()
-
-            if user_data and check_password_hash(user_data['password_hash'], password):
-                user = User(
-                    id=user_data['id'],
-                    email=user_data['email'],
-                    name=user_data['name'],
-                    phone=user_data['phone'],
-                    role=user_data['role']
-                )
-                user._authenticated = True
-                login_user(user)
-                print(f"User logged in: {user}")
-                
-                if user.role == 'client':
-                    return redirect(url_for('consultas_cliente'))
-                else:
-                    return redirect(url_for('logincliente'))
-            
-            flash('Invalid identifier or password')
-            return redirect(url_for('logincliente'))
-        
-        except Exception as e:
-            print(f"Error during login: {e}")
-            flash('Error during login')
-            return redirect(url_for('logincliente'))
-    return render_template('logincliente.html')
-
-# Admin registration route
-@app.route('/admin/register', methods=['GET', 'POST'])
-def registeradmin():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        
-        try:
-            connection = pymysql.connect(
-                charset="utf8mb4",
-                connect_timeout=10,
-                cursorclass=pymysql.cursors.DictCursor,
-                db="defaultdb",
-                host="projweb3-projweb3.g.aivencloud.com",
-                password="AVNS_J6HaV0sCEBEwuvqBeGP",
-                port=19280,
-                user="avnadmin",
-            )
-            with connection.cursor() as cursor:
-                # Check if username already exists
-                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
-                if cursor.fetchone():
-                    flash('Username already exists.', 'error')
-                    return render_template('registeradmin.html')
-                
-                # Create new admin
-                password_hash = generate_password_hash(password)
-                cursor.execute(
-                    "INSERT INTO users (username, password_hash, role) VALUES (%s, %s, %s)",
-                    (username, password_hash, 'admin')
-                )
-                connection.commit()
-                
-                flash('Admin registered successfully!')
-                return redirect(url_for('loginadmin'))
-        
-        except Exception as e:
-            print(f"Error during admin registration: {e}")
-            flash('Error during registration')
-            return redirect(url_for('registeradmin'))
-    
-    return render_template('registeradmin.html')
+            return redirect(url_for('login'))
+    return render_template('login.html')
 
 # Client registration route
-@app.route('/client/register', methods=['GET', 'POST'])
-def registercliente():
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -247,7 +170,7 @@ def registercliente():
                 cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
                 if cursor.fetchone():
                     flash('Email já cadastrado.', 'error')
-                    return render_template('registercliente.html')
+                    return render_template('register.html')
                 
                 # Create new client
                 password_hash = generate_password_hash(password)
@@ -258,14 +181,63 @@ def registercliente():
                 connection.commit()
                 
                 flash('Cliente registrado com sucesso!')
-                return redirect(url_for('logincliente'))
+                return redirect(url_for('login'))
         
         except Exception as e:
             print(f"Error during client registration: {e}")
-            flash('Erro durante o registro')
-            return redirect(url_for('registercliente'))
-    
-    return render_template('registercliente.html')
+            flash('Error during registration')
+            return redirect(url_for('register'))
+    return render_template('register.html')
+
+# Admin registration route (sends to aprovar_admins table)
+@app.route('/admin/register', methods=['GET', 'POST'])
+def registeradmin():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        
+        try:
+            connection = pymysql.connect(
+                charset="utf8mb4",
+                connect_timeout=10,
+                cursorclass=pymysql.cursors.DictCursor,
+                db="defaultdb",
+                host="projweb3-projweb3.g.aivencloud.com",
+                password="AVNS_J6HaV0sCEBEwuvqBeGP",
+                port=19280,
+                user="avnadmin",
+            )
+            with connection.cursor() as cursor:
+                # Check if email or username already exists
+                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+                if cursor.fetchone():
+                    flash('Email já cadastrado.', 'error')
+                    return render_template('registeradmin.html')
+                
+                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+                if cursor.fetchone():
+                    flash('Username já cadastrado.', 'error')
+                    return render_template('registeradmin.html')
+                
+                # Create new admin in aprovar_admins table
+                password_hash = generate_password_hash(password)
+                cursor.execute(
+                    "INSERT INTO aprovar_admins (email, username, password_hash, name, phone) VALUES (%s, %s, %s, %s, %s)",
+                    (email, username, password_hash, name, phone)
+                )
+                connection.commit()
+                
+                flash('Solicitação de admin enviada para aprovação!')
+                return redirect(url_for('login'))
+        
+        except Exception as e:
+            print(f"Error during admin registration: {e}")
+            flash('Error during registration')
+            return redirect(url_for('registeradmin'))
+    return render_template('registeradmin.html')
 
 @app.route('/logout')
 @login_required

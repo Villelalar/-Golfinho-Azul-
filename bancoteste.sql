@@ -4,9 +4,21 @@ USE defaultdb;
 
 -- Drop and recreate tables
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS aprovar_admins;
 DROP TABLE IF EXISTS consultas;
 DROP TABLE IF EXISTS instagram_posts;
 DROP TABLE IF EXISTS imagens_homepage;
+
+-- Create aprovar_admins table for pending admin registrations
+CREATE TABLE aprovar_admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Create users table with auto-incrementing ID and role
 CREATE TABLE users (

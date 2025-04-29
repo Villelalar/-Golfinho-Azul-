@@ -13,21 +13,21 @@
         <h1>Minhas Consultas</h1>
 
         <!-- Navigation -->
-        <div class="nav-buttons">
+        <div class="logout-button-container">
             <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
         </div>
 
         <!-- Search Form -->
         <div class="search-container">
             <form id="searchForm">
-                <input type="text" id="search_query" name="search_query" placeholder="Buscar consulta..." required>
+                <input type="text" id="search_query" name="search_query" placeholder="Digite sua busca..." required>
                 <button type="submit" class="search-btn">Buscar</button>
             </form>
         </div>
 
         <!-- Appointments Table -->
         <div class="appointments-container">
-            <table id="appointmentsTable" class="appointments-table">
+            <table id="appointmentsTable" class="users-table">
                 <thead>
                     <tr>
                         <th>Data</th>
