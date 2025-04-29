@@ -315,6 +315,11 @@ body, html {
     margin: 1rem;
     position: relative;
     z-index: 2;
+    transition: all 0.3s ease;
+
+}
+.login-container:hover{
+    transform: translateY(-10px);
 }
 
 .logo-container {
@@ -324,10 +329,10 @@ body, html {
 }
 
 .logo {
-    max-width: 220px;
+    max-width: 230px;
     height: auto;
     filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
-    margin-top: 1rem;
+    margin-top: 3rem;
 }
 
 .login-box {
@@ -440,7 +445,7 @@ body, html {
     transition: all 0.3s ease;
     box-shadow: 0 3px 8px rgba(52,152,219,0.2);
     margin-top: 3px;
-    height: 28px;
+    height: 35px;
 }
 
 .login-container form button:hover {
@@ -468,7 +473,7 @@ body, html {
     }
 
     .logo {
-        max-width: 150px;
+        max-width: 200px;
     }
 
     .login-container form {
