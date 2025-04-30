@@ -9,8 +9,9 @@ app.secret_key = 'institutooceanoazulXunilasalle'
 # Initialize Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'loginadmin'  
+login_manager.login_view = 'login'
 
+# ------------------- L O G I N S -----------------------------------------------
 # modelo de usuário
 class User(UserMixin):
     def __init__(self, id, email, name, phone, role):
@@ -74,47 +75,7 @@ def load_user(user_id):
 def index():
     return render_template('index.html')
 
-@app.route('/loginadmin', methods=['GET', 'POST'])
-def loginadmin():
-    if request.method == 'POST':
-        identifier = request.form['identifier']
-        password = request.form['password']
-        
-        connection = get_db_connection()
-        with connection.cursor() as cursor:
-            cursor.execute('SELECT * FROM admins WHERE email = %s', (identifier,))
-            user = cursor.fetchone()
-            
-        if user and check_password_hash(user['password'], password):
-            user_obj = User(user['id'], user['email'], user['name'], user['phone'], 'admin')
-            login_user(user_obj)
-            return redirect(url_for('tables'))
-        else:
-            flash('Credenciais inválidas!', 'error')
-    
-    return render_template('login.html')
-
-@app.route('/logincliente', methods=['GET', 'POST'])
-def logincliente():
-    if request.method == 'POST':
-        identifier = request.form['identifier']
-        password = request.form['password']
-        
-        connection = get_db_connection()
-        with connection.cursor() as cursor:
-            cursor.execute('SELECT * FROM clients WHERE email = %s', (identifier,))
-            user = cursor.fetchone()
-            
-        if user and check_password_hash(user['password'], password):
-            user_obj = User(user['id'], user['email'], user['name'], user['phone'], 'client')
-            login_user(user_obj)
-            return redirect(url_for('consultas_cliente'))
-        else:
-            flash('Credenciais inválidas!', 'error')
-    
-    return render_template('login.html')
-
-# Unified login route
+# LOGIN UNIFICADO
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -146,8 +107,8 @@ def login():
 
             if user_data:
                 print(f"Found user: {user_data}")
-                print(f"Password hash: {user_data['password_hash']}")
-                print(f"Password entered: {password}")  # Debug - will show in logs
+                #debug print(f"Password hash: {user_data['password_hash']}")
+                #debug print(f"Password entered: {password}")  
                 if check_password_hash(user_data['password_hash'], password):
                     print("Password check succeeded")
                     user = User(
@@ -161,7 +122,7 @@ def login():
                     login_user(user)
                     print(f"User logged in: {user}")
                     
-                    # Redirect based on user role
+                    # redireciona para páginas de admin e cliente baseado na role
                     if user.role == 'admin':
                         return redirect(url_for('tables'))
                     elif user.role == 'client':
@@ -169,23 +130,23 @@ def login():
                         return redirect(url_for('consultas_cliente'))
                     else:
                         print(f"Invalid role: {user.role}")
-                        flash('Invalid user role')
+                        flash('Função de usuário inválida')
                         return redirect(url_for('login'))
                 else:
                     print(f"Password check failed for password: {password}")
             else:
                 print("No user found in database")
             
-            flash('Invalid identifier or password')
+            flash('Identificador ou senha inválidos')
             return redirect(url_for('login'))
         
         except Exception as e:
             print(f"Error during login: {e}")
-            flash('Error during login')
+            flash('Erro durante o login')
             return redirect(url_for('login'))
     return render_template('login.html')
 
-# Client registration route
+# Registro de usuário - cliente ou admin
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -193,6 +154,8 @@ def register():
         password = request.form.get('password')
         name = request.form.get('name')
         phone = request.form.get('phone')
+        role = request.form.get('role')
+        username = request.form.get('username')  # só para admins!
         
         try:
             connection = pymysql.connect(
@@ -206,78 +169,111 @@ def register():
                 user="avnadmin",
             )
             with connection.cursor() as cursor:
-                # Check if email already exists
                 cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
                 if cursor.fetchone():
                     flash('Email já cadastrado.', 'error')
                     return render_template('register.html')
                 
-                # Create new client
+                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+                if cursor.fetchone():
+                    flash('Nome de usuário já cadastrado.', 'error')
+                    return render_template('register.html')
                 password_hash = generate_password_hash(password)
-                cursor.execute(
-                    "INSERT INTO users (email, password_hash, name, phone, role) VALUES (%s, %s, %s, %s, %s)",
-                    (email, password_hash, name, phone, 'client')
-                )
-                connection.commit()
+
+                if role == 'client':
+                    # clientes adicionados automaticamente
+                    cursor.execute(
+                        "INSERT INTO users (email, username, password_hash, name, phone, role) VALUES (%s, %s, %s, %s, %s, %s)",
+                        (email, username, password_hash, name, phone, 'client')
+                    )
+                    flash('Cliente registrado com sucesso!')
+                else:  # role == 'admin'
+                    # Check if admin request already exists
+                    cursor.execute(
+                        "SELECT id FROM aprovar_admins WHERE email = %s",
+                        (email,)
+                    )
+                    existing_request = cursor.fetchone()
+                    if existing_request:
+                        flash('Já existe uma solicitação de admin pendente para este email', 'warning')
+                        return redirect(url_for('login'))
+                    cursor.execute(
+                        "SELECT id FROM users WHERE email = %s AND role = 'admin'",
+                        (email,)
+                    )
+                    existing_admin = cursor.fetchone()
+                    if existing_admin:
+                        flash('Este usuário já é um administrador.', 'warning')
+                        return redirect(url_for('login'))
+                    
+                    # admins precisam ser aprovados!!
+                    cursor.execute(
+                        "INSERT INTO aprovar_admins (email, username, password_hash, name, phone) VALUES (%s, %s, %s, %s, %s)",
+                        (email, username, password_hash, name, phone)
+                    )
+                    flash('Solicitação de admin enviada para aprovação!')
                 
-                flash('Cliente registrado com sucesso!')
+                connection.commit()
                 return redirect(url_for('login'))
         
         except Exception as e:
-            print(f"Error during client registration: {e}")
-            flash('Error during registration')
+            print(f"Error during registration: {e}")
+            flash('Erro durante o registro')
             return redirect(url_for('register'))
     return render_template('register.html')
 
-# Admin registration route (sends to aprovar_admins table)
-@app.route('/admin/register', methods=['GET', 'POST'])
-def registeradmin():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        username = request.form.get('username')
-        password = request.form.get('password')
-        name = request.form.get('name')
-        phone = request.form.get('phone')
-        
-        try:
-            connection = pymysql.connect(
-                charset="utf8mb4",
-                connect_timeout=10,
-                cursorclass=pymysql.cursors.DictCursor,
-                db="defaultdb",
-                host="projweb3-projweb3.g.aivencloud.com",
-                password="AVNS_J6HaV0sCEBEwuvqBeGP",
-                port=19280,
-                user="avnadmin",
-            )
-            with connection.cursor() as cursor:
-                # Check if email or username already exists
-                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-                if cursor.fetchone():
-                    flash('Email já cadastrado.', 'error')
-                    return render_template('registeradmin.html')
-                
-                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
-                if cursor.fetchone():
-                    flash('Username já cadastrado.', 'error')
-                    return render_template('registeradmin.html')
-                
-                # Create new admin in aprovar_admins table
-                password_hash = generate_password_hash(password)
+
+# ------------------- R O T A S &&& P A G I N A S -----------------------------------------------
+# Rota para aprovar admin requests
+@app.route('/admin/tables/aprovar_admins', methods=['POST'])
+@login_required
+def aprovar_admins():
+    if current_user.role != 'admin':
+        flash('Acesso negado - apenas administradores!', 'error')
+        return redirect(url_for('login'))
+
+    try:
+        connection = pymysql.connect(
+            charset="utf8mb4",
+            connect_timeout=10,
+            cursorclass=pymysql.cursors.DictCursor,
+            db="defaultdb",
+            host="projweb3-projweb3.g.aivencloud.com",
+            password="AVNS_J6HaV0sCEBEwuvqBeGP",
+            port=19280,
+            user="avnadmin",
+        )
+        with connection.cursor() as cursor:
+            admin_id = request.form.get('admin_id')
+            action = request.form.get('action')
+            
+            if action == 'approve':
                 cursor.execute(
-                    "INSERT INTO aprovar_admins (email, username, password_hash, name, phone) VALUES (%s, %s, %s, %s, %s)",
-                    (email, username, password_hash, name, phone)
+                    "SELECT * FROM aprovar_admins WHERE id = %s", (admin_id,)
                 )
-                connection.commit()
+                admin_request = cursor.fetchone()
                 
-                flash('Solicitação de admin enviada para aprovação!')
-                return redirect(url_for('login'))
-        
-        except Exception as e:
-            print(f"Error during admin registration: {e}")
-            flash('Error during registration')
-            return redirect(url_for('registeradmin'))
-    return render_template('registeradmin.html')
+                if admin_request:
+                    cursor.execute(
+                        "INSERT INTO users (email, username, password_hash, name, phone, role) VALUES (%s, %s, %s, %s, %s, %s)",
+                        (admin_request['email'], admin_request['username'], 
+                         admin_request['password_hash'], admin_request['name'],
+                         admin_request['phone'], 'admin')
+                    )
+                    cursor.execute("DELETE FROM aprovar_admins WHERE id = %s", (admin_id,))
+                    flash('Admin aprovado com sucesso!', 'success')
+                else:
+                    flash('Solicitação não encontrada', 'error')
+            elif action == 'reject':
+                cursor.execute("DELETE FROM aprovar_admins WHERE id = %s", (admin_id,))
+                flash('Solicitação rejeitada', 'success')
+
+            connection.commit()
+            return redirect(url_for('view_table', table_name='aprovar_admins'))
+    except Exception as e:
+        print(f"Error during admin approval: {e}")
+        flash('Erro durante a operação', 'error')
+        return redirect(url_for('view_table', table_name='aprovar_admins'))
 
 @app.route('/logout')
 @login_required
@@ -291,7 +287,7 @@ def logout():
 def tables():
     if current_user.role != 'admin':
         flash('Access denied')
-        return redirect(url_for('loginadmin'))
+        return redirect(url_for('login'))
     
     # Get tables from the defaultdb database
     tables = get_tables('defaultdb')
@@ -303,10 +299,36 @@ def tables():
 def view_table(table_name):
     if current_user.role != 'admin':
         flash('Access denied')
-        return redirect(url_for('loginadmin'))
+        return redirect(url_for('login'))
     
-    data = get_data('defaultdb', table_name)
-    return render_template('view_table.html', table_name=table_name, data=data)
+    try:
+        if table_name == 'aprovar_admins':
+            connection = pymysql.connect(
+                charset="utf8mb4",
+                connect_timeout=10,
+                cursorclass=pymysql.cursors.DictCursor,
+                db="defaultdb",
+                host="projweb3-projweb3.g.aivencloud.com",
+                password="AVNS_J6HaV0sCEBEwuvqBeGP",
+                port=19280,
+                user="avnadmin",
+            )
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM aprovar_admins")
+                data = cursor.fetchall()
+                if not data:
+                    data = []  # Return empty list instead of message
+                return render_template('aprovar_admins.html', admin_requests=data)
+        
+        data = get_data('defaultdb', table_name)
+        if not data:
+            data = [{'message': 'Vazio!'}]
+        
+        return render_template('view_table.html', table_name=table_name, data=data)
+    except Exception as e:
+        print(f"Error fetching data from table {table_name}: {e}")
+        flash('Erro ao carregar dados da tabela')
+        return redirect(url_for('tables'))
 
 # rota interna que possibilita pesquisa de linha na tabela e retorna o resultado
 @app.route('/admin/search', methods=['POST'])
@@ -314,7 +336,7 @@ def view_table(table_name):
 def search():
     if current_user.role != 'admin':
         return app.response_class(
-            response=json.dumps({'status': 'error', 'message': 'Access denied'}),
+            response=json.dumps({'status': 'error', 'message': 'Acesso negado'}),
             status=403,
             mimetype='application/json'
         )
@@ -377,7 +399,7 @@ def get_db_connection():
         user="avnadmin",
     )
 
-# rota interna que possibilita alterar linhas
+
 # rota interna que possibilita alterar linhas
 @app.route('/admin/update_data', methods=['POST'])
 @login_required
@@ -448,8 +470,8 @@ def consultas_cliente():
         
         if user.role != 'client':
             print(f"Access denied - user role: {user.role}")
-            flash('Access denied')
-            return redirect(url_for('logincliente'))
+            flash('Acesso negado')
+            return redirect(url_for('login'))
         
         connection = pymysql.connect(
             charset="utf8mb4",
@@ -721,7 +743,7 @@ def search_data(table_name, search_query):
             port=19280,
             user="avnadmin",
         )
-        with connection.cursor() as cursor:
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # Get all columns
             cursor.execute(f"SHOW COLUMNS FROM {table_name}")
             columns = [column['Field'] for column in cursor.fetchall()]
@@ -732,6 +754,7 @@ def search_data(table_name, search_query):
             
             cursor.execute(f"SELECT * FROM {table_name} WHERE {query}", (search_term,) * len(columns))
             results = cursor.fetchall()
+            print(results)
             
             return app.response_class(
                 response=json.dumps({'status': 'success', 'results': results}),

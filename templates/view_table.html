@@ -9,6 +9,14 @@
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <h1>Visualizando Tabela: {{ table_name }}</h1>
 
     <!-- Formulário de busca -->
@@ -37,28 +45,45 @@
 
     <!-- Tabela de dados original -->
     <h2>Dados da Tabela</h2>
-    <table id="dataTable" class="users-table">
-        <thead>
-            <tr>
-                {% for column in data[0].keys() %}
-                    <th>{{ column }}</th>
-                {% endfor %}
-                <th>Ações</th> <!-- Coluna para o botão de edição -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in data %}
+    <div class="table-container">
+        <table id="dataTable" class="users-table">
+            <thead>
+                <tr>
+                    {% if data[0].message %}
+                        <th colspan="2">{{ data[0].message }}</th>
+                    {% else %}
+                        {% for column in data[0].keys() %}
+                        <th>{{ column }}</th>
+                        {% endfor %}
+                        <th>Ações</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
                 <tr data-id="{{ row.id }}">
                     {% for value in row.values() %}
-                        <td>{{ value }}</td>
+                    <td>{{ value }}</td>
                     {% endfor %}
                     <td>
                         <button class="edit-btn">Editar</button>
                     </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                {% endfor %}
+
+                <style>
+                    .empty-message {
+                        color: #666;
+                        font-style: italic;
+                        background-color: #f8f9fa;
+                        border: 1px solid #dee2e6;
+                        border-radius: 4px;
+                        padding: 20px;
+                    }
+                </style>
+            </tbody>
+        </table>
+    </div>
 
     <!-- Formulário para adicionar dados -->
     <h2>Adicionar Novo Registro</h2>

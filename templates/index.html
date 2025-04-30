@@ -94,55 +94,6 @@
         {% endif %}
     {% endwith %}
 
-    <script>
-        let slideIndex = 1;
-        showSlides(slideIndex);
-
-        function changeSlide(n) {
-            showSlides(slideIndex += n);
-        }
-
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
-        }
-
-        function showSlides(n) {
-            let i;
-            let slides = document.getElementsByClassName("slide");
-            let dots = document.getElementsByClassName("dot");
-
-            if (n > slides.length) { slideIndex = 1 }
-            if (n < 1) { slideIndex = slides.length }
-
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            for (i = 0; i < dots.length; i++) {
-                dots[i].className = dots[i].className.replace(" active", "");
-            }
-
-            slides[slideIndex - 1].style.display = "block";
-            dots[slideIndex - 1].className += " active";
-        }
-
-        // Auto advance slides
-        setInterval(() => {
-            changeSlide(1);
-        }, 5000);
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const popups = document.querySelectorAll('.popup');
-            popups.forEach(popup => {
-                setTimeout(() => {
-                    popup.classList.add('fade-out');
-                }, 2000);
-                setTimeout(() => {
-                    popup.remove();
-                }, 2500);
-            });
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
