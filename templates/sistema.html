@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
     <h1>Tabelas Disponíveis no Banco de Dados</h1>
     <div class="posts-table">
         {% for table in tables %}

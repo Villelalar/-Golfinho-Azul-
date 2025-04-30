@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprovar Administradores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Aprovar Administradores</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="table-container">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if admin_requests|length == 0 %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 20px;">
+                            <div class="empty-message">Nenhuma solicitação de admin pendente!</div>
+                        </td>
+                    </tr>
+                {% else %}
+                    {% for admin in admin_requests %}
+                    <tr>
+                        <td>{{ admin.id }}</td>
+                        <td>{{ admin.email }}</td>
+                        <td>{{ admin.username }}</td>
+                        <td>{{ admin.name }}</td>
+                        <td>{{ admin.phone }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('aprovar_admins') }}" style="display: inline;">
+                                <input type="hidden" name="action" value="approve">
+                                <input type="hidden" name="admin_id" value="{{ admin.id }}">
+                                <button type="submit" class="btn btn-success">Aprovar</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('aprovar_admins') }}" style="display: inline;">
+                                <input type="hidden" name="action" value="reject">
+                                <input type="hidden" name="admin_id" value="{{ admin.id }}">
+                                <button type="submit" class="btn btn-danger">Rejeitar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="logout-button-container">
+        <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+    </div>
+
+</body>
+</html>

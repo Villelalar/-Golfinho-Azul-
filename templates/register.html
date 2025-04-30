@@ -9,6 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <div class="login-page">
         <div class="login-container">
             <div class="logo-container">
@@ -18,42 +25,58 @@
                 <h2>Criar nova conta</h2>
                 <form method="POST" action="{{ url_for('register') }}">
                     <div class="input-group">
-                        <input type="text" id="username" name="username" required>
-                        <label for="username">USERNAME</label>
+                        <input type="radio" id="client" name="role" value="client" checked>
+                        <label for="client">Cliente</label>
+                        <input type="radio" id="admin" name="role" value="admin">
+                        <label for="admin">Administrador</label>
                     </div>
+                    
+                    <div class="input-group">
+                        <input type="text" id="username" name="username" required>
+                        <label for="username">Nome de usuário</label>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="email" id="email" name="email" required>
+                        <label for="email">Email</label>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="text" id="name" name="name" required>
+                        <label for="name">Nome completo</label>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="tel" id="phone" name="phone" required>
+                        <label for="phone">Telefone</label>
+                    </div>
+                    
                     <div class="input-group">
                         <input type="password" id="password" name="password" required>
                         <label for="password">Senha</label>
                     </div>
+                    
                     <button type="submit" class="login-btn">REGISTRAR</button>
                     <div class="register-link">
                         <p>Você já tem uma conta? <a href="{{ url_for('login') }}">Login</a></p>
                     </div>
                 </form>
+
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const roleRadios = document.querySelectorAll('input[name="role"]');
+                    const usernameInput = document.querySelector('input[name="username"]');
+                    
+                    roleRadios.forEach(function(radio) {
+                        radio.addEventListener('change', function() {
+                            // No need to toggle visibility, username is always required
+                        });
+                    });
+                });
+                </script>
             </div>
         </div>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const popups = document.querySelectorAll('.popup');
-            popups.forEach(popup => {
-                setTimeout(() => {
-                    popup.style.opacity = '0';
-                }, 2000);
-                setTimeout(() => {
-                    popup.remove();
-                }, 2500);
-            });
-        });
-    </script>
+    <div class="login-page">
 </body>
 </html>
