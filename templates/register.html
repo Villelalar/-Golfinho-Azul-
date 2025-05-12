@@ -24,11 +24,15 @@
             <div class="login-box">
                 <h2>Criar nova conta</h2>
                 <form method="POST" action="{{ url_for('register') }}">
-                    <div class="input-group">
-                        <input type="radio" id="client" name="role" value="client" checked>
-                        <label for="client">Cliente</label>
-                        <input type="radio" id="admin" name="role" value="admin">
-                        <label for="admin">Administrador</label>
+                    <div class="role-selection">
+                        <div>
+                            <input type="radio" id="client" name="role" value="client" checked>
+                            <label for="client">Cliente</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="admin" name="role" value="admin">
+                            <label for="admin">Administrador</label>
+                        </div>
                     </div>
                     
                     <div class="input-group">
@@ -59,6 +63,9 @@
                     <button type="submit" class="login-btn">REGISTRAR</button>
                     <div class="register-link">
                         <p>Você já tem uma conta? <a href="{{ url_for('login') }}">Login</a></p>
+                    </div>
+                    <div class="register-link">
+                        <p><a href="{{ url_for('index') }}">Voltar para Página Inicial</a></p>
                     </div>
                 </form>
 

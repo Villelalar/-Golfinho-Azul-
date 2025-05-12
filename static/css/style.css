@@ -40,7 +40,6 @@ body {
 .logo-container {
     height: 100%;
     padding: 15px;
-    background-color: #008bb4;
 }
 
 .logo-container img {
@@ -566,14 +565,14 @@ body, html {
 .login-page {
     min-height: 100vh;
     background: linear-gradient(-45deg,
-        #001F3F,  /* Navy Blue */
-        #003366,  /* Deep Blue */
-        #21648e,  /* Ocean Blue */
-        #1B9CFC,  /* Sky Blue */
-        #4FB4F8,  /* Light Blue */
-        #00A8FF,  /* Bright Blue */
-        #21648e,  /* Ocean Blue */
-        #001F3F   /* Back to Navy Blue */
+        #001F3F, 
+        #003366, 
+        #21648e, 
+        #1B9CFC,  
+        #4FB4F8, 
+        #00A8FF,  
+        #21648e, 
+        #001F3F   
     );
     background-size: 400% 400%;
     display: flex;
@@ -632,7 +631,8 @@ body, html {
     max-width: 230px;
     height: auto;
     filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
-    margin-top: 3rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .login-box {
@@ -646,17 +646,42 @@ body, html {
     font-size: 34px;
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
-    padding: 0 10px;
 }
 
 .input-group {
-    position: relative;
-    margin-bottom: 1.5rem;
+position: relative;
+margin-bottom: 25px;
+}
+
+.input-group input[type="radio"] {
+margin-right: 8px;
+}
+
+.input-group label[for="client"],
+.input-group label[for="admin"] {
+margin-right: 20px;
+color: #333;
+font-size: 14px;
+}
+
+.role-selection {
+display: flex;
+justify-content: center;
+margin-bottom: 20px;
+gap: 20px;
 }
 
 .input-group input {
-    width: 100%;
-    padding: 12px 0;
+width: 100%;
+padding: 12px 0;
+font-size: 16px;
+color: #333;
+border: none;
+border-bottom: 2px solid #ddd;
+outline: none;
+background: transparent;
+font-family: 'Poppins', sans-serif;
+transition: border-color 0.3s ease;
     font-size: 16px;
     color: #333;
     border: none;
