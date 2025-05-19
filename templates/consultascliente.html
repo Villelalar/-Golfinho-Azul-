@@ -6,7 +6,6 @@
     <title>Minhas Consultas</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='js/client_scripts.js') }}"></script>
 </head>
 <body>
     <div class="page-container">
@@ -52,6 +51,8 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <style>
+                .appointments-container {
                     border: 1px solid #dee2e6;
                     border-radius: 4px;
                     padding: 20px;
@@ -114,7 +115,7 @@
                 const detalhes = row.find('td:eq(3) input').val();
 
                 $.ajax({
-                    url: '/client/consulta/atualizarconsulta',
+                    url: '/client/consultas/atualizarconsulta',
                     type: 'POST',
                     data: {
                         consulta_id: id,
@@ -123,15 +124,22 @@
                         status: status,
                         detalhes: detalhes
                     },
+                    dataType: 'json',
                     success: function(response) {
-                        if (response.status === 'success') {
-                            // Reload page after successful update
-                            location.reload();
-                        } else {
-                            alert('Erro ao atualizar consulta: ' + response.error);
+                        try {
+                            if (response.status === 'success') {
+                                // Reload page after successful update
+                                location.reload();
+                            } else {
+                                alert('Erro ao atualizar consulta: ' + response.error);
+                            }
+                        } catch (e) {
+                            console.error('Error:', e);
+                            alert('Erro ao processar resposta do servidor');
                         }
                     },
-                    error: function() {
+                    error: function(xhr, status, error) {
+                        console.error('AJAX error:', error);
                         alert('Erro ao atualizar consulta. Tente novamente.');
                     }
                 });

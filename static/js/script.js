@@ -94,19 +94,23 @@ $(document).ready(function() {
                         const tr = $('<tr>');
                         headers.forEach(header => {
                             const cellValue = row[header];
-                            if (cellValue !== undefined && cellValue !== null) {
-                                // Check if the value is an ISO string and convert it to MySQL format
-                                if (typeof cellValue === 'string' && cellValue.includes('T')) {
-                                    const isoDate = new Date(cellValue);
-                                    const mysqlFormat = isoDate.getFullYear() + '-' + 
-                                        String(isoDate.getMonth() + 1).padStart(2, '0') + '-' +
-                                        String(isoDate.getDate()).padStart(2, '0') + ' ' +
-                                        String(isoDate.getHours()).padStart(2, '0') + ':' +
-                                        String(isoDate.getMinutes()).padStart(2, '0') + ':' +
-                                        String(isoDate.getSeconds()).padStart(2, '0');
-                                    tr.append($('<td>').text(mysqlFormat));
+                            if (cellValue !== undefined) {
+                                if (cellValue === null) {
+                                    tr.append($('<td>').text('Não Atribuído'));
                                 } else {
-                                    tr.append($('<td>').text(cellValue));
+                                    // Check if the value is an ISO string and convert it to MySQL format
+                                    if (typeof cellValue === 'string' && cellValue.includes('T')) {
+                                        const isoDate = new Date(cellValue);
+                                        const mysqlFormat = isoDate.getFullYear() + '-' + 
+                                            String(isoDate.getMonth() + 1).padStart(2, '0') + '-' +
+                                            String(isoDate.getDate()).padStart(2, '0') + ' ' +
+                                            String(isoDate.getHours()).padStart(2, '0') + ':' +
+                                            String(isoDate.getMinutes()).padStart(2, '0') + ':' +
+                                            String(isoDate.getSeconds()).padStart(2, '0');
+                                        tr.append($('<td>').text(mysqlFormat));
+                                    } else {
+                                        tr.append($('<td>').text(cellValue));
+                                    }
                                 }
                             }
                         });

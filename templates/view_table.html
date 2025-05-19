@@ -32,7 +32,9 @@
             <thead>
                 <tr>
                     {% for column in data[0].keys() %}
+                        {% if column != 'password_hash' %}
                         <th>{{ column }}</th>
+                        {% endif %}
                     {% endfor %}
                     <th>Ações</th>
                 </tr>
@@ -53,7 +55,9 @@
                         <th colspan="2">{{ data[0].message }}</th>
                     {% else %}
                         {% for column in data[0].keys() %}
-                        <th>{{ column }}</th>
+                            {% if column != 'password_hash' %}
+                            <th>{{ column }}</th>
+                            {% endif %}
                         {% endfor %}
                         <th>Ações</th>
                     {% endif %}
@@ -62,8 +66,10 @@
             <tbody>
                 {% for row in data %}
                 <tr data-id="{{ row.id }}">
-                    {% for value in row.values() %}
-                    <td>{{ value }}</td>
+                    {% for column, value in row.items() %}
+                        {% if column != 'password_hash' %}
+                        <td>{{ value }}</td>
+                        {% endif %}
                     {% endfor %}
                     <td>
                         <button class="edit-btn">Editar</button>
@@ -85,6 +91,7 @@
         </table>
     </div>
 
+    {% if table_name != 'users' %}
     <!-- Formulário para adicionar dados -->
     <h2>Adicionar Novo Registro</h2>
     <form id="addDataForm">
@@ -95,6 +102,7 @@
         {% endfor %}
         <button type="submit">Adicionar</button>
     </form>
+    {% endif %}
 
 {#logout button#}
     <div class="logout-button-container">
