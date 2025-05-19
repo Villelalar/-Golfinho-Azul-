@@ -222,8 +222,7 @@ $(document).ready(function() {
             $.ajax({
                 url: '/admin/update_data',
                 type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ id: id, table_name: tableName, ...updatedData }),
+                data: { id: id, table_name: tableName, ...updatedData }, // Send as form data instead of JSON
                 success: function(response) {
                     if (response.status === 'success') {
                         showPopup('Dados atualizados com sucesso!', false);
