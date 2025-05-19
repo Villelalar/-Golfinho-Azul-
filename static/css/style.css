@@ -16,6 +16,7 @@ body {
     overflow-x: hidden;
 }
 
+/* Ocean Header Styles */
 .ocean-header {
     background-color: #008bb4;
     padding: 0;
@@ -178,6 +179,7 @@ body {
     to { opacity: 1 }
 }
 
+/* About Us Section */
 .about-us {
     padding: 80px 20px;
     background: linear-gradient(180deg, #f0f8ff 0%, #e6f3ff 100%);
@@ -694,7 +696,7 @@ transition: border-color 0.3s ease;
     border-color: #007bff;
 }
 
-.oceanBody {
+.ocean-body {
     margin: 0;
     padding: 0;
     background: linear-gradient(180deg, #b3e0ff 0%, #4fc3f7 100%);
@@ -703,7 +705,7 @@ transition: border-color 0.3s ease;
     position: relative;
 }
 
-.databaseContainer {
+.database-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
@@ -714,7 +716,7 @@ transition: border-color 0.3s ease;
     z-index: 10;
 }
 
-.databaseContainer.fullPage {
+.database-container.full-page {
     width: 100%;
     box-sizing: border-box;
 }
@@ -723,7 +725,7 @@ transition: border-color 0.3s ease;
 
 /* Ocean Theme - Clean Background */
 
-.databaseTitle {
+.database-title {
     text-align: center;
     margin-bottom: 3rem;
     color: #00546B;
@@ -734,7 +736,7 @@ transition: border-color 0.3s ease;
     z-index: 10;
 }
 
-.tablesGrid {
+.tables-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
@@ -743,7 +745,7 @@ transition: border-color 0.3s ease;
     z-index: 10;
 }
 
-.tableCard {
+.table-card {
     background-color: rgba(255, 255, 255, 0.85);
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 96, 100, 0.15);
@@ -759,7 +761,7 @@ transition: border-color 0.3s ease;
     overflow: hidden;
 }
 
-.tableCard::before {
+.table-card::before {
     content: '';
     position: absolute;
     top: -50%;
@@ -771,12 +773,12 @@ transition: border-color 0.3s ease;
     transition: opacity 0.5s ease;
 }
 
-.tableCard:hover {
+.table-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 30px rgba(0, 96, 100, 0.25);
 }
 
-.tableCard:hover::before {
+.table-card:hover::before {
     opacity: 1;
 }
 
@@ -788,11 +790,11 @@ transition: border-color 0.3s ease;
     transition: transform 0.3s ease;
 }
 
-.tableCard:hover .tableIcon {
+.table-card:hover .table-icon {
     transform: scale(1.1);
 }
 
-.tableName {
+.table-name {
     font-size: 1.25rem;
     color: #00546B;
     margin-bottom: 1.8rem;
@@ -800,7 +802,7 @@ transition: border-color 0.3s ease;
     font-weight: 500;
 }
 
-.viewTableBtn {
+.view-table-btn {
     background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
     color: white;
     border: none;
@@ -816,7 +818,7 @@ transition: border-color 0.3s ease;
     overflow: hidden;
 }
 
-.viewTableBtn::after {
+.view-table-btn::after {
     content: '';
     position: absolute;
     top: 0;
@@ -827,17 +829,17 @@ transition: border-color 0.3s ease;
     transition: 0.5s;
 }
 
-.viewTableBtn:hover {
+.view-table-btn:hover {
     background: linear-gradient(135deg, #039be5 0%, #0288d1 100%);
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(2, 136, 209, 0.4);
 }
 
-.viewTableBtn:hover::after {
+.view-table-btn:hover::after {
     left: 100%;
 }
 
-.logoutContainer {
+.logout-container {
     display: flex;
     justify-content: center;
     margin-top: 3rem;
@@ -845,7 +847,7 @@ transition: border-color 0.3s ease;
     z-index: 10;
 }
 
-.logoutBtn {
+.logout-btn {
     background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
     color: white;
     border: none;
@@ -860,7 +862,7 @@ transition: border-color 0.3s ease;
     overflow: hidden;
 }  
 
-.logoutBtn::after {
+.logout-btn::after {
     content: '';
     position: absolute;
     top: 0;
@@ -871,17 +873,17 @@ transition: border-color 0.3s ease;
     transition: 0.5s;
 }
 
-.logoutBtn:hover {
+.logout-btn:hover {
     background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(211, 47, 47, 0.4);
 }
 
-.logoutBtn:hover::after {
+.logout-btn:hover::after {
     left: 100%;
 }
 
-.inputGroup label {
+.input-group label {
     position: absolute;
     top: 12px;
     left: 0;
@@ -892,8 +894,8 @@ transition: border-color 0.3s ease;
     font-family: 'Poppins', sans-serif;
 }
 
-.inputGroup input:focus ~ label,
-.inputGroup input.filled ~ label {
+.input-group input:focus ~ label,
+.input-group input.filled ~ label {
     top: -20px;
     font-size: 0.875rem;
     color: #3498db;
