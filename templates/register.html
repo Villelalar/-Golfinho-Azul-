@@ -73,11 +73,14 @@
                 document.addEventListener('DOMContentLoaded', function() {
                     const inputs = document.querySelectorAll('.input-group input');
                     inputs.forEach(input => {
+                        // Check initial state
                         if (input.value) {
                             input.classList.add('filled');
                         } else {
                             input.classList.remove('filled');
                         }
+                        
+                        // Add event listener for input changes
                         input.addEventListener('input', function() {
                             if (this.value) {
                                 this.classList.add('filled');

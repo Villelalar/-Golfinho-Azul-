@@ -16,7 +16,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Ocean Header Styles */
 .ocean-header {
     background-color: #008bb4;
     padding: 0;
@@ -179,7 +178,6 @@ body {
     to { opacity: 1 }
 }
 
-/* About Us Section */
 .about-us {
     padding: 80px 20px;
     background: linear-gradient(180deg, #f0f8ff 0%, #e6f3ff 100%);
@@ -696,7 +694,194 @@ transition: border-color 0.3s ease;
     border-color: #007bff;
 }
 
-.input-group label {
+.oceanBody {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, #b3e0ff 0%, #4fc3f7 100%);
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+
+.databaseContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: transparent;
+    min-height: 100vh;
+    position: relative;
+    z-index: 10;
+}
+
+.databaseContainer.fullPage {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ocean Theme - No Animations */
+
+/* Ocean Theme - Clean Background */
+
+.databaseTitle {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #00546B;
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 10;
+}
+
+.tablesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 10;
+}
+
+.tableCard {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 96, 100, 0.15);
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.4s ease;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.tableCard::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.tableCard:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 96, 100, 0.25);
+}
+
+.tableCard:hover::before {
+    opacity: 1;
+}
+
+.table-icon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+}
+
+.tableCard:hover .tableIcon {
+    transform: scale(1.1);
+}
+
+.tableName {
+    font-size: 1.25rem;
+    color: #00546B;
+    margin-bottom: 1.8rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.viewTableBtn {
+    background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 0.75rem 1.8rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(2, 136, 209, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.viewTableBtn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+}
+
+.viewTableBtn:hover {
+    background: linear-gradient(135deg, #039be5 0%, #0288d1 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(2, 136, 209, 0.4);
+}
+
+.viewTableBtn:hover::after {
+    left: 100%;
+}
+
+.logoutContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+    position: relative;
+    z-index: 10;
+}
+
+.logoutBtn {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
+    position: relative;
+    overflow: hidden;
+}  
+
+.logoutBtn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+}
+
+.logoutBtn:hover {
+    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(211, 47, 47, 0.4);
+}
+
+.logoutBtn:hover::after {
+    left: 100%;
+}
+
+.inputGroup label {
     position: absolute;
     top: 12px;
     left: 0;
@@ -707,8 +892,8 @@ transition: border-color 0.3s ease;
     font-family: 'Poppins', sans-serif;
 }
 
-.input-group input:focus ~ label,
-.input-group input.filled ~ label {
+.inputGroup input:focus ~ label,
+.inputGroup input.filled ~ label {
     top: -20px;
     font-size: 0.875rem;
     color: #3498db;
