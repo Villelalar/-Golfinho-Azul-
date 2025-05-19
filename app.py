@@ -83,9 +83,6 @@ def index():
 # LOGIN UNIFICADO
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Clear any existing flashed messages to prevent duplicates
-    session.pop('_flashes', None)
-    
     # Check if user is already logged in
     if current_user.is_authenticated:
         flash('Você já está logado!', 'info')
@@ -93,6 +90,8 @@ def login():
             return redirect(url_for('tables'))
         else:  # client
             return redirect(url_for('consultas_cliente'))
+
+
 
     if request.method == 'POST':
         identifier = request.form.get('identifier')
@@ -126,9 +125,6 @@ def login():
                     user._authenticated = True
                     login_user(user)
                     print(f"Usuário logado: {user}")
-                    
-                    # Clear messages before redirect
-                    session.pop('_flashes', None)
                     
                     # Show success message
                     flash(f'Bem-vindo, {user.name}!', 'success')
@@ -150,76 +146,10 @@ def login():
                 print("Nenhum usuário encontrado.")
                 flash('Usuário não encontrado', 'error')
             
-            # Clear messages before redirect
-            session.pop('_flashes', None)
             return redirect(url_for('login'))
         except Exception as e:
             print(f"Error during login: {e}")
             flash('Erro durante o login', 'error')
-            # Clear messages before redirect
-            session.pop('_flashes', None)
-            return redirect(url_for('login'))
-    if request.method == 'POST':
-        identifier = request.form.get('identifier')
-        password = request.form.get('password')
-        print(f"Login attempt - Identifier: {identifier}")
-        print(f"Password entered: {password}")  # Debug - will show in logs
-        
-        try:
-            connection = conectar_banco()
-            with connection.cursor() as cursor:
-                # Try to find user by email first, then by username
-                print(f"Procurando por usuário... Email: {identifier}")
-                cursor.execute("SELECT * FROM users WHERE email = %s", (identifier,))
-                user_data = cursor.fetchone()
-                if not user_data:
-                    print(f"Procurando por usuário... Username: {identifier}")
-                    cursor.execute("SELECT * FROM users WHERE username = %s", (identifier,))
-                    user_data = cursor.fetchone()
-
-            if user_data:
-                print(f"Found user: {user_data}")
-                #debug print(f"Password hash: {user_data['password_hash']")
-                #debug print(f"Password entered: {password}")  
-                if check_password_hash(user_data['password_hash'], password):
-                    print("Senha correta!")
-                    user = User(
-                        id=user_data['id'],
-                        email=user_data['email'],
-                        name=user_data['name'],
-                        phone=user_data['phone'],
-                        role=user_data['role']
-                    )
-                    user._authenticated = True
-                    login_user(user)
-                    print(f"Usuário logado: {user}")
-                    
-                    # redireciona para páginas de admin e cliente baseado na role
-                    if user.role == 'admin':
-                        return redirect(url_for('tables'))
-                    elif user.role == 'client':
-                        print(f"Redirecionando cliente {user.email} para consultas_cliente")
-                        return redirect(url_for('consultas_cliente'))
-                    else:
-                        print(f"Função inválida: {user.role}")
-                        flash('Função de usuário inválida', 'error')
-                        return redirect(url_for('login'))
-                else:
-                    print(f"Senha errada para senha: {password}")
-                    flash('Senha inválida', 'error')
-            else:
-                print("Nenhum usuário encontrado.")
-                flash('Usuário não encontrado', 'error')
-            
-            # Clear messages before redirect
-            session.pop('_flashes', None)
-            return redirect(url_for('login'))
-        
-        except Exception as e:
-            print(f"Error during login: {e}")
-            flash('Erro durante o login', 'error')
-            # Clear messages before redirect
-            session.pop('_flashes', None)
             return redirect(url_for('login'))
 
     return render_template('login.html')
@@ -227,9 +157,6 @@ def login():
 # Registro de usuário - cliente ou admin
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # Clear any existing flashed messages
-    session.pop('_flashes', None)
-    
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -260,8 +187,6 @@ def register():
                         (email, username, password_hash, name, phone, 'client')
                     )
                     flash('Cliente registrado com sucesso!', 'success')
-                    # Clear messages before redirect
-                    session.pop('_flashes', None)
                     return redirect(url_for('login'))
                 else:  # role == 'admin'
                     # Check if admin request already exists
@@ -286,66 +211,16 @@ def register():
                         (email, username, password_hash, name, phone)
                     )
                     flash('Solicitação de admin enviada para aprovação!', 'info')
-                    # Clear messages before redirect
-                    session.pop('_flashes', None)
-                    return redirect(url_for('login'))
+                connection.commit()
+                return redirect(url_for('login'))
         except Exception as e:
             print(f"Error during registration: {e}")
             flash('Erro durante o registro', 'error')
-            # Clear messages before redirect
-            session.pop('_flashes', None)
             return render_template('register.html')
-    try:
-        password_hash = generate_password_hash(password)
-
-        if role == 'client':
-            # clientes adicionados automaticamente
-            cursor.execute(
-                "INSERT INTO users (email, username, password_hash, name, phone, role) VALUES (%s, %s, %s, %s, %s, %s)",
-                (email, username, password_hash, name, phone, 'client')
-            )
-            flash('Cliente registrado com sucesso!', 'success')
-        else:  # role == 'admin'
-            # Check if admin request already exists
-            cursor.execute(
-                "SELECT id FROM aprovar_admins WHERE email = %s",
-                (email,)
-            )
-            existing_request = cursor.fetchone()
-            if existing_request:
-                flash('Já existe uma solicitação de admin pendente para este email', 'warning')
-                session.pop('_flashes', None)
-                return redirect(url_for('login'))
-            cursor.execute(
-                "SELECT id FROM users WHERE email = %s AND role = 'admin'",
-                (email,)
-            )
-            existing_admin = cursor.fetchone()
-            if existing_admin:
-                flash('Este usuário já é um administrador.', 'warning')
-                session.pop('_flashes', None)
-                return redirect(url_for('login'))
-            
-            # admins precisam ser aprovados!!
-            cursor.execute(
-                "INSERT INTO aprovar_admins (email, username, password_hash, name, phone) VALUES (%s, %s, %s, %s, %s)",
-                (email, username, password_hash, name, phone)
-            )
-            flash('Solicitação de admin enviada para aprovação!', 'info')
-            session.pop('_flashes', None)
-        
-        connection.commit()
-        return redirect(url_for('login'))
-
-    except Exception as e:
-        print(f"Error during registration: {e}")
-        flash('Erro durante o registro', 'error')
-        session.pop('_flashes', None)
-        return render_template('register.html')
+    return render_template('register.html')
 
 
 # ------------------- R O T A S &&& P A G I N A S -----------------------------------------------
-
 # Rota para aprovar admins
 @app.route('/admin/tables/aprovar_admins', methods=['POST'])
 @login_required

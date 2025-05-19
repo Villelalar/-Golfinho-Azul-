@@ -62,6 +62,18 @@
             }
         }
     </style>
+    <script>
+        // Add script to automatically fade out messages after 3 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.popup');
+            messages.forEach(message => {
+                setTimeout(() => {
+                    message.classList.add('fade-out');
+                    setTimeout(() => message.remove(), 300);
+                }, 3000);
+            });
+        });
+    </script>
 </head>
 <body>
     {% with messages = get_flashed_messages(with_categories=true) %}
