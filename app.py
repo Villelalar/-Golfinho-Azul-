@@ -78,6 +78,14 @@ def index():
 # LOGIN UNIFICADO
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Check if user is already logged in
+    if current_user.is_authenticated:
+        flash('Você já está logado!')
+        if current_user.get_role() == 'admin':
+            return redirect(url_for('tables'))
+        else:  # client
+            return redirect(url_for('consultas_cliente'))
+
     if request.method == 'POST':
         identifier = request.form.get('identifier')
         password = request.form.get('password')
@@ -373,14 +381,16 @@ def add_data():
     if current_user.role != 'admin':
         return json.dumps({'error': 'Access denied'}), 403, {'Content-Type': 'application/json'}
     
-    table_name = request.form.get('table')
-    data = request.form.get('data')
+    table_name = request.form.get('table_name')
+    data = {}
+    
+    # Get all form fields except table_name
+    for key in request.form.keys():
+        if key != 'table_name':
+            data[key] = request.form.get(key)
     
     try:
-        # Parse data
-        data_dict = json.loads(data)
-        
-        result = add_data(table_name, data_dict)
+        result = add_data(table_name, data)
         return result
     except Exception as e:
         print(f"Error adding data: {e}")
@@ -408,25 +418,21 @@ def update_data():
         flash('Access denied')
         return redirect(url_for('login'))
     try:
-        # Obtém os dados JSON da requisição
-        data = request.get_json()
-        if not data:
+        # Get form data directly
+        id = request.form.get('id')
+        table_name = request.form.get('table_name')
+        if not id or not table_name:
             return app.response_class(
-                response=json.dumps({'status': 'error', 'message': 'Nenhum dado fornecido.'}),
+                response=json.dumps({'status': 'error', 'message': 'ID ou nome da tabela não fornecido.'}),
                 status=400,
                 mimetype='application/json'
             )
-
-        id = data.get('id')
-        table_name = data.get('table_name')
-        if not id or not table_name:
-            return app.response_class(
-                    response=json.dumps({'status': 'error', 'message': 'ID ou nome da tabela não fornecido.'}),
-                    status=400,
-                    mimetype='application/json'
-            )
         
-        updated_data = {key: value for key, value in data.items() if key not in ['id', 'table_name']}
+        # Get all form fields except id and table_name
+        updated_data = {}
+        for key in request.form.keys():
+            if key not in ['id', 'table_name']:
+                updated_data[key] = request.form.get(key)
         
         connection = pymysql.connect(
             charset="utf8mb4",
