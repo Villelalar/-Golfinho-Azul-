@@ -159,8 +159,6 @@ def login():
             # Clear messages before redirect
             session.pop('_flashes', None)
             return redirect(url_for('login'))
-    return render_template('login.html')
-
     if request.method == 'POST':
         identifier = request.form.get('identifier')
         password = request.form.get('password')
@@ -181,7 +179,7 @@ def login():
 
             if user_data:
                 print(f"Found user: {user_data}")
-                #debug print(f"Password hash: {user_data['password_hash']}")
+                #debug print(f"Password hash: {user_data['password_hash']")
                 #debug print(f"Password entered: {password}")  
                 if check_password_hash(user_data['password_hash'], password):
                     print("Senha correta!")
@@ -204,20 +202,26 @@ def login():
                         return redirect(url_for('consultas_cliente'))
                     else:
                         print(f"Função inválida: {user.role}")
-                        flash('Função de usuário inválida')
+                        flash('Função de usuário inválida', 'error')
                         return redirect(url_for('login'))
                 else:
                     print(f"Senha errada para senha: {password}")
+                    flash('Senha inválida', 'error')
             else:
                 print("Nenhum usuário encontrado.")
+                flash('Usuário não encontrado', 'error')
             
-            flash('Identificador ou senha inválidos')
+            # Clear messages before redirect
+            session.pop('_flashes', None)
             return redirect(url_for('login'))
         
         except Exception as e:
             print(f"Error during login: {e}")
-            flash('Erro durante o login')
+            flash('Erro durante o login', 'error')
+            # Clear messages before redirect
+            session.pop('_flashes', None)
             return redirect(url_for('login'))
+
     return render_template('login.html')
 
 # Registro de usuário - cliente ou admin
@@ -422,9 +426,9 @@ def view_table(table_name):
                     data = []  # Return empty list instead of message
                 return render_template('aprovar_admins.html', admin_requests=data)
         
-        data = get_data('defaultdb', table_name)
+        data = get_data(table_name)
         if not data:
-            data = [{'message': 'Vazio!'}]
+            data = []  # Return empty list instead of message
         
         return render_template('view_table.html', table_name=table_name, data=data)
     except Exception as e:
@@ -516,7 +520,7 @@ def update_data():
             if key not in ['id', 'table_name']:
                 updated_data[key] = request.form.get(key)
 
-        conectar_banco()
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             set_clause = ", ".join([f"{key} = %s" for key in updated_data.keys()])
             query = f"UPDATE {table_name} SET {set_clause} WHERE id = %s"
@@ -642,15 +646,15 @@ def get_tables(database_name):
             connection.close()
 
 # Função para obter dados de uma tabela
-def get_data(table_name):
+def get_data(table_name, database_name='defaultdb'):
     try:
-        connection = conectar_banco()
+        connection = conectar_banco(database_name)
         with connection.cursor() as cursor:
             cursor.execute(f"SELECT * FROM {table_name}")
             data = cursor.fetchall()
         return data
     except Exception as e:
-        print(f"Error getting data: {e}")
+        print(f"Error getting data from {database_name}.{table_name}: {e}")
         return []
     finally:
         if 'connection' in locals():
@@ -714,7 +718,7 @@ def update_data(table_name, data, id):
 # Função para deletar dados de uma tabela
 def delete_data(table_name, id):
     try:
-        conectar_banco()
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             cursor.execute(f"DELETE FROM {table_name} WHERE id = %s", (id,))
             connection.commit()
@@ -738,7 +742,7 @@ def delete_data(table_name, id):
 # Função para pesquisar dados em uma tabela
 def search_data(table_name, search_query):
     try:
-        conectar_banco()
+        connection = conectar_banco()
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(f"SHOW COLUMNS FROM {table_name}")
             columns = [column['Field'] for column in cursor.fetchall()]
@@ -770,7 +774,7 @@ def search_data(table_name, search_query):
 @app.route('/test_db')
 def test_db():
     try:
-        conectar_banco()
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             cursor.execute("SHOW TABLES")
             tables = cursor.fetchall()

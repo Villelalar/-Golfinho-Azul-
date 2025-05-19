@@ -145,9 +145,9 @@ $(document).ready(function() {
             const newData = {};
             const userRole = getUserRole();
 
-            // Skip ID fields
+            // Skip ID fields except user_id
             formData.forEach(field => {
-                if (!field.name.toLowerCase().includes('id')) {
+                if (!field.name.toLowerCase().includes('id') || field.name.toLowerCase() === 'user_id') {
                     newData[field.name] = field.value;
                 }
             });
