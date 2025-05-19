@@ -20,11 +20,15 @@ $(document).ready(function() {
             popup.addClass('success');
         }
         $('body').append(popup);
-        setTimeout(() => {
-            popup.css('opacity', '0');
-            setTimeout(() => popup.remove(), 500);
-        }, 2000);
     }
+
+    // Add fade-out animation to messages
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.popup');
+        messages.forEach(message => {
+            message.classList.add('fade-out');
+        });
+    });
 
     // Function to get table name from URL
     function getTableNameFromURL() {
