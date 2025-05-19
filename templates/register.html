@@ -36,27 +36,27 @@
                     </div>
                     
                     <div class="input-group">
-                        <input type="text" id="username" name="username" required>
+                        <input type="text" id="username" name="username" required class="filled">
                         <label for="username">Nome de usuário</label>
                     </div>
                     
                     <div class="input-group">
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" required class="filled">
                         <label for="email">Email</label>
                     </div>
                     
                     <div class="input-group">
-                        <input type="text" id="name" name="name" required>
+                        <input type="text" id="name" name="name" required class="filled">
                         <label for="name">Nome completo</label>
                     </div>
                     
                     <div class="input-group">
-                        <input type="tel" id="phone" name="phone" required>
+                        <input type="tel" id="phone" name="phone" required class="filled">
                         <label for="phone">Telefone</label>
                     </div>
                     
                     <div class="input-group">
-                        <input type="password" id="password" name="password" required>
+                        <input type="password" id="password" name="password" required class="filled">
                         <label for="password">Senha</label>
                     </div>
                     
@@ -71,19 +71,25 @@
 
                 <script>
                 document.addEventListener('DOMContentLoaded', function() {
-                    const roleRadios = document.querySelectorAll('input[name="role"]');
-                    const usernameInput = document.querySelector('input[name="username"]');
-                    
-                    roleRadios.forEach(function(radio) {
-                        radio.addEventListener('change', function() {
-                            // No need to toggle visibility, username is always required
+                    const inputs = document.querySelectorAll('.input-group input');
+                    inputs.forEach(input => {
+                        if (input.value) {
+                            input.classList.add('filled');
+                        } else {
+                            input.classList.remove('filled');
+                        }
+                        input.addEventListener('input', function() {
+                            if (this.value) {
+                                this.classList.add('filled');
+                            } else {
+                                this.classList.remove('filled');
+                            }
                         });
                     });
                 });
                 </script>
             </div>
         </div>
-
-    <div class="login-page">
+    </div>
 </body>
 </html>
