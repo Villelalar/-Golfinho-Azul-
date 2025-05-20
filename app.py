@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, json 
+from flask import Flask, render_template, request, redirect, url_for, flash, json, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 import pymysql
@@ -7,11 +7,25 @@ app = Flask(__name__)
 app.secret_key = 'institutooceanoazulXunilasalle'
 
 # Initialize Flask-Login
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+autenticador = LoginManager()
+autenticador.init_app(app)
+autenticador.login_view = 'login'
 
 # ------------------- L O G I N S -----------------------------------------------
+# função para conectar ao banco de dados
+def conectar_banco(database_name='defaultdb'):
+    connection = pymysql.connect(
+        charset="utf8mb4",
+        connect_timeout=10,
+        cursorclass=pymysql.cursors.DictCursor,
+        db=database_name,
+        host="projweb3-projweb3.g.aivencloud.com",
+        password="AVNS_J6HaV0sCEBEwuvqBeGP",
+        port=19280,
+        user="avnadmin",
+    )
+    return connection
+
 # modelo de usuário
 class User(UserMixin):
     def __init__(self, id, email, name, phone, role):
@@ -35,20 +49,11 @@ class User(UserMixin):
         return f"User(id={self.id}, email={self.email}, role={self.role}, authenticated={self._authenticated})"
 
 # loader para usuários
-@login_manager.user_loader
+@autenticador.user_loader
 def load_user(user_id):
-    print(f"Loading user with ID: {user_id}")
+    print(f"Usuário carregado com ID: {user_id}")
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
             user_data = cursor.fetchone()
@@ -64,10 +69,10 @@ def load_user(user_id):
                 print(f"Loaded user: {user}")
                 return user
         
-        print("User not found")
+        print("Usuário não encontrado!")
         return None
     except Exception as e:
-        print(f"Error loading user: {e}")
+        print(f"Erro ao carregar usuário: {e}")
         return None
 
 # ROTA PARA PÁGINA INICIAL
@@ -80,11 +85,13 @@ def index():
 def login():
     # Check if user is already logged in
     if current_user.is_authenticated:
-        flash('Você já está logado!')
+        flash('Você já está logado!', 'info')
         if current_user.get_role() == 'admin':
             return redirect(url_for('tables'))
         else:  # client
             return redirect(url_for('consultas_cliente'))
+
+
 
     if request.method == 'POST':
         identifier = request.form.get('identifier')
@@ -93,32 +100,21 @@ def login():
         print(f"Password entered: {password}")  # Debug - will show in logs
         
         try:
-            connection = pymysql.connect(
-                charset="utf8mb4",
-                connect_timeout=10,
-                cursorclass=pymysql.cursors.DictCursor,
-                db="defaultdb",
-                host="projweb3-projweb3.g.aivencloud.com",
-                password="AVNS_J6HaV0sCEBEwuvqBeGP",
-                port=19280,
-                user="avnadmin",
-            )
+            connection = conectar_banco()
             with connection.cursor() as cursor:
                 # Try to find user by email first, then by username
-                print(f"Searching for user with email: {identifier}")
+                print(f"Procurando por usuário... Email: {identifier}")
                 cursor.execute("SELECT * FROM users WHERE email = %s", (identifier,))
                 user_data = cursor.fetchone()
                 if not user_data:
-                    print(f"No user found with email, searching for username: {identifier}")
+                    print(f"Procurando por usuário... Username: {identifier}")
                     cursor.execute("SELECT * FROM users WHERE username = %s", (identifier,))
                     user_data = cursor.fetchone()
 
             if user_data:
                 print(f"Found user: {user_data}")
-                #debug print(f"Password hash: {user_data['password_hash']}")
-                #debug print(f"Password entered: {password}")  
                 if check_password_hash(user_data['password_hash'], password):
-                    print("Password check succeeded")
+                    print("Senha correta!")
                     user = User(
                         id=user_data['id'],
                         email=user_data['email'],
@@ -128,30 +124,34 @@ def login():
                     )
                     user._authenticated = True
                     login_user(user)
-                    print(f"User logged in: {user}")
+                    print(f"Usuário logado: {user}")
+                    
+                    # Show success message
+                    flash(f'Bem-vindo, {user.name}!', 'success')
                     
                     # redireciona para páginas de admin e cliente baseado na role
                     if user.role == 'admin':
                         return redirect(url_for('tables'))
                     elif user.role == 'client':
-                        print(f"Redirecting client {user.email} to consultas_cliente")
+                        print(f"Redirecionando cliente {user.email} para consultas_cliente")
                         return redirect(url_for('consultas_cliente'))
                     else:
-                        print(f"Invalid role: {user.role}")
-                        flash('Função de usuário inválida')
+                        print(f"Função inválida: {user.role}")
+                        flash('Função de usuário inválida', 'error')
                         return redirect(url_for('login'))
                 else:
-                    print(f"Password check failed for password: {password}")
+                    print(f"Senha errada para senha: {password}")
+                    flash('Senha inválida', 'error')
             else:
-                print("No user found in database")
+                print("Nenhum usuário encontrado.")
+                flash('Usuário não encontrado', 'error')
             
-            flash('Identificador ou senha inválidos')
             return redirect(url_for('login'))
-        
         except Exception as e:
             print(f"Error during login: {e}")
-            flash('Erro durante o login')
+            flash('Erro durante o login', 'error')
             return redirect(url_for('login'))
+
     return render_template('login.html')
 
 # Registro de usuário - cliente ou admin
@@ -166,16 +166,7 @@ def register():
         username = request.form.get('username')  # só para admins!
         
         try:
-            connection = pymysql.connect(
-                charset="utf8mb4",
-                connect_timeout=10,
-                cursorclass=pymysql.cursors.DictCursor,
-                db="defaultdb",
-                host="projweb3-projweb3.g.aivencloud.com",
-                password="AVNS_J6HaV0sCEBEwuvqBeGP",
-                port=19280,
-                user="avnadmin",
-            )
+            connection = conectar_banco()
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
                 if cursor.fetchone():
@@ -186,6 +177,7 @@ def register():
                 if cursor.fetchone():
                     flash('Nome de usuário já cadastrado.', 'error')
                     return render_template('register.html')
+
                 password_hash = generate_password_hash(password)
 
                 if role == 'client':
@@ -194,7 +186,8 @@ def register():
                         "INSERT INTO users (email, username, password_hash, name, phone, role) VALUES (%s, %s, %s, %s, %s, %s)",
                         (email, username, password_hash, name, phone, 'client')
                     )
-                    flash('Cliente registrado com sucesso!')
+                    flash('Cliente registrado com sucesso!', 'success')
+                    return redirect(url_for('login'))
                 else:  # role == 'admin'
                     # Check if admin request already exists
                     cursor.execute(
@@ -213,26 +206,22 @@ def register():
                     if existing_admin:
                         flash('Este usuário já é um administrador.', 'warning')
                         return redirect(url_for('login'))
-                    
-                    # admins precisam ser aprovados!!
                     cursor.execute(
                         "INSERT INTO aprovar_admins (email, username, password_hash, name, phone) VALUES (%s, %s, %s, %s, %s)",
                         (email, username, password_hash, name, phone)
                     )
-                    flash('Solicitação de admin enviada para aprovação!')
-                
+                    flash('Solicitação de admin enviada para aprovação!', 'info')
                 connection.commit()
                 return redirect(url_for('login'))
-        
         except Exception as e:
             print(f"Error during registration: {e}")
-            flash('Erro durante o registro')
-            return redirect(url_for('register'))
+            flash('Erro durante o registro', 'error')
+            return render_template('register.html')
     return render_template('register.html')
 
 
 # ------------------- R O T A S &&& P A G I N A S -----------------------------------------------
-# Rota para aprovar admin requests
+# Rota para aprovar admins
 @app.route('/admin/tables/aprovar_admins', methods=['POST'])
 @login_required
 def aprovar_admins():
@@ -241,16 +230,7 @@ def aprovar_admins():
         return redirect(url_for('login'))
 
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             admin_id = request.form.get('admin_id')
             action = request.form.get('action')
@@ -279,48 +259,41 @@ def aprovar_admins():
             connection.commit()
             return redirect(url_for('view_table', table_name='aprovar_admins'))
     except Exception as e:
-        print(f"Error during admin approval: {e}")
+        print(f"Error during aprovação: {e}")
         flash('Erro durante a operação', 'error')
         return redirect(url_for('view_table', table_name='aprovar_admins'))
 
 @app.route('/logout')
-@login_required
 def logout():
+    # Clear any existing flashed messages
+    session.pop('_flashes', None)
     logout_user()
+    flash('Você foi desconectado com sucesso!', 'info')
     return redirect(url_for('index'))
 
-# sistema route
+# rota para visualizar tabelas (template sistema)
 @app.route('/admin/tables', methods=['GET'])
 @login_required
 def tables():
     if current_user.role != 'admin':
-        flash('Access denied')
+        flash('Accesso negado.')
         return redirect(url_for('login'))
     
-    # Get tables from the defaultdb database
     tables = get_tables('defaultdb')
     return render_template('sistema.html', tables=tables)
 
-# pagina de tabela específica : exibe dados da tabela
+# pagina de tabela específica : exibe dados da tabela selecionada
 @app.route('/admin/table/<table_name>', methods=['GET'])
 @login_required
 def view_table(table_name):
     if current_user.role != 'admin':
-        flash('Access denied')
+        flash('Accesso negado.')
         return redirect(url_for('login'))
     
+    # para rota "aprovar admins" é necessário alterar a página!
     try:
         if table_name == 'aprovar_admins':
-            connection = pymysql.connect(
-                charset="utf8mb4",
-                connect_timeout=10,
-                cursorclass=pymysql.cursors.DictCursor,
-                db="defaultdb",
-                host="projweb3-projweb3.g.aivencloud.com",
-                password="AVNS_J6HaV0sCEBEwuvqBeGP",
-                port=19280,
-                user="avnadmin",
-            )
+            connection = conectar_banco()
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM aprovar_admins")
                 data = cursor.fetchall()
@@ -328,9 +301,9 @@ def view_table(table_name):
                     data = []  # Return empty list instead of message
                 return render_template('aprovar_admins.html', admin_requests=data)
         
-        data = get_data('defaultdb', table_name)
+        data = get_data(table_name)
         if not data:
-            data = [{'message': 'Vazio!'}]
+            data = []  # Return empty list instead of message
         
         return render_template('view_table.html', table_name=table_name, data=data)
     except Exception as e:
@@ -355,7 +328,7 @@ def search():
     
     # Validate required parameters
     if not table_name or not search_query:
-        print(f"Invalid search parameters: table_name={table_name}, search_query={search_query}")
+        print(f"Parâmetros inválidos: table_name={table_name}, search_query={search_query}")
         return app.response_class(
             response=json.dumps({'status': 'error', 'message': 'Tabela ou consulta inválida.'}),
             status=400,
@@ -363,11 +336,11 @@ def search():
         )
     
     try:
-        print(f"Searching in table {table_name} for query: {search_query}")
+        print(f"Busca na tabela {table_name} por query: {search_query}")
         results = search_data(table_name, search_query)
         return results
     except Exception as e:
-        print(f"Error during search in table {table_name}: {e}")
+        print(f"Erro durante busca na tabela {table_name}: {e}")
         return app.response_class(
             response=json.dumps({'status': 'error', 'message': str(e)}),
             status=500,
@@ -379,12 +352,12 @@ def search():
 @login_required
 def add_data():
     if current_user.role != 'admin':
-        return json.dumps({'error': 'Access denied'}), 403, {'Content-Type': 'application/json'}
+        return json.dumps({'error': 'Accesso negado.'}), 403, {'Content-Type': 'application/json'}
     
     table_name = request.form.get('table_name')
     data = {}
     
-    # Get all form fields except table_name
+    # puxa tudo menos o nome da tabela
     for key in request.form.keys():
         if key != 'table_name':
             data[key] = request.form.get(key)
@@ -393,32 +366,20 @@ def add_data():
         result = add_data(table_name, data)
         return result
     except Exception as e:
-        print(f"Error adding data: {e}")
+        print(f"Error ao inserir data: {e}")
         return json.dumps({'error': str(e)}), 500, {'Content-Type': 'application/json'}
-
-# conecta ao banco de dados, usado para alterar dados in-line
-def get_db_connection():
-    return pymysql.connect(
-        charset="utf8mb4",
-        connect_timeout=10,
-        cursorclass=pymysql.cursors.DictCursor,
-        db="defaultdb",
-        host="projweb3-projweb3.g.aivencloud.com",
-        password="AVNS_J6HaV0sCEBEwuvqBeGP",
-        port=19280,
-        user="avnadmin",
-    )
-
 
 # rota interna que possibilita alterar linhas
 @app.route('/admin/update_data', methods=['POST'])
 @login_required
 def update_data():
     if current_user.role != 'admin':
-        flash('Access denied')
+        print(f"Accesso negado. - user role: {current_user.role}")
+        flash('Acesso negado')
         return redirect(url_for('login'))
+    
     try:
-        # Get form data directly
+        connection = conectar_banco()
         id = request.form.get('id')
         table_name = request.form.get('table_name')
         if not id or not table_name:
@@ -428,22 +389,13 @@ def update_data():
                 mimetype='application/json'
             )
         
-        # Get all form fields except id and table_name
+        # puxa tudo menos ID e tabela
         updated_data = {}
         for key in request.form.keys():
             if key not in ['id', 'table_name']:
                 updated_data[key] = request.form.get(key)
-        
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             set_clause = ", ".join([f"{key} = %s" for key in updated_data.keys()])
             query = f"UPDATE {table_name} SET {set_clause} WHERE id = %s"
@@ -475,20 +427,10 @@ def consultas_cliente():
         print(f"User in consultation page: {user}")
         
         if user.role != 'client':
-            print(f"Access denied - user role: {user.role}")
+            print(f"Accesso negado. - user role: {user.role}")
             flash('Acesso negado')
             return redirect(url_for('login'))
-        
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM consultas WHERE user_id = %s", (user.id,))
             consultas = cursor.fetchall()
@@ -507,7 +449,7 @@ def consultas_cliente():
 @login_required
 def atualizar_consulta():
     if current_user.role != 'client':
-        return json.dumps({'error': 'Access denied'}), 403, {'Content-Type': 'application/json'}
+        return json.dumps({'error': 'Accesso negado.'}), 403, {'Content-Type': 'application/json'}
     
     consulta_id = request.form.get('consulta_id')
     data = request.form.get('data')
@@ -516,16 +458,7 @@ def atualizar_consulta():
     status = request.form.get('status')
 
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             cursor.execute("""
                 UPDATE consultas 
@@ -547,21 +480,12 @@ def atualizar_consulta():
 @login_required
 def deletar_consulta():
     if current_user.role != 'client':
-        return json.dumps({'error': 'Access denied'}), 403, {'Content-Type': 'application/json'}
+        return json.dumps({'error': 'Accesso negado.'}), 403, {'Content-Type': 'application/json'}
     
     consulta_id = request.form.get('consulta_id')
 
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             cursor.execute("""
                 DELETE FROM consultas 
@@ -580,17 +504,7 @@ def deletar_consulta():
 # Função para listar as tabelas do banco de dados
 def get_tables(database_name):
     try:
-        print(f"Attempting to connect to database: {database_name}")
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db=database_name,
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             cursor.execute("SHOW TABLES")
             tables = cursor.fetchall()
@@ -607,24 +521,15 @@ def get_tables(database_name):
             connection.close()
 
 # Função para obter dados de uma tabela
-def get_data(database_name, table_name):
+def get_data(table_name, database_name='defaultdb'):
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db=database_name,
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco(database_name)
         with connection.cursor() as cursor:
             cursor.execute(f"SELECT * FROM {table_name}")
             data = cursor.fetchall()
         return data
     except Exception as e:
-        print(f"Error getting data: {e}")
+        print(f"Error getting data from {database_name}.{table_name}: {e}")
         return []
     finally:
         if 'connection' in locals():
@@ -633,16 +538,7 @@ def get_data(database_name, table_name):
 # Função para adicionar dados a uma tabela
 def add_data(table_name, data):
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             # Get column names and values
             columns = ', '.join(data.keys())
@@ -672,16 +568,7 @@ def add_data(table_name, data):
 # Função para atualizar dados em uma tabela
 def update_data(table_name, data, id):
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             # Build update query
             set_clause = ', '.join([f"{key} = %s" for key in data.keys()])
@@ -706,16 +593,7 @@ def update_data(table_name, data, id):
 # Função para deletar dados de uma tabela
 def delete_data(table_name, id):
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             cursor.execute(f"DELETE FROM {table_name} WHERE id = %s", (id,))
             connection.commit()
@@ -739,22 +617,11 @@ def delete_data(table_name, id):
 # Função para pesquisar dados em uma tabela
 def search_data(table_name, search_query):
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-            # Get all columns
             cursor.execute(f"SHOW COLUMNS FROM {table_name}")
             columns = [column['Field'] for column in cursor.fetchall()]
             
-            # Build search query
             search_term = f"%{search_query}%"
             query = " OR ".join([f"{column} LIKE %s" for column in columns])
             
@@ -782,16 +649,7 @@ def search_data(table_name, search_query):
 @app.route('/test_db')
 def test_db():
     try:
-        connection = pymysql.connect(
-            charset="utf8mb4",
-            connect_timeout=10,
-            cursorclass=pymysql.cursors.DictCursor,
-            db="defaultdb",
-            host="projweb3-projweb3.g.aivencloud.com",
-            password="AVNS_J6HaV0sCEBEwuvqBeGP",
-            port=19280,
-            user="avnadmin",
-        )
+        connection = conectar_banco()
         with connection.cursor() as cursor:
             cursor.execute("SHOW TABLES")
             tables = cursor.fetchall()

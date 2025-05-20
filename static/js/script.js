@@ -20,11 +20,15 @@ $(document).ready(function() {
             popup.addClass('success');
         }
         $('body').append(popup);
-        setTimeout(() => {
-            popup.css('opacity', '0');
-            setTimeout(() => popup.remove(), 500);
-        }, 2000);
     }
+
+    // Add fade-out animation to messages
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.popup');
+        messages.forEach(message => {
+            message.classList.add('fade-out');
+        });
+    });
 
     // Function to get table name from URL
     function getTableNameFromURL() {
@@ -141,9 +145,9 @@ $(document).ready(function() {
             const newData = {};
             const userRole = getUserRole();
 
-            // Skip ID fields
+            // Skip ID fields except user_id
             formData.forEach(field => {
-                if (!field.name.toLowerCase().includes('id')) {
+                if (!field.name.toLowerCase().includes('id') || field.name.toLowerCase() === 'user_id') {
                     newData[field.name] = field.value;
                 }
             });
