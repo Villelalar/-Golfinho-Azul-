@@ -10,73 +10,73 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header class="ocean-header">
-        <nav class="nav-container">
-            <div class="logo-container">
+    <header class="oceanoHeader">
+        <nav class="navegacaoContainer">
+            <div class="logoContainer">
                 <img src="{{ url_for('static', filename='features/logoTransparent.png') }}" alt="Logo" class="logo">
             </div>
-            <div class="nav-buttons">
-                <a href="{{ url_for('login') }}" class="nav-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
-                <a href="{{ url_for('register') }}" class="nav-btn"><i class="fas fa-user-plus"></i> Registrar</a>
+            <div class="navegacaoButton">
+                <a href="{{ url_for('login') }}" class="navegacaoBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="{{ url_for('register') }}" class="navegacaoBtn"><i class="fas fa-user-plus"></i> Registrar</a>
             </div>
         </nav>
     </header>
 
-    <div class="slider-container">
+    <div class="sliderContainer">
         <div class="slider">
             <div class="slide fade">
                 <img src="{{ url_for('static', filename='features/ocean1.jpg') }}" alt="Ocean 1">
-                <div class="slide-caption">
+                <div class="slideCaption">
                     <h2>Cuidar das nossas próprias ondas</h2>
                     <p>Juntos podemos fazer a diferença</p>
                 </div>
             </div>
             <div class="slide fade">
                 <img src="{{ url_for('static', filename='features/ocean2.jpg') }}" alt="Ocean 2">
-                <div class="slide-caption">
+                <div class="slideCaption">
                     <h2>Criar laços com o mundo</h2>
                     <p>Faça parte da nossa caminhada</p>
                 </div>
             </div>
             <div class="slide fade">
                 <img src="{{ url_for('static', filename='features/ocean3.jpg') }}" alt="Ocean 3">
-                <div class="slide-caption">
+                <div class="slideCaption">
                     <h2>Ação Comunitária</h2>
                     <p>Tratamento e cuidado</p>
                 </div>
             </div>
 
-            <button class="slider-btn prev" onclick="changeSlide(-1)" title="Slide anterior" aria-label="Slide anterior"><i class="fas fa-chevron-left"></i></button>
-            <button class="slider-btn next" onclick="changeSlide(1)" title="Próximo slide" aria-label="Próximo slide"><i class="fas fa-chevron-right"></i></button>
+            <button class="sliderBtn prev" onclick="changeSlide(-1)" title="Slide anterior" aria-label="Slide anterior"><i class="fas fa-chevron-left"></i></button>
+            <button class="sliderBtn next" onclick="changeSlide(1)" title="Próximo slide" aria-label="Próximo slide"><i class="fas fa-chevron-right"></i></button>
         </div>
 
-        <div class="slider-dots">
+        <div class="sliderDots">
             <span class="dot" onclick="currentSlide(1)"></span>
             <span class="dot" onclick="currentSlide(2)"></span>
             <span class="dot" onclick="currentSlide(3)"></span>
         </div>
     </div>
 
-    <section class="about-us">
-        <div class="about-container">
+    <section class="about">
+        <div class="aboutContainer">
             <h2>Sobre Nós</h2>
-            <div class="about-content">
-                <div class="about-text">
+            <div class="aboutContent">
+                <div class="aboutText">
                     <p>Somos uma organização não governamental dedicada à Pessoas com deficiência. Nossa missão é cuidar de todos através de consultas e tratamentos.</p>
                     <p>Trabalhamos em parceria com voluntários e médicos para fornecer cuidados de saúde de qualidade.</p>
                 </div>
-                <div class="about-stats">
-                    <div class="stat-item">
+                <div class="aboutStats">
+                    <div class="statItem">
                         <i class="fas fa-water"></i>
                         <h3>Pessoas Cadastradas</h3>
                         <p>Mais de 1000 pessoas</p>
                     </div>
-                    <div class="stat-item">
+                    <div class="statItem">
                         <i class="fas fa-hands-helping"></i>
                         <h3>Voluntários Ativos</h3>
                         <p>+500 voluntários engajados em nossas ações</p>
                     </div>
-                    <div class="stat-item">
+                    <div class="statItem">
                         <i class="fas fa-seedling"></i>
                         <h3>Projetos Realizados</h3>
                         <p>Mais de 50 projetos de cuidados</p>

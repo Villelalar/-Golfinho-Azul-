@@ -16,30 +16,30 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <div class="login-page">
-        <div class="login-container">
-            <div class="logo-container">
+    <div class="loginPage">
+        <div class="loginContainer">
+            <div class="logoContainer">
                 <img src="{{ url_for('static', filename='features/logoBlue.png') }}" alt="Logo" class="logo">
             </div>
-            <div class="login-box">
+            <div class="loginBox">
                 <h2>Realizar Login</h2>
                 <form method="POST" action="{{ url_for('login') }}">
-                    <div class="input-group">
+                    <div class="inputGroup">
                         <input type="text" id="identifier" name="identifier" required aria-label="Email" title="Email ou Usuário">
                         <label for="identifier">Email ou Usuário</label>
                     </div>
-                    <div class="input-group">
+                    <div class="inputGroup">
                         <input type="password" id="password" name="password" required aria-label="Senha" title="Digite sua senha">
                         <label for="password">Senha</label>
                     </div>
-                    <button type="submit" class="login-btn">Entrar</button>
+                    <button type="submit" class="loginBtn">Entrar</button>
                 </form>
-                <div class="register-link">
+                <div class="registerLink">
                     <p>Não tem uma conta? 
                         <a href="{{ url_for('register') }}">Registre-se!</a>
                     </p>
                 </div>
-                <div class="register-link">
+                <div class="registerLink">
                     <p><a href="{{ url_for('index') }}">Voltar para Página Inicial</a></p>
                 </div>
             </div>
@@ -48,7 +48,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('.input-group input');
+            const inputs = document.querySelectorAll('.inputGroup input');
             inputs.forEach(input => {
                 input.addEventListener('input', function() {
                     if (this.value) {

@@ -16,8 +16,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Ocean Header Styles */
-.ocean-header {
+.oceanoHeader {
     background-color: #008bb4;
     padding: 0;
     position: fixed;
@@ -27,7 +26,7 @@ body {
     z-index: 1000;
 }
 
-.nav-container {
+.navegacaoContainer {
     height: 100%;
     max-width: 1800px;
     margin: 0 auto;
@@ -37,12 +36,12 @@ body {
     align-items: center;
 }
 
-.logo-container {
+.logoContainer {
     height: 100%;
     padding: 15px;
 }
 
-.logo-container img {
+.logoContainer img {
     height: 170px;
     width: auto;
     max-width: none;
@@ -50,7 +49,7 @@ body {
     margin-left: 30px;
 }
 
-.nav-buttons {
+.navegacaoButton {
     display: flex;
     gap: 2rem;
     margin-left: auto;
@@ -58,7 +57,7 @@ body {
     margin-top: 20px;
 }
 
-.nav-btn {
+.navegacaoBtn {
     color: white;
     text-decoration: none;
     padding: 0.8rem 1.5rem;
@@ -72,13 +71,12 @@ body {
     font-weight: 500;
 }
 
-.nav-btn:hover {
+.navegacaoBtn:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
 }
 
-/* Slider Styles */
-.slider-container {
+.sliderContainer {
     margin-top: 200px;
     position: relative;
     width: 100%;
@@ -106,7 +104,7 @@ body {
     object-fit: cover;
 }
 
-.slide-caption {
+.slideCaption {
     position: absolute;
     bottom: 20%;
     left: 10%;
@@ -115,17 +113,17 @@ body {
     max-width: 800px;
 }
 
-.slide-caption h2 {
+.slideCaption h2 {
     font-size: 3rem;
     margin-bottom: 1rem;
     color: white;
 }
 
-.slide-caption p {
+.slideCaption p {
     font-size: 1.5rem;
 }
 
-.slider-btn {
+.sliderBtn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -139,7 +137,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.slider-btn:hover {
+.sliderBtn:hover {
     background: rgba(255, 255, 255, 0.5);
 }
 
@@ -151,7 +149,7 @@ body {
     right: 20px;
 }
 
-.slider-dots {
+.sliderDots {
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -179,51 +177,50 @@ body {
     to { opacity: 1 }
 }
 
-/* About Us Section */
-.about-us {
+.about {
     padding: 80px 20px;
     background: linear-gradient(180deg, #f0f8ff 0%, #e6f3ff 100%);
 }
 
-.about-container {
+.aboutContainer {
     max-width: 1200px;
     margin: 0 auto;
 }
 
-.about-us h2 {
+.about h2 {
     font-size: 2.5rem;
     color: #006994;
     text-align: center;
     margin-bottom: 40px;
 }
 
-.about-content {
+.aboutContent {
     display: flex;
     flex-direction: column;
     gap: 40px;
 }
 
-.about-text {
+.aboutText {
     text-align: center;
     max-width: 800px;
     margin: 0 auto;
 }
 
-.about-text p {
+.aboutText p {
     font-size: 1.2rem;
     line-height: 1.6;
     color: #444;
     margin-bottom: 20px;
 }
 
-.about-stats {
+.aboutStats {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
     gap: 30px;
 }
 
-.stat-item {
+.statItem {
     flex: 1;
     min-width: 250px;
     text-align: center;
@@ -234,45 +231,44 @@ body {
     transition: transform 0.3s ease;
 }
 
-.stat-item:hover {
+.statItem:hover {
     transform: translateY(-5px);
 }
 
-.stat-item i {
+.statItem i {
     font-size: 2.5rem;
     color: #0099cc;
     margin-bottom: 15px;
 }
 
-.stat-item h3 {
+.statItem h3 {
     font-size: 1.5rem;
     color: #006994;
     margin-bottom: 10px;
 }
 
-.stat-item p {
+.statItem p {
     color: #666;
     line-height: 1.4;
 }
 
 @media screen and (max-width: 768px) {
-    .about-stats {
+    .aboutStats {
         flex-direction: column;
         align-items: center;
     }
 
-    .stat-item {
+    .statItem {
         width: 100%;
         max-width: 350px;
     }
 
-    .about-text p {
+    .aboutText p {
         font-size: 1.1rem;
     }
 }
 
-/* Action buttons styles */
-.edit-btn, .save-btn, .cancel-btn {
+.editBtn, .saveBtn, .cancelBtn {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -280,36 +276,36 @@ body {
     font-size: 14px;
 }
 
-.button-spacer {
+.buttonSpacer {
     display: inline-block;
     width: 12px;
 }
 
-.edit-btn {
+.editBtn {
     background-color: #4CAF50;
     color: white;
 }
 
-.save-btn {
+.saveBtn {
     background-color: #2196F3;
     color: white;
 }
 
-.cancel-btn {
+.cancelBtn {
     background-color: #f44336;
     color: white;
 }
 
-.edit-btn:hover {
-    background-color: #45a049; /* Darker green */
+.editBtn:hover {
+    background-color: #45a049; 
 }
 
-.save-btn:hover {
-    background-color: #1976D2; /* Darker blue */
+.saveBtn:hover {
+    background-color: #1976D2; 
 }
 
-.cancel-btn:hover {
-    background-color: #d32f2f; /* Darker red */
+.cancelBtn:hover {
+    background-color: #d32f2f; 
 }
 
 h1, h2 {
@@ -318,8 +314,7 @@ h1, h2 {
     color: #333;
 }
 
-/* Estilos para os itens da lista de tabelas */
-.post-item {
+.postItem {
     border: 1px solid #ddd;
     padding: 15px;
     margin: 10px;
@@ -332,13 +327,13 @@ h1, h2 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.post-item img {
+.postItem img {
     width: 100%;
     max-width: 500px;
     height: auto;
 }
 
-.post-item a {
+.postItem a {
     display: inline-block;
     margin-top: 10px;
     background-color: #007BFF;
@@ -348,11 +343,11 @@ h1, h2 {
     border-radius: 5px;
 }
 
-.post-item a:hover {
+.postItem a:hover {
     background-color: #0056b3;
 }
 
-.posts-table {
+.postsTable {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -362,19 +357,19 @@ h1, h2 {
     margin: 0 auto;
 }
 
-/* Media Queries */
+
 @media screen and (max-width: 768px) {
     h1 {
         font-size: 24px;
         padding: 0 15px;
     }
 
-    .post-item {
+    .postItem {
         margin: 8px;
         padding: 12px;
     }
 
-    .users-table {
+    .usersTable {
         width: 95%;
         font-size: 14px;
     }
@@ -410,8 +405,7 @@ h1, h2 {
     }
 }
 
-/* Estilos para a tabela de usuários */
-.users-table {
+.usersTable {
     width: 80%;
     margin: 20px auto;
     border-collapse: collapse;
@@ -420,18 +414,17 @@ h1, h2 {
     border-radius: 8px;
 }
 
-.users-table th, .users-table td {
+.usersTable th, .usersTable td {
     padding: 12px;
     text-align: center;
     border: 1px solid #ddd;
 }
 
-.users-table th {
+.usersTable th {
     background-color: #4CAF50;
     color: white;
 }
 
-/* Estilo para a linha de destaque "PESQUISA" */
 #dataTable th[colspan] {
     text-align: center;
     font-size: 1.2em;
@@ -439,12 +432,12 @@ h1, h2 {
     background-color: darkslategray;
 }
 
-/* Estilo para a tabela de pesquisa */
+
 #searchResults {
     margin-top: 20px;
 }
 
-/* Estilos para formulários */
+
 form {
     text-align: center;
     margin: 20px;
@@ -468,7 +461,7 @@ button:hover {
     background-color: #45a049;
 }
 
-/* Estilos para popups */
+
 .popup {
     position: fixed;
     top: 20px;
@@ -481,8 +474,8 @@ button:hover {
     z-index: 1000;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
-    background-color: #007BFF; /* Blue background */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    background-color: #007BFF; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .popup.error {
@@ -492,7 +485,7 @@ button:hover {
     background-color: green;
 }
 
-/* Login Page Styles */
+
 body, html {
     margin: 0;
     padding: 0;
@@ -501,7 +494,7 @@ body, html {
     font-family: 'Poppins', sans-serif;
 }
 
-.login-container {
+.loginContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -519,18 +512,18 @@ body, html {
     overflow: hidden;
 }
 
-.login-container form {
+.loginContainer form {
     position: relative;
     z-index: 2;
 }
 
-.login-container .logo-container {
+.loginContainer .logoContainer {
     position: relative;
     z-index: 2;
 }
 
-/* Overlay effect */
-.background-overlay {
+
+.backgroundOverlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -542,11 +535,11 @@ body, html {
     z-index: 1;
 }
 
-.login-container form:hover ~ .background-overlay {
+.loginContainer form:hover ~ .backgroundOverlay {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.login-container form {
+.loginContainer form {
     background: none;
     padding: 0;
     border-radius: 0;
@@ -562,7 +555,7 @@ body, html {
     margin: 0;
 }
 
-.login-page {
+.loginPage {
     min-height: 100vh;
     background: linear-gradient(-45deg,
         #001F3F, 
@@ -591,7 +584,7 @@ body, html {
     100% { background-position: 0% 50%; }
 }
 
-.login-page::before {
+.loginPage::before {
     content: '';
     position: absolute;
     top: 0;
@@ -602,7 +595,7 @@ body, html {
     z-index: 1;
 }
 
-.login-container {
+.loginContainer {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
@@ -617,11 +610,11 @@ body, html {
     transition: all 0.3s ease;
 
 }
-.login-container:hover{
+.loginContainer:hover{
     transform: translateY(-10px);
 }
 
-.logo-container {
+.logoContainer {
     text-align: center;
     height: 100px;
     margin-bottom: 1.5rem;
@@ -635,11 +628,11 @@ body, html {
     margin-bottom: 1rem;
 }
 
-.login-box {
+.loginBox {
     padding: 1rem 0;
 }
 
-.login-box h2 {
+.loginBox h2 {
     color: #333;
     text-align: center;
     margin-bottom: 35px;
@@ -648,30 +641,47 @@ body, html {
     font-family: 'Poppins', sans-serif;
 }
 
-.input-group {
+.inputGroup {
 position: relative;
 margin-bottom: 25px;
 }
 
-.input-group input[type="radio"] {
+.inputGroup label {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    color: #999;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.inputGroup input:focus ~ label,
+.inputGroup input.filled ~ label {
+    top: -20px;
+    font-size: 14px;
+    color: #007bff;
+}
+
+.inputGroup input[type="radio"] {
 margin-right: 8px;
 }
 
-.input-group label[for="client"],
-.input-group label[for="admin"] {
+.inputGroup label[for="client"],
+.inputGroup label[for="admin"] {
 margin-right: 20px;
 color: #333;
 font-size: 14px;
 }
 
-.role-selection {
+.roleSelection {
 display: flex;
 justify-content: center;
 margin-bottom: 20px;
 gap: 20px;
 }
 
-.input-group input {
+.inputGroup input {
 width: 100%;
 padding: 12px 0;
 font-size: 16px;
@@ -692,11 +702,56 @@ transition: border-color 0.3s ease;
     transition: border-color 0.3s ease;
 }
 
-.input-group input:focus {
+.inputGroup input:focus {
     border-color: #007bff;
 }
 
-.ocean-body {
+.loginBtn {
+    width: 100%;
+    padding: 12px 0;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(2, 136, 209, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.loginBtn:hover {
+    background: linear-gradient(135deg, #039be5 0%, #0288d1 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(2, 136, 209, 0.4);
+}
+
+.registerLink {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.registerLink p {
+    color: #555;
+    font-size: 14px;
+}
+
+.registerLink a {
+    color: #0288d1;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.registerLink a:hover {
+    color: #01579b;
+    text-decoration: underline;
+}
+
+.oceanBody {
     margin: 0;
     padding: 0;
     background: linear-gradient(180deg, #b3e0ff 0%, #4fc3f7 100%);
@@ -705,7 +760,7 @@ transition: border-color 0.3s ease;
     position: relative;
 }
 
-.database-container {
+.databaseContainer {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
@@ -716,16 +771,13 @@ transition: border-color 0.3s ease;
     z-index: 10;
 }
 
-.database-container.full-page {
+.databaseContainer.fullPage {
     width: 100%;
     box-sizing: border-box;
 }
 
-/* Ocean Theme - No Animations */
 
-/* Ocean Theme - Clean Background */
-
-.database-title {
+.databaseTitle {
     text-align: center;
     margin-bottom: 3rem;
     color: #00546B;
@@ -736,7 +788,7 @@ transition: border-color 0.3s ease;
     z-index: 10;
 }
 
-.tables-grid {
+.tablesGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
@@ -745,7 +797,7 @@ transition: border-color 0.3s ease;
     z-index: 10;
 }
 
-.table-card {
+.tableCard {
     background-color: rgba(255, 255, 255, 0.85);
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 96, 100, 0.15);
@@ -761,7 +813,7 @@ transition: border-color 0.3s ease;
     overflow: hidden;
 }
 
-.table-card::before {
+.tableCard::before {
     content: '';
     position: absolute;
     top: -50%;
@@ -773,16 +825,16 @@ transition: border-color 0.3s ease;
     transition: opacity 0.5s ease;
 }
 
-.table-card:hover {
+.tableCard:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 30px rgba(0, 96, 100, 0.25);
 }
 
-.table-card:hover::before {
+.tableCard:hover::before {
     opacity: 1;
 }
 
-.table-icon {
+.tableIcon {
     width: 100px;
     height: 100px;
     margin-bottom: 1.5rem;
@@ -790,11 +842,11 @@ transition: border-color 0.3s ease;
     transition: transform 0.3s ease;
 }
 
-.table-card:hover .table-icon {
+.tableCard:hover .tableIcon {
     transform: scale(1.1);
 }
 
-.table-name {
+.tableName {
     font-size: 1.25rem;
     color: #00546B;
     margin-bottom: 1.8rem;
@@ -802,7 +854,7 @@ transition: border-color 0.3s ease;
     font-weight: 500;
 }
 
-.view-table-btn {
+.viewTableBtn {
     background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
     color: white;
     border: none;
@@ -818,7 +870,7 @@ transition: border-color 0.3s ease;
     overflow: hidden;
 }
 
-.view-table-btn::after {
+.viewTableBtn::after {
     content: '';
     position: absolute;
     top: 0;
@@ -829,17 +881,17 @@ transition: border-color 0.3s ease;
     transition: 0.5s;
 }
 
-.view-table-btn:hover {
+.viewTableBtn:hover {
     background: linear-gradient(135deg, #039be5 0%, #0288d1 100%);
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(2, 136, 209, 0.4);
 }
 
-.view-table-btn:hover::after {
+.viewTableBtn:hover::after {
     left: 100%;
 }
 
-.logout-container {
+.logoutContainer {
     display: flex;
     justify-content: center;
     margin-top: 3rem;
@@ -847,7 +899,7 @@ transition: border-color 0.3s ease;
     z-index: 10;
 }
 
-.logout-btn {
+.logoutBtn {
     background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
     color: white;
     border: none;
@@ -862,7 +914,7 @@ transition: border-color 0.3s ease;
     overflow: hidden;
 }  
 
-.logout-btn::after {
+.logoutBtn::after {
     content: '';
     position: absolute;
     top: 0;
@@ -873,17 +925,17 @@ transition: border-color 0.3s ease;
     transition: 0.5s;
 }
 
-.logout-btn:hover {
+.logoutBtn:hover {
     background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(211, 47, 47, 0.4);
 }
 
-.logout-btn:hover::after {
+.logoutBtn:hover::after {
     left: 100%;
 }
 
-.input-group label {
+.inputGroup label {
     position: absolute;
     top: 12px;
     left: 0;
@@ -894,14 +946,14 @@ transition: border-color 0.3s ease;
     font-family: 'Poppins', sans-serif;
 }
 
-.input-group input:focus ~ label,
-.input-group input.filled ~ label {
+.inputGroup input:focus ~ label,
+.inputGroup input.filled ~ label {
     top: -20px;
     font-size: 0.875rem;
     color: #3498db;
 }
 
-.login-btn {
+.loginBtn {
     width: 100%;
     padding: 12px;
     background-color: #007bff;
@@ -920,50 +972,49 @@ transition: border-color 0.3s ease;
     text-align: center;
 }
 
-.button-group {
+.buttonGroup {
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin-top: 30px;
 }
 
-.client-btn {
+.clientBtn {
     background-color: #28a745;
 }
 
-.client-btn:hover {
+.clientBtn:hover {
     background-color: #218838;
     transform: translateY(-2px);
 }
 
-.login-btn:hover {
+.loginBtn:hover {
     background-color: #0056b3;
 }
 
-.register-link {
+.registerLink {
     text-align: center;
     margin-top: 20px;
     font-family: 'Poppins', sans-serif;
 }
 
-.register-link p {
+.registerLink p {
     color: #666;
     font-size: 14px;
 }
 
-.register-link a {
+.registerLink a {
     color: #3498db;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
-.register-link a:hover {
+.registerLink a:hover {
     color: #2980b9;
 }
 
-/* Button */
-.login-container form button {
+.loginContainer form button {
     padding: 6px;
     background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
@@ -979,13 +1030,12 @@ transition: border-color 0.3s ease;
     height: 35px;
 }
 
-.login-container form button:hover {
+.loginContainer form button:hover {
     background: linear-gradient(135deg, #2980b9, #2472a4);
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(52,152,219,0.4);
 }
 
-/* Animations */
 @keyframes formAppear {
     from {
         opacity: 0;
@@ -997,9 +1047,8 @@ transition: border-color 0.3s ease;
     }
 }
 
-/* Responsive adjustments */
 @media screen and (max-width: 480px) {
-    .login-container {
+    .loginContainer {
         padding: 10px;
     }
 
@@ -1007,19 +1056,19 @@ transition: border-color 0.3s ease;
         max-width: 200px;
     }
 
-    .login-container form {
+    .loginContainer form {
         padding: 20px;
     }
 }
 
-.post-item {
+.postItem {
     margin: 2px 0;
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-.post-item label {
+.postItem.label {
     font-size: 12px;
     color: #666;
     margin-bottom: 1px;
@@ -1033,12 +1082,12 @@ transition: border-color 0.3s ease;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
-.login-container .post-item {
+.loginContainer.postItem {
     margin: 10px 0;
     width: 100%;
 }
 
-.login-container .post-item label {
+.loginContainer.postItem.label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
@@ -1047,7 +1096,7 @@ transition: border-color 0.3s ease;
     font-size: 0.95em;
 }
 
-.login-container .post-item input {
+.loginContainer.postItem.input {
     width: 100%;
     padding: 12px;
     border: 2px solid #e0e0e0;
@@ -1057,12 +1106,12 @@ transition: border-color 0.3s ease;
     outline: none;
 }
 
-.login-container .post-item input:focus {
+.loginContainer.postItem.input:focus {
     border-color: #3498db;
     box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
 }
 
-.login-container .post-item button {
+.loginContainer.postItem.button {
     width: 100%;
     padding: 12px;
     background: #3498db;
@@ -1083,7 +1132,7 @@ transition: border-color 0.3s ease;
     box-shadow: 0 5px 15px rgba(52,152,219,0.3);
 }
 
-.login-container .post-item a {
+.loginContainer.postItem a {
     display: inline-block;
     margin-top: 15px;
     color: #7f8c8d;
@@ -1092,36 +1141,34 @@ transition: border-color 0.3s ease;
     transition: color 0.3s ease;
 }
 
-.login-container .post-item a:hover {
+.loginContainer.postItem a:hover {
     color: #3498db;
 }
 
-/* Responsive styles */
 @media screen and (max-width: 480px) {
-    .login-container {
+    .loginContainer {
         padding: 15px;
     }
 
-    .login-container h1 {
+    .loginContainer h1 {
         font-size: 2em;
         margin-bottom: 20px;
     }
 
-    .login-container form {
+    .loginContainer form {
         padding: 20px;
     }
 
-    .login-container .post-item {
+    .loginContainer .postItem {
         margin: 15px 0;
     }
 
-    .login-container .post-item input,
-    .login-container .post-item button {
+    .loginContainer .postItem input,
+    .loginContainer .postItem button {
         padding: 10px;
     }
 }
 
-/* Popup styles */
 .popup {
     position: fixed;
     top: 20px;
@@ -1144,27 +1191,26 @@ transition: border-color 0.3s ease;
     background-color: green;
 }
 
-/* Logout Button */
-.logout-button-container {
+.logoutButtonContainer {
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    margin: 20px; /* Add some margin for spacing */
+    justify-content: center;
+    align-items: center; 
+    margin: 20px; 
 }
 
-.logout-button {
+.logoutButton {
     display: inline-block;
-    padding: 10px 20px; /* Padding for the button */
-    background-color: #dc3545; /* Red color for logout */
-    color: white; /* White text */
-    text-decoration: none; /* Remove underline */
-    border-radius: 25px; /* Rounded corners */
-    font-weight: bold; /* Bold text */
-    transition: background-color 0.3s ease; /* Smooth hover effect */
-    border: none; /* Remove default border */
-    cursor: pointer; /* Pointer cursor on hover */
+    padding: 10px 20px; 
+    background-color: #dc3545; 
+    color: white; 
+    text-decoration: none; 
+    border-radius: 25px; 
+    font-weight: bold; 
+    transition: background-color 0.3s ease; 
+    border: none;
+    cursor: pointer; 
 }
 
-.logout-button:hover {
-    background-color: #c82333; /* Darker red on hover */
+.logoutButton:hover {
+    background-color: #c82333; 
 }
