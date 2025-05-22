@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 import pymysql
+import time
 
 app = Flask(__name__)
 app.secret_key = 'institutooceanoazulXunilasalle'
@@ -85,11 +86,17 @@ def index():
 def login():
     # Check if user is already logged in
     if current_user.is_authenticated:
-        flash('Você já está logado!', 'info')
-        if current_user.get_role() == 'admin':
-            return redirect(url_for('tables'))
-        else:  # client
-            return redirect(url_for('consultas_cliente'))
+        # If coming from acesso_negado, we need to clear the session
+        if 'from_acesso_negado' in request.args:
+            logout_user()
+            session.clear()
+            flash('Acesso negado. Por favor, faça login novamente.', 'error')
+        else:
+            flash('Você já está logado!', 'info')
+            if current_user.get_role() == 'admin':
+                return redirect(url_for('tables'))
+            else:  # client
+                return redirect(url_for('consultas_cliente'))
 
 
 
@@ -221,12 +228,20 @@ def register():
 
 
 # ------------------- R O T A S &&& P A G I N A S -----------------------------------------------
+
+# Rota para acesso negado
+@app.route('/acesso_negado')
+def acesso_negado():
+    return render_template('acesso_negado.html')
+
+# Rota para aprovar admins
 # Rota para aprovar admins
 @app.route('/admin/tables/aprovar_admins', methods=['POST'])
 @login_required
 def aprovar_admins():
     if current_user.role != 'admin':
         flash('Acesso negado - apenas administradores!', 'error')
+        time.sleep(2)
         return redirect(url_for('login'))
 
     try:
@@ -276,8 +291,7 @@ def logout():
 @login_required
 def tables():
     if current_user.role != 'admin':
-        flash('Accesso negado.')
-        return redirect(url_for('login'))
+        return redirect(url_for('acesso_negado'))
     
     tables = get_tables('defaultdb')
     return render_template('sistema.html', tables=tables)
@@ -287,8 +301,7 @@ def tables():
 @login_required
 def view_table(table_name):
     if current_user.role != 'admin':
-        flash('Accesso negado.')
-        return redirect(url_for('login'))
+        return redirect(url_for('acesso_negado'))
     
     # para rota "aprovar admins" é necessário alterar a página!
     try:
