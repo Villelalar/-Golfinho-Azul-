@@ -63,7 +63,7 @@
         }
     </style>
 </head>
-<body class="ocean-body">
+<body class="oceanBody">
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
@@ -72,14 +72,14 @@
     {% endif %}
 {% endwith %}
     
-    <div class="database-container full-page">
-        <h1 class="database-title">Tabelas Disponíveis no Banco de Dados</h1>
+    <div class="databaseContainer fullPage">
+        <h1 class="databaseTitle">Tabelas Disponíveis no Banco de Dados</h1>
         
-        <div class="tables-grid">
+        <div class="tablesGrid">
             {% for table in tables %}
-                <div class="table-card">
+                <div class="tableCard">
                     {% if table == 'aprovar_admins' %}
-                        <div class="table-icon admin-icon">
+                        <div class="tableIcon admin-icon">
                             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="50" cy="35" r="25" fill="#999"/>
                                 <path d="M50 45 L50 45 Q25 45 25 75 L75 75 Q75 45 50 45" fill="#999"/>
@@ -88,7 +88,7 @@
                             </svg>
                         </div>
                     {% elif table == 'consultas' %}
-                        <div class="table-icon document-icon">
+                        <div class="tableIcon document-icon">
                             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M30 15 L70 15 L85 30 L85 85 L30 85 Z" fill="#E0E0E0"/>
                                 <path d="M70 15 L70 30 L85 30" fill="#BDBDBD"/>
@@ -99,7 +99,7 @@
                             </svg>
                         </div>
                     {% elif table == 'imagens_homepag' %}
-                        <div class="table-icon image-icon">
+                        <div class="tableIcon image-icon">
                             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="20" y="20" width="60" height="60" rx="5" fill="#E0E0E0"/>
                                 <circle cx="40" cy="40" r="8" fill="#555"/>
@@ -107,7 +107,7 @@
                             </svg>
                         </div>
                     {% elif table == 'instagram_posts' %}
-                        <div class="table-icon instagram-icon">
+                        <div class="tableIcon instagram-icon">
                             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
                                     <linearGradient id="instagram-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -124,21 +124,21 @@
                             </svg>
                         </div>
                     {% elif table == 'users' %}
-                        <div class="table-icon user-icon">
+                        <div class="tableIcon user-icon">
                             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="50" cy="40" r="20" fill="#999"/>
                                 <path d="M50 60 L50 60 Q20 60 20 90 L80 90 Q80 60 50 60" fill="#999"/>
                             </svg>
                         </div>
                     {% else %}
-                        <div class="table-icon default-icon">
+                        <div class="tableIcon default-icon">
                             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="25" y="25" width="50" height="50" fill="#999"/>
                             </svg>
                         </div>
                     {% endif %}
                     
-                    <h2 class="table-name">
+                    <h2 class="tableName">
                         {% if table == 'aprovar_admins' %}
                             aprovarAdmins
                         {% elif table == 'consultas' %}
@@ -154,13 +154,13 @@
                         {% endif %}
                     </h2>
                     
-                    <a href="{{ url_for('view_table', table_name=table) }}" class="view-table-btn">Ver Tabela</a>
+                    <a href="{{ url_for('view_table', table_name=table) }}" class="viewTableBtn">Ver Tabela</a>
                 </div>
             {% endfor %}
         </div>
         
-        <div class="logout-container">
-            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        <div class="logoutContainer">
+            <a href="{{ url_for('logout') }}" class="logoutBtn">Logout</a>
         </div>
     </div>
     <script>

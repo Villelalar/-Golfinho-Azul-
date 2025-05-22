@@ -71,15 +71,15 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <div class="login-page">
-        <div class="login-container">
-            <div class="logo-container">
+    <div class="loginPage">
+        <div class="loginContainer">
+            <div class="logoContainer">
                 <img src="{{ url_for('static', filename='features/logoBlue.png') }}" alt="Logo" class="logo">
             </div>
-            <div class="login-box">
+            <div class="loginBox">
                 <h2>Criar nova conta</h2>
                 <form method="POST" action="{{ url_for('register') }}">
-                    <div class="role-selection">
+                    <div class="roleSelection">
                         <div>
                             <input type="radio" id="client" name="role" value="client" checked>
                             <label for="client">Cliente</label>
@@ -90,43 +90,43 @@
                         </div>
                     </div>
                     
-                    <div class="input-group">
+                    <div class="inputGroup">
                         <input type="text" id="username" name="username" required class="filled">
                         <label for="username">Nome de usuário</label>
                     </div>
                     
-                    <div class="input-group">
+                    <div class="inputGroup">
                         <input type="email" id="email" name="email" required class="filled">
                         <label for="email">Email</label>
                     </div>
                     
-                    <div class="input-group">
+                    <div class="inputGroup">
                         <input type="text" id="name" name="name" required class="filled">
                         <label for="name">Nome completo</label>
                     </div>
                     
-                    <div class="input-group">
+                    <div class="inputGroup">
                         <input type="tel" id="phone" name="phone" required class="filled">
                         <label for="phone">Telefone</label>
                     </div>
                     
-                    <div class="input-group">
+                    <div class="inputGroup">
                         <input type="password" id="password" name="password" required class="filled">
                         <label for="password">Senha</label>
                     </div>
                     
-                    <button type="submit" class="login-btn">REGISTRAR</button>
-                    <div class="register-link">
+                    <button type="submit" class="loginBtn">REGISTRAR</button>
+                    <div class="registerLink">
                         <p>Você já tem uma conta? <a href="{{ url_for('login') }}">Login</a></p>
                     </div>
-                    <div class="register-link">
+                    <div class="registerLink">
                         <p><a href="{{ url_for('index') }}">Voltar para Página Inicial</a></p>
                     </div>
                 </form>
 
                 <script>
                 document.addEventListener('DOMContentLoaded', function() {
-                    const inputs = document.querySelectorAll('.input-group input');
+                    const inputs = document.querySelectorAll('.inputGroup input');
                     inputs.forEach(input => {
                         // Check initial state
                         if (input.value) {
