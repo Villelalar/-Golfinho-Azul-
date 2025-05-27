@@ -369,7 +369,7 @@ h1, h2 {
         padding: 12px;
     }
 
-    .usersTable {
+    .defaultTable {
         width: 95%;
         font-size: 14px;
     }
@@ -405,7 +405,7 @@ h1, h2 {
     }
 }
 
-.usersTable {
+.defaultTable {
     width: 80%;
     margin: 20px auto;
     border-collapse: collapse;
@@ -414,13 +414,13 @@ h1, h2 {
     border-radius: 8px;
 }
 
-.usersTable th, .usersTable td {
+.defaultTable th, .defaultTable td {
     padding: 12px;
     text-align: center;
     border: 1px solid #ddd;
 }
 
-.usersTable th {
+.defaultTable th {
     background-color: #4CAF50;
     color: white;
 }

@@ -28,7 +28,7 @@
     <!-- Div para envolver a tabela de pesquisa (inicialmente invisível) -->
     <div id="searchResults" style="display: none;">
         <h2>Resultados da Pesquisa</h2>
-        <table id="searchTable" class="users-table">
+        <table id="searchTable" class="defaultTable">
             <thead>
                 <tr>
                     {% for column in data[0].keys() %}
@@ -48,7 +48,7 @@
     <!-- Tabela de dados original -->
     <h2>Dados da Tabela</h2>
     <div class="table-container">
-        <table id="dataTable" class="users-table">
+        <table id="dataTable" class="defaultTable">
             <thead>
                 <tr>
                     {% if data[0].message %}
