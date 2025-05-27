@@ -30,7 +30,7 @@ def conectar_banco(database_name='defaultdb'):
 # modelo de usuário
 class User(UserMixin):
     def __init__(self, id, email, name, phone, role):
-        self.id = id
+        self.cpf = id
         self.email = email
         self.name = name
         self.phone = phone
@@ -41,18 +41,18 @@ class User(UserMixin):
         return self._authenticated
 
     def get_id(self):
-        return str(self.id)
+        return str(self.cpf)
 
     def get_role(self):
         return self.role
 
     def __repr__(self):
-        return f"User(id={self.id}, email={self.email}, role={self.role}, authenticated={self._authenticated})"
+        return f"User(CPF={self.cpf}, email={self.email}, role={self.role}, authenticated={self._authenticated})"
 
 # loader para usuários
 @autenticador.user_loader
 def load_user(user_id):
-    print(f"Usuário carregado com ID: {user_id}")
+    print(f"Usuário carregado com CPF: {user_id}")
     try:
         connection = conectar_banco()
         with connection.cursor() as cursor:
@@ -81,10 +81,11 @@ def load_user(user_id):
 def index():
     return render_template('index.html')
 
+
 # LOGIN UNIFICADO
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Check if user is already logged in
+    # Checa se ja esta logado
     if current_user.is_authenticated:
         # If coming from acesso_negado, we need to clear the session
         if 'from_acesso_negado' in request.args:
@@ -99,27 +100,26 @@ def login():
                 return redirect(url_for('consultas_cliente'))
 
 
-
     if request.method == 'POST':
         identifier = request.form.get('identifier')
         password = request.form.get('password')
-        print(f"Login attempt - Identifier: {identifier}")
-        print(f"Password entered: {password}")  # Debug - will show in logs
+        print(f"Tentando login - Identifier: {identifier}")
+        print(f"Senha inserida: {password}")
         
         try:
             connection = conectar_banco()
             with connection.cursor() as cursor:
-                # Try to find user by email first, then by username
+                # email, depois CPF
                 print(f"Procurando por usuário... Email: {identifier}")
                 cursor.execute("SELECT * FROM users WHERE email = %s", (identifier,))
                 user_data = cursor.fetchone()
                 if not user_data:
-                    print(f"Procurando por usuário... Username: {identifier}")
-                    cursor.execute("SELECT * FROM users WHERE username = %s", (identifier,))
+                    print(f"Procurando por CPF... CPF: {identifier}")
+                    cursor.execute("SELECT * FROM users WHERE id = %s", (identifier,))
                     user_data = cursor.fetchone()
 
             if user_data:
-                print(f"Found user: {user_data}")
+                print(f"Usuario encontrado: {user_data}")
                 if check_password_hash(user_data['password_hash'], password):
                     print("Senha correta!")
                     user = User(
@@ -170,7 +170,7 @@ def register():
         name = request.form.get('name')
         phone = request.form.get('phone')
         role = request.form.get('role')
-        username = request.form.get('username')  # só para admins!
+        id = request.form.get('id')  # alterado para CPF como ID universal
         
         try:
             connection = conectar_banco()
@@ -180,9 +180,9 @@ def register():
                     flash('Email já cadastrado.', 'error')
                     return render_template('register.html')
                 
-                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+                cursor.execute("SELECT * FROM users WHERE id = %s", (id,))
                 if cursor.fetchone():
-                    flash('Nome de usuário já cadastrado.', 'error')
+                    flash('CPF já cadastrado.', 'error')
                     return render_template('register.html')
 
                 password_hash = generate_password_hash(password)
@@ -190,32 +190,32 @@ def register():
                 if role == 'client':
                     # clientes adicionados automaticamente
                     cursor.execute(
-                        "INSERT INTO users (email, username, password_hash, name, phone, role) VALUES (%s, %s, %s, %s, %s, %s)",
-                        (email, username, password_hash, name, phone, 'client')
+                        "INSERT INTO users (id, email, password_hash, name, phone, role) VALUES (%s, %s, %s, %s, %s, %s)",
+                        (id, email, password_hash, name, phone, 'client')
                     )
                     flash('Cliente registrado com sucesso!', 'success')
                     return redirect(url_for('login'))
                 else:  # role == 'admin'
                     # Check if admin request already exists
                     cursor.execute(
-                        "SELECT id FROM aprovar_admins WHERE email = %s",
-                        (email,)
+                        "SELECT id FROM aprovar_admins WHERE id = %s",
+                        (id,)
                     )
                     existing_request = cursor.fetchone()
                     if existing_request:
-                        flash('Já existe uma solicitação de admin pendente para este email', 'warning')
+                        flash('Já existe uma solicitação de admin pendente para este CPF.', 'warning')
                         return redirect(url_for('login'))
                     cursor.execute(
-                        "SELECT id FROM users WHERE email = %s AND role = 'admin'",
-                        (email,)
+                        "SELECT id FROM users WHERE id = %s AND role = 'admin'",
+                        (id,)
                     )
                     existing_admin = cursor.fetchone()
                     if existing_admin:
                         flash('Este usuário já é um administrador.', 'warning')
                         return redirect(url_for('login'))
                     cursor.execute(
-                        "INSERT INTO aprovar_admins (email, username, password_hash, name, phone) VALUES (%s, %s, %s, %s, %s)",
-                        (email, username, password_hash, name, phone)
+                        "INSERT INTO aprovar_admins (id, email, password_hash, name, phone) VALUES (%s, %s, %s, %s, %s)",
+                        (id, email, password_hash, name, phone)
                     )
                     flash('Solicitação de admin enviada para aprovação!', 'info')
                 connection.commit()
@@ -258,8 +258,8 @@ def aprovar_admins():
                 
                 if admin_request:
                     cursor.execute(
-                        "INSERT INTO users (email, username, password_hash, name, phone, role) VALUES (%s, %s, %s, %s, %s, %s)",
-                        (admin_request['email'], admin_request['username'], 
+                        "INSERT INTO users (id, email, password_hash, name, phone, role) VALUES (%s, %s, %s, %s, %s, %s)",
+                        (admin_request['id'], admin_request['email'], 
                          admin_request['password_hash'], admin_request['name'],
                          admin_request['phone'], 'admin')
                     )

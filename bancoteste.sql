@@ -21,10 +21,10 @@ CREATE TABLE aprovar_admins (
 );
 
 -- Create users table with auto-incrementing ID and role
+-- APLICAR ESTE EDIT!!!
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id STRING(14) PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
-    username VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,  -- Store hashed passwords
     name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
@@ -65,9 +65,9 @@ CREATE TABLE imagens_homepage (
 );
 
 -- Insert test admin (senha é "senha")
-INSERT INTO users (email, username, password_hash, name, phone, role) VALUES (
-    'admin@admin.com',
+INSERT INTO users (id, email, password_hash, name, phone, role) VALUES (
     'admin',
+    'admin@admin.com',
     'pbkdf2:sha256:260000$hRu4PQsONrQM2xDx$a2e7481c6499f6ab643faec0b4dd1b77025f5c00e668ac014f949def08557e76',
     'Admin',
     NULL,
@@ -75,9 +75,9 @@ INSERT INTO users (email, username, password_hash, name, phone, role) VALUES (
 );
 
 -- Insert test client (senha é "senha")
-INSERT INTO users (email, username, password_hash, name, phone, role) VALUES (
+INSERT INTO users (id, email, password_hash, name, phone, role) VALUES (
+    'testclient'
     'test@client.com',
-    'client_test',
     'pbkdf2:sha256:260000$hRu4PQsONrQM2xDx$a2e7481c6499f6ab643faec0b4dd1b77025f5c00e668ac014f949def085557e76',
     'Cliente Teste',
     '(11) 99999-9999',
