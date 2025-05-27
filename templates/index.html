@@ -80,25 +80,15 @@
     <div class="sliderContainer">
         <div class="slider">
             <div class="slide fade">
-                <img src="{{ url_for('static', filename='features/ocean1.jpg') }}" alt="Ocean 1">
-                <div class="slideCaption">
-                    <h2>Cuidar das nossas próprias ondas</h2>
-                    <p>Juntos podemos fazer a diferença</p>
-                </div>
+                 <video class="video-slide" autoplay loop muted>
+          <source src="{{ url_for('static', filename='features/A.mp4') }}" type="video/mp4">
+        </video>
             </div>
             <div class="slide fade">
                 <img src="{{ url_for('static', filename='features/ocean2.jpg') }}" alt="Ocean 2">
-                <div class="slideCaption">
-                    <h2>Criar laços com o mundo</h2>
-                    <p>Faça parte da nossa caminhada</p>
-                </div>
             </div>
             <div class="slide fade">
                 <img src="{{ url_for('static', filename='features/ocean3.jpg') }}" alt="Ocean 3">
-                <div class="slideCaption">
-                    <h2>Ação Comunitária</h2>
-                    <p>Tratamento e cuidado</p>
-                </div>
             </div>
 
             <button class="sliderBtn prev" onclick="changeSlide(-1)" title="Slide anterior" aria-label="Slide anterior"><i class="fas fa-chevron-left"></i></button>
@@ -160,6 +150,46 @@
                 }, 3000);
             });
         });
+
+        let slideIndex = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+
+  function showSlides() {
+
+    slides.forEach(slide => {
+      slide.style.display = 'none';
+    });
+
+    dots.forEach(dot => {
+      dot.classList.remove('active');
+    });
+
+    slideIndex++;
+    if (slideIndex > slides.length) { slideIndex = 1; }
+
+    slides[slideIndex - 1].style.display = 'block';
+
+    dots[slideIndex - 1].classList.add('active');
+
+     if (videos[slideIndex - 1]) {
+    videos[slideIndex - 1].currentTime = 20;  // Set the video to 20 seconds
+  }
+  }
+  function changeSlide(n) {
+    slideIndex += n;
+    if (slideIndex > slides.length) { slideIndex = 1; }
+    if (slideIndex < 1) { slideIndex = slides.length; }
+    showSlides();
+  }
+  function currentSlide(n) {
+    slideIndex = n;
+    showSlides();
+  }
+
+ 
+  showSlides();
+  setInterval(showSlides, 500000);
     </script>
 </body>
 </html>
