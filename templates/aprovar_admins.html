@@ -6,11 +6,11 @@
     <title>Aprovar Administradores</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 <body>
-<div class="container">
+    <div class="container">
     <h1>Aprovar Administradores</h1>
-
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -20,12 +20,11 @@
     {% endwith %}
 
     <div class="table-container">
-        <table class="users-table">
+        <table class="defaultTable">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Email</th>
-                    <th>Username</th>
                     <th>Nome</th>
                     <th>Telefone</th>
                     <th>Ações</th>
@@ -43,7 +42,6 @@
                     <tr>
                         <td>{{ admin.id }}</td>
                         <td>{{ admin.email }}</td>
-                        <td>{{ admin.username }}</td>
                         <td>{{ admin.name }}</td>
                         <td>{{ admin.phone }}</td>
                         <td>
