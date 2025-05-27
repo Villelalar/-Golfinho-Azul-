@@ -165,12 +165,12 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        id = request.form.get('id')
         email = request.form.get('email')
         password = request.form.get('password')
         name = request.form.get('name')
         phone = request.form.get('phone')
-        role = request.form.get('role')
-        id = request.form.get('id')  # alterado para CPF como ID universal
+        role = request.form.get('role')  
         
         try:
             connection = conectar_banco()
@@ -196,7 +196,6 @@ def register():
                     flash('Cliente registrado com sucesso!', 'success')
                     return redirect(url_for('login'))
                 else:  # role == 'admin'
-                    # Check if admin request already exists
                     cursor.execute(
                         "SELECT id FROM aprovar_admins WHERE id = %s",
                         (id,)
@@ -316,12 +315,17 @@ def view_table(table_name):
         
         data = get_data(table_name)
         if not data:
-            data = []  # Return empty list instead of message
-        
+            connection = conectar_banco()
+            with connection.cursor() as cursor:
+                cursor.execute(f"SHOW COLUMNS FROM {table_name}")
+                columns = cursor.fetchall()  # Aqui pegamos as colunas da tabela
+                # Criar um dicionário falso com valores vazios (ou algum valor fictício)
+                fake = {column['Field']: '--' for column in columns} 
+                data = [fake]
         return render_template('view_table.html', table_name=table_name, data=data)
     except Exception as e:
         print(f"Error fetching data from table {table_name}: {e}")
-        flash('Erro ao carregar dados da tabela')
+        flash('Erro ao carregar dados da tabela.')
         return redirect(url_for('tables'))
 
 # rota interna que possibilita pesquisa de linha na tabela e retorna o resultado
