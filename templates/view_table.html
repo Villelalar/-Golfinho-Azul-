@@ -3,12 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizar Tabela: {{ table_name }}</title>
+    <title>Visualizar Tabela: {{ table_name }} - Golfinho Azul</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <link rel="icon" href="{{ url_for('static', filename='features/logo1.svg') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <header class="oceanoHeader">
+        <nav class="navegacaoContainer">
+            <div class="logoContainer">
+                    <a href="javascript:history.back()" class="logoBtn">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Voltar</span>
+                    </a>
+            </div>
+            <div class="navegacaoButton">
+                {% if current_user.is_authenticated %}
+                    <div class="profile-dropdown">
+                        <button class="profile-btn">
+                            <div class="profile-icon">
+                                <img src="{{ url_for('static', filename='features/icon.jpg') }}" alt="Profile">
+                            </div>
+                            <span>Meu Perfil</span>
+                        </button>
+                        <div class="dropdownContent">
+                            <a href="{% if current_user.get_role() == 'admin' %}{{ url_for('tables') }}{% else %}{{ url_for('consultas_cliente') }}{% endif %}">Dashboard</a>
+                            <a href="{{ url_for('alterar_dados') }}">Alterar Dados</a>
+                            <a href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="navegacaoBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="{{ url_for('register') }}" class="navegacaoBtn"><i class="fas fa-user-plus"></i> Registrar</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -17,7 +49,8 @@
         {% endif %}
     {% endwith %}
 
-    <h1>Visualizando Tabela: {{ table_name }}</h1>
+    <div class="container">
+    <h1>Visualizar Tabela: {{ table_name }}</h1>
 
     <!-- Formulário de busca -->
     <form id="searchForm">
@@ -91,10 +124,10 @@
         </table>
     </div>
 
-    {% if table_name != 'users' %}
     <!-- Formulário para adicionar dados -->
+    {% if table_name not in ['users', 'aprovar_admins'] %}
     <h2>Adicionar Novo Registro</h2>
-    <form id="addDataForm">
+    <form id="addDataForm" onsubmit="return validateAddForm()">
         {% for column in data[0].keys() %}
             {% if not column.lower().startswith('id') and column.lower() != 'created_at' %}
                 <input type="text" id="{{ column }}" name="{{ column }}" placeholder="{{ column }}" required>
@@ -104,10 +137,7 @@
     </form>
     {% endif %}
 
-{#logout button#}
-    <div class="logoutButtonContainer">
-        <a href="{{ url_for('logout') }}" class="logoutButton">Logout</a>
-    </div>
+
 
 </body>
 </html>

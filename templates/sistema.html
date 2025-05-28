@@ -3,75 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selecionar Tabela</title>
-    <link rel="icon" href="{{ url_for('static', filename='features/OIP.jpeg') }}">
+    <title>Sistema - Golfinho Azul</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='features/logo1.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        .popup {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 30px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .popup.success {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .popup.error {
-            background-color: #f44336;
-            color: white;
-        }
-
-        .popup.warning {
-            background-color: #ff9800;
-            color: white;
-        }
-
-        .popup.info {
-            background-color: #2196F3;
-            color: white;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(-50%) translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(-50%);
-                opacity: 1;
-            }
-        }
-
-        .popup.fade-out {
-            animation: fadeOut 0.3s ease-out forwards;
-        }
-
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="oceanBody">
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
-    
+    <header class="oceanoHeader">
+        <nav class="navegacaoContainer">
+            <div class="logoContainer">
+                    <a href="javascript:history.back()" class="logoBtn">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Voltar</span>
+                    </a>
+            </div>
+            <div class="navegacaoButton">
+                {% if current_user.is_authenticated %}
+                    <div class="profile-dropdown">
+                        <button class="profile-btn">
+                            <div class="profile-icon">
+                                <img src="{{ url_for('static', filename='features/icon.jpg') }}" alt="Profile">
+                            </div>
+                            <span>Meu Perfil</span>
+                        </button>
+                        <div class="dropdownContent">
+                            <a href="{% if current_user.get_role() == 'admin' %}{{ url_for('tables') }}{% else %}{{ url_for('consultas_cliente') }}{% endif %}">Dashboard</a>
+                            <a href="{{ url_for('alterar_dados') }}">Alterar Dados</a>
+                            <a href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="navegacaoBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="{{ url_for('register') }}" class="navegacaoBtn"><i class="fas fa-user-plus"></i> Registrar</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <div class="databaseContainer fullPage">
         <h1 class="databaseTitle">Tabelas Disponíveis no Banco de Dados</h1>
         

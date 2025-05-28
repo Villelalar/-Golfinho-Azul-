@@ -30,15 +30,67 @@ body {
     height: 100%;
     max-width: 1800px;
     margin: 0 auto;
-    padding: 0;
+    padding: 0 20px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
 }
 
+/* Logo container for main pages (login, register, index) */
 .logoContainer {
-    height: 100%;
-    padding: 15px;
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+/* Logo container for inner pages (with back button) */
+.navegacaoContainer .logoContainer {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+.backBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    margin-left: 1rem;
+}
+
+.backBtn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.backBtn i {
+    font-size: 16px;
+}
+
+.logoBtn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 1rem;
+    height: 40px;
+}
+
+.logoBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
 .logoContainer img {
@@ -50,12 +102,43 @@ body {
     margin-top: 0;
 }
 
+/* Logo Sizes */
+.logoBig {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logoIcon {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logoText {
+    height: 30px;
+    width: auto;
+    margin-left: 10px;
+    object-fit: contain;
+}
+
+.logoBig {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+}
+
 .navegacaoButton {
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px;
     margin-left: auto;
-    padding-right: 80px;
-    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
 }
 
 .navegacaoBtn {
@@ -70,6 +153,120 @@ body {
     gap: 0.8rem;
     font-size: 1.1rem;
     font-weight: 500;
+}
+
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+    height: 100%;
+}
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 6px 16px 6px 10px;
+    height: 40px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-radius: 20px;
+    margin: 0 4px;
+}
+
+.profile-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.profile-btn:active {
+    transform: translateY(0);
+}
+
+.profile-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none; /* Prevents the icon from capturing hover */
+}
+
+.profile-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dropdownContent {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1001;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdownContent a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.dropdownContent a:hover {
+    background-color: #f5f5f5;
+}
+
+.profile-dropdown:hover .dropdownContent {
+    display: block;
+}
+
+.profile-icon:hover {
+    transform: scale(1.1);
+}
+
+:root {
+    --default-profile-color: #008bb4;
+    --default-profile-color-dark: #006994;
+}
+
+.profileBtn {
+    background: none;
+    border: none;
+    color: white;
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    height: 40px;
+}
+
+.profileIcon::before {
+    content: '👤';
+    font-size: 1rem;
+    color: white;
 }
 
 .navegacaoBtn:hover {
@@ -409,17 +606,21 @@ h1, h2 {
 }
 
 .defaultTable th {
-    background-color: #4CAF50;
+    background-color: #008bb4;
     color: white;
+}
+
+.defaultTable tr:hover {
+    background-color: rgba(0, 139, 180, 0.1);
 }
 
 #dataTable th[colspan] {
     text-align: center;
     font-size: 1.2em;
     padding: 10px;
-    background-color: darkslategray;
+    background-color: #006994;
+    color: white;
 }
-
 
 #searchResults {
     margin-top: 20px;
@@ -439,14 +640,51 @@ input[type="text"], input[type="email"] {
 
 button {
     padding: 8px 16px;
-    background-color: #4CAF50;
+    background-color: #008bb4;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #006994;
+    transform: translateY(-1px);
+}
+
+.editBtn, .saveBtn, .cancelBtn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.editBtn {
+    background-color: #008bb4;
+    color: white;
+}
+
+.saveBtn {
+    background-color: #008bb4;
+    color: white;
+}
+
+.cancelBtn {
+    background-color: #f44336;
+    color: white;
+}
+
+.editBtn:hover, .saveBtn:hover {
+    background-color: #006994;
+    transform: translateY(-1px);
+}
+
+.cancelBtn:hover {
+    background-color: #d32f2f;
+    transform: translateY(-1px);
 }
 
 
@@ -605,7 +843,6 @@ body, html {
 .logoContainer {
     text-align: center;
     height: 100px;
-    margin-bottom: 1.5rem;
 }
 
 .logo {
@@ -1079,7 +1316,7 @@ transition: border-color 0.3s ease;
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: #34495e;
+    color: #008bb4;
     text-align: left;
     font-size: 0.95em;
 }
@@ -1095,14 +1332,14 @@ transition: border-color 0.3s ease;
 }
 
 .loginContainer.postItem.input:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+    border-color: #008bb4;
+    box-shadow: 0 0 0 2px rgba(0, 139, 180, 0.2);
 }
 
 .loginContainer.postItem.button {
     width: 100%;
     padding: 12px;
-    background: #3498db;
+    background: #008bb4;
     color: white;
     border: none;
     border-radius: 8px;

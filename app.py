@@ -29,12 +29,14 @@ def conectar_banco(database_name='defaultdb'):
 
 # modelo de usuário
 class User(UserMixin):
-    def __init__(self, id, email, name, phone, role):
+    def __init__(self, id, email, name, phone, role, profile_color='#008bb4', profile_picture=None):
         self.cpf = id
         self.email = email
         self.name = name
         self.phone = phone
         self.role = role
+        self.profile_color = profile_color
+        self.profile_picture = profile_picture
         self._authenticated = False
 
     def is_authenticated(self):
@@ -47,7 +49,7 @@ class User(UserMixin):
         return self.role
 
     def __repr__(self):
-        return f"User(CPF={self.cpf}, email={self.email}, role={self.role}, authenticated={self._authenticated})"
+        return f"User(CPF={self.cpf}, email={self.email}, role={self.role}, profile_color={self.profile_color}, authenticated={self._authenticated})"
 
 # loader para usuários
 @autenticador.user_loader
@@ -64,7 +66,8 @@ def load_user(user_id):
                     email=user_data['email'],
                     name=user_data['name'],
                     phone=user_data['phone'],
-                    role=user_data['role']
+                    role=user_data['role'],
+                    profile_color=user_data['profile_color']
                 )
                 user._authenticated = True
                 print(f"Loaded user: {user}")
@@ -79,6 +82,16 @@ def load_user(user_id):
 # ROTA PARA PÁGINA INICIAL
 @app.route('/')
 def index():
+    try:
+        connection = conectar_banco()
+        with connection.cursor() as cursor:
+            cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_color VARCHAR(7) DEFAULT '#008bb4'")
+            cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_picture VARCHAR(255) DEFAULT NULL")
+            connection.commit()
+            print("Profile columns added")
+    except Exception as e:
+        print(f"Error adding profile columns: {e}")
+    
     return render_template('index.html')
 
 
@@ -224,6 +237,47 @@ def register():
             flash('Erro durante o registro', 'error')
             return render_template('register.html')
     return render_template('register.html')
+
+@app.route('/alterar_dados', methods=['GET', 'POST'])
+@login_required
+def alterar_dados():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        profile_color = request.form.get('profile_color')
+        profile_picture = request.files.get('profile_picture')
+        
+        connection = conectar_banco()
+        with connection.cursor() as cursor:
+            update_query = "UPDATE users SET name = %s, email = %s, phone = %s, profile_color = %s"
+            update_params = [name, email, phone, profile_color]
+            
+            if profile_picture and profile_picture.filename:
+                # Save the uploaded image to the static/profile_pictures directory
+                filename = f"{current_user.get_id()}_{profile_picture.filename}"
+                profile_picture.save(f"static/profile_pictures/{filename}")
+                update_query += ", profile_picture = %s"
+                update_params.append(filename)
+            
+            update_query += " WHERE id = %s"
+            update_params.append(current_user.get_id())
+            
+            cursor.execute(update_query, tuple(update_params))
+            connection.commit()
+            
+            # Update the current user object
+            current_user.name = name
+            current_user.email = email
+            current_user.phone = phone
+            current_user.profile_color = profile_color
+            if profile_picture and profile_picture.filename:
+                current_user.profile_picture = filename
+            
+            flash('Dados atualizados com sucesso!', 'success')
+            return redirect(url_for('alterar_dados'))
+    
+    return render_template('alterar_dados.html')
 
 
 # ------------------- R O T A S &&& P A G I N A S -----------------------------------------------

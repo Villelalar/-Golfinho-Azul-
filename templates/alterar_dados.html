@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Dados - Golfinho Azul</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='features/logo1.svg') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="oceanoHeader">
+        <nav class="navegacaoContainer">
+            <div class="logoContainer">
+                <a href="javascript:history.back()" class="logoBtn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Voltar</span>
+                </a>
+            </div>
+            <div class="navegacaoButton">
+                <div class="profileDropdown">
+                    <button class="profileBtn">
+                        <div class="profileIcon" style="--profile-color: {{ current_user.profile_color }}; --profile-color-dark: {{ current_user.profile_color }}"></div>
+                        Meu Perfil
+                    </button>
+                    <div class="dropdownContent">
+                        <a href="{% if current_user.get_role() == 'admin' %}{{ url_for('tables') }}{% else %}{{ url_for('consultas_cliente') }}{% endif %}">Dashboard</a>
+                        <a href="{{ url_for('alterar_dados') }}">Alterar Dados</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="popup {% if category %}{{ category }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="loginPage">
+        <div class="loginContainer">
+            <div class="loginBox">
+                <h2>Editar Dados Pessoais</h2>
+                <form method="POST" action="{{ url_for('alterar_dados') }}">
+                    <div class="inputGroup">
+                        <input type="text" id="id" name="id" value="{{ current_user.id }}" readonly>
+                        <label for="id">CPF</label>
+                    </div>
+                    
+                    <div class="inputGroup">
+                        <input type="text" id="name" name="name" value="{{ current_user.name }}" required>
+                        <label for="name">Nome</label>
+                    </div>
+                    
+                    <div class="inputGroup">
+                        <input type="email" id="email" name="email" value="{{ current_user.email }}" required>
+                        <label for="email">Email</label>
+                    </div>
+                    
+                    <div class="inputGroup">
+                        <input type="tel" id="phone" name="phone" value="{{ current_user.phone }}" required>
+                        <label for="phone">Telefone</label>
+                    </div>
+                    
+                    <div class="inputGroup">
+                        <input type="color" id="profile_color" name="profile_color" value="{{ current_user.profile_color }}" required>
+                        <label for="profile_color">Cor do Ícone</label>
+                    </div>
+                    
+                    <div class="buttonGroup">
+                        <button type="submit" class="loginBtn">Salvar Alterações</button>
+                        <button type="button" class="loginBtn" onclick="showPasswordMessage()">Alterar Senha</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
