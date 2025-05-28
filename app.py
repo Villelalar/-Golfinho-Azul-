@@ -82,16 +82,6 @@ def load_user(user_id):
 # ROTA PARA PÁGINA INICIAL
 @app.route('/')
 def index():
-    try:
-        connection = conectar_banco()
-        with connection.cursor() as cursor:
-            cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_color VARCHAR(7) DEFAULT '#008bb4'")
-            cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_picture VARCHAR(255) DEFAULT NULL")
-            connection.commit()
-            print("Profile columns added")
-    except Exception as e:
-        print(f"Error adding profile columns: {e}")
-    
     return render_template('index.html')
 
 

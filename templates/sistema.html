@@ -15,21 +15,26 @@
             <div class="logoContainer">
                 <a href="javascript:history.back()" class="logoBtn">
                     <i class="fas fa-arrow-left"></i>
-                    <span>Voltar</span>
+                    <span>ALTERAR PARA A LOGO SER AQUI</span>
                 </a>
             </div>
             <div class="navegacaoButton">
+            {% if current_user.is_authenticated %}
                 <div class="profileDropdown">
                     <button class="profileBtn">
                         <div class="profileIcon" style="--profile-color: {{ current_user.profile_color }}; --profile-color-dark: {{ current_user.profile_color }}"></div>
                         Meu Perfil
                     </button>
                     <div class="dropdownContent">
-                        <a href="{% if current_user.get_role() == 'admin' %}{{ url_for('tables') }}{% else %}{{ url_for('consultas_cliente') }}{% endif %}">Dashboard</a>
+                        <a href="{{ url_for('login')}}">Dashboard</a>
                         <a href="{{ url_for('alterar_dados') }}">Alterar Dados</a>
                         <a href="{{ url_for('logout') }}">Logout</a>
                     </div>
                 </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="navegacaoBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="{{ url_for('register') }}" class="navegacaoBtn"><i class="fas fa-user-plus"></i> Registrar</a>
+                {% endif %}
             </div>
         </nav>
     </header>

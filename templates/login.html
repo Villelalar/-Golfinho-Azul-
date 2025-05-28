@@ -19,17 +19,22 @@
                 </a>
             </div>
             <div class="navegacaoButton">
+            {% if current_user.is_authenticated %}
                 <div class="profileDropdown">
                     <button class="profileBtn">
                         <div class="profileIcon" style="--profile-color: {{ current_user.profile_color }}; --profile-color-dark: {{ current_user.profile_color }}"></div>
                         Meu Perfil
                     </button>
                     <div class="dropdownContent">
-                        <a href="{% if current_user.get_role() == 'admin' %}{{ url_for('tables') }}{% else %}{{ url_for('consultas_cliente') }}{% endif %}">Dashboard</a>
+                        <a href="{{ url_for('login')}}">Dashboard</a>
                         <a href="{{ url_for('alterar_dados') }}">Alterar Dados</a>
                         <a href="{{ url_for('logout') }}">Logout</a>
                     </div>
                 </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="navegacaoBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="{{ url_for('register') }}" class="navegacaoBtn"><i class="fas fa-user-plus"></i> Registrar</a>
+                {% endif %}
             </div>
         </nav>
     </header>
@@ -45,7 +50,7 @@
     <div class="loginPage">
         <div class="loginContainer">
             <div class="logoContainer">
-                <img src="{{ url_for('static', filename='features/logoBlue.png') }}" alt="Logo" class="logo">
+                <img src="{{ url_for('static', filename='features/logotext.svg') }}" alt="Logo" class="logo">
             </div>
             <div class="loginBox">
                 <h2>Realizar Login</h2>
