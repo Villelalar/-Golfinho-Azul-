@@ -39,8 +39,10 @@ $(document).ready(function() {
     document.addEventListener('DOMContentLoaded', function() {
         const messages = document.querySelectorAll('.popup');
         messages.forEach(message => {
-            message.classList.add('fade-out');
-            setTimeout(() => message.remove(), 300);
+            setTimeout(() => {
+                message.classList.add('fade-out');
+                setTimeout(() => message.remove(), 700); // 700ms igual ao CSS
+            }, 2000); // Mostra por 2 segundos antes de sumir
         });
     });
 
@@ -111,11 +113,18 @@ $(document).ready(function() {
                 success: function(response) {
                     const tbody = $('#searchTable tbody');
                     tbody.empty();
-                    
+
+                    // Exibe a div de resultados
+                    $('#searchResults').show();
+
                     response.results.forEach(row => {
                         const tr = $('<tr>');
-                        Object.values(row).forEach(value => {
-                            tr.append($('<td>').text(value));
+                        // Pega a ordem dos cabeçalhos (exceto "Ações" e "password_hash")
+                        const headers = $('#searchTable thead th').map(function() {
+                            return $(this).text();
+                        }).get().filter(h => h !== 'Ações' && h !== 'password_hash');
+                        headers.forEach(key => {
+                            tr.append($('<td>').text(row[key] !== undefined ? row[key] : ''));
                         });
                         tr.append($('<td>').html('<button class="edit-btn btn btn-secondary">Editar</button>'));
                         tbody.append(tr);
@@ -160,7 +169,13 @@ $(document).ready(function() {
             // Collect the edited data
             row.find('td:not(:last-child)').each(function(index) {
                 const columnName = headers.eq(index).text();
-                const value = $(this).find('input').val();
+                let value = $(this).find('input').val();
+
+                // Só converte se for campo de data/hora
+                if (columnName.toLowerCase().includes('data') || columnName.toLowerCase().includes('created_at') || columnName.toLowerCase().includes('datetime')) {
+                    value = formatDatetimeLocalToSQL(value);
+                }
+
                 updatedData[columnName] = value;
             });
 
@@ -224,5 +239,21 @@ $(document).ready(function() {
                 });
             }
         });
+    }
+
+    function formatDatetimeLocalToSQL(datetimeLocal) {
+        // datetimeLocal: '2025-05-27T12:43' ou '2025-05-27T12:43:56'
+        if (!datetimeLocal) return '';
+        // Se já está no formato SQL, retorna direto
+        if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(datetimeLocal)) {
+            return datetimeLocal.length === 16 ? datetimeLocal + ':00' : datetimeLocal;
+        }
+        // Se está no formato datetime-local, converte
+        if (datetimeLocal.includes('T')) {
+            let [date, time] = datetimeLocal.split('T');
+            if (time.length === 5) time += ':00';
+            return `${date} ${time}`;
+        }
+        return datetimeLocal;
     }
 });

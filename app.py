@@ -3,6 +3,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import check_password_hash, generate_password_hash
 import pymysql
 import time
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'institutooceanoazulXunilasalle'
@@ -354,7 +355,7 @@ def view_table(table_name):
                 cursor.execute("SELECT * FROM aprovar_admins")
                 data = cursor.fetchall()
                 if not data:
-                    data = []  # Return empty list instead of message
+                    data = []  
                 return render_template('aprovar_admins.html', admin_requests=data)
         
         data = get_data(table_name)
@@ -455,6 +456,7 @@ def update_data():
         for key in request.form.keys():
             if key not in ['id', 'table_name']:
                 updated_data[key] = request.form.get(key)
+                # ... depois salve normalmente no banco
 
         connection = conectar_banco()
         with connection.cursor() as cursor:
@@ -483,7 +485,6 @@ def update_data():
 @login_required
 def historico():
     try:
-        # Get the user object from the session
         user = current_user
         print(f"Página de Histórico: {user}")
         
@@ -493,14 +494,13 @@ def historico():
             return redirect(url_for('login'))
         connection = conectar_banco()
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM doacoes WHERE user_id = %s", (user.id,))
+            cursor.execute("SELECT * FROM doacoes WHERE user_id = %s", (user.cpf,))
             historico = cursor.fetchall()
-            
             return render_template('historico.html', historico=historico)
     except Exception as e:
         print(f"Error getting doacoes: {e}")
         flash('Erro ao carregar doacoes.')
-        return redirect(url_for('logincliente'))
+        return redirect(url_for('login'))
     finally:
         if 'connection' in locals():
             connection.close()
@@ -632,8 +632,14 @@ def search_data(table_name, search_query):
             
             cursor.execute(f"SELECT * FROM {table_name} WHERE {query}", (search_term,) * len(columns))
             results = cursor.fetchall()
+
+            # Formatar campos de data/hora para o padrão SQL
+            for row in results:
+                for key, value in row.items():
+                    if isinstance(value, datetime):
+                        row[key] = value.strftime('%Y-%m-%d %H:%M:%S')
+
             print(results)
-            
             return app.response_class(
                 response=json.dumps({'status': 'success', 'results': results}),
                 status=200,

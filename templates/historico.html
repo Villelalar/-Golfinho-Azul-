@@ -8,7 +8,6 @@
     <link rel="icon" href="{{ url_for('static', filename='features/icon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <!-- Flash Messages -->
@@ -50,37 +49,36 @@
     </header>
 
     <div class="page-container">
-        <h1>Minhas Doações</h1>
-
-        <!-- doonations Table -->
-        <div class="doonations-container">
-            <table id="tabelaDoacoes" class="users-table">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Hora</th>
-                        <th>Valor</th>
-                        <th>Detalhes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for doacao in historico %}
-                    <tr data-id="{{ doacao.id }}">
-                        <td>{{ doacao.data }}</td>
-                        <td>{{ doacao.hora }}</td>
-                        <td>{{ doacao.valor }}</td>
-                        <td>{{ doacao.detalhes }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <style>
-                .doonations-container {
-                    border: 1px solid #dee2e6;
-                    border-radius: 4px;
-                    padding: 20px;
-                }
-            </style>
+        <div class="container">
+            <h1>Minhas Doações</h1>
+            <div class="table-container">
+                <table id="tabelaDoacoes" class="defaultTable">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if not historico %}
+                            <tr>
+                                <td colspan="3" style="text-align: center; padding: 20px;">
+                                    <div class="empty-message">Nenhuma doação registrada!</div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            {% for doacao in historico %}
+                            <tr data-id="{{ doacao.id }}">
+                                <td>{{ doacao.status }}</td>
+                                <td>R${{ doacao.valor }}</td>
+                                <td>{{ doacao.created_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Flash Messages -->
@@ -92,5 +90,7 @@
             {% endif %}
         {% endwith %}
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

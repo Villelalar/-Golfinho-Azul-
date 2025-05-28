@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <header class="oceanoHeader">
         <nav class="navegacaoContainer">
@@ -95,29 +96,27 @@
                 </tr>
             </thead>
             <tbody>
-                {% for row in data %}
-                <tr data-id="{{ row.id }}">
-                    {% for column, value in row.items() %}
-                        {% if column != 'password_hash' %}
-                        <td>{{ value }}</td>
-                        {% endif %}
+                {% if data and data[0]['id'] == '--' %}
+                    <tr>
+                        {% for column in data[0].keys() if column != 'password_hash' %}
+                            <td class="empty-message" colspan="1">--</td>
+                        {% endfor %}
+                        <td class="empty-message">Nenhum registro encontrado!</td>
+                    </tr>
+                {% else %}
+                    {% for row in data %}
+                    <tr data-id="{{ row.id }}">
+                        {% for column, value in row.items() %}
+                            {% if column != 'password_hash' %}
+                            <td>{{ value }}</td>
+                            {% endif %}
+                        {% endfor %}
+                        <td>
+                            <button class="edit-btn">Editar</button>
+                        </td>
+                    </tr>
                     {% endfor %}
-                    <td>
-                        <button class="edit-btn">Editar</button>
-                    </td>
-                </tr>
-                {% endfor %}
-
-                <style>
-                    .empty-message {
-                        color: #666;
-                        font-style: italic;
-                        background-color: #f8f9fa;
-                        border: 1px solid #dee2e6;
-                        border-radius: 4px;
-                        padding: 20px;
-                    }
-                </style>
+                {% endif %}
             </tbody>
         </table>
     </div>
@@ -134,6 +133,7 @@
         <button type="submit">Adicionar</button>
     </form>
     {% endif %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
