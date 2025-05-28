@@ -230,7 +230,6 @@ body {
 }
 
 .sliderContainer {
-    margin-top: 130px;
     position: relative;
     width: 100%;
     height: calc(100vh - 150px);

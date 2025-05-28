@@ -100,7 +100,7 @@ def login():
             if current_user.get_role() == 'admin':
                 return redirect(url_for('tables'))
             else:  # client
-                return redirect(url_for('consultas_cliente'))
+                return redirect(url_for('historico'))
 
 
     if request.method == 'POST':
@@ -143,8 +143,8 @@ def login():
                     if user.role == 'admin':
                         return redirect(url_for('tables'))
                     elif user.role == 'client':
-                        print(f"Redirecionando cliente {user.email} para consultas_cliente")
-                        return redirect(url_for('consultas_cliente'))
+                        print(f"Redirecionando cliente {user.email} para historico")
+                        return redirect(url_for('historico'))
                     else:
                         print(f"Função inválida: {user.role}")
                         flash('Função de usuário inválida', 'error')
@@ -479,13 +479,13 @@ def update_data():
             connection.close()
 
 # Client consultation page
-@app.route('/client/consultas')
+@app.route('/client/historico')
 @login_required
-def consultas_cliente():
+def historico():
     try:
         # Get the user object from the session
         user = current_user
-        print(f"User in consultation page: {user}")
+        print(f"Página de Histórico: {user}")
         
         if user.role != 'client':
             print(f"Accesso negado. - user role: {user.role}")
@@ -493,74 +493,18 @@ def consultas_cliente():
             return redirect(url_for('login'))
         connection = conectar_banco()
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM consultas WHERE user_id = %s", (user.id,))
-            consultas = cursor.fetchall()
+            cursor.execute("SELECT * FROM doacoes WHERE user_id = %s", (user.id,))
+            historico = cursor.fetchall()
             
-            return render_template('consultascliente.html', consultas=consultas)
+            return render_template('historico.html', historico=historico)
     except Exception as e:
-        print(f"Error getting consultas: {e}")
-        flash('Erro ao carregar consultas.')
+        print(f"Error getting doacoes: {e}")
+        flash('Erro ao carregar doacoes.')
         return redirect(url_for('logincliente'))
     finally:
         if 'connection' in locals():
             connection.close()
 
-# Client update consultation
-@app.route('/client/consultas/atualizarconsulta', methods=['POST'])
-@login_required
-def atualizar_consulta():
-    if current_user.role != 'client':
-        return json.dumps({'error': 'Accesso negado.'}), 403, {'Content-Type': 'application/json'}
-    
-    consulta_id = request.form.get('consulta_id')
-    data = request.form.get('data')
-    hora = request.form.get('hora')
-    detalhes = request.form.get('detalhes')
-    status = request.form.get('status')
-
-    try:
-        connection = conectar_banco()
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                UPDATE consultas 
-                SET data = %s, hora = %s, detalhes = %s, status = %s
-                WHERE id = %s AND user_id = %s
-            """, (data, hora, detalhes, status, consulta_id, current_user.id))
-            connection.commit()
-            
-            return json.dumps({'status': 'success'}), 200, {'Content-Type': 'application/json'}
-    except Exception as e:
-        print(f"Error updating consultation: {e}")
-        return json.dumps({'error': str(e)}), 500, {'Content-Type': 'application/json'}
-    finally:
-        if 'connection' in locals():
-            connection.close()
-
-# Client delete consultation
-@app.route('/client/consultas/deletarconsulta', methods=['POST'])
-@login_required
-def deletar_consulta():
-    if current_user.role != 'client':
-        return json.dumps({'error': 'Accesso negado.'}), 403, {'Content-Type': 'application/json'}
-    
-    consulta_id = request.form.get('consulta_id')
-
-    try:
-        connection = conectar_banco()
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                DELETE FROM consultas 
-                WHERE id = %s AND user_id = %s
-            """, (consulta_id, current_user.id))
-            connection.commit()
-            
-            return json.dumps({'status': 'success'}), 200, {'Content-Type': 'application/json'}
-    except Exception as e:
-        print(f"Error deleting consultation: {e}")
-        return json.dumps({'error': str(e)}), 500, {'Content-Type': 'application/json'}
-    finally:
-        if 'connection' in locals():
-            connection.close()
 
 # Função para listar as tabelas do banco de dados
 def get_tables(database_name):

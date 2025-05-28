@@ -34,6 +34,7 @@ $(document).ready(function() {
         return (firstDigit === parseInt(cpf.charAt(9))) && (secondDigit === parseInt(cpf.charAt(10)));
     }
 
+
     // Add fade-out animation to messages
     document.addEventListener('DOMContentLoaded', function() {
         const messages = document.querySelectorAll('.popup');
