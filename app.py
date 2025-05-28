@@ -355,7 +355,7 @@ def view_table(table_name):
                 cursor.execute("SELECT * FROM aprovar_admins")
                 data = cursor.fetchall()
                 if not data:
-                    data = []  # Return empty list instead of message
+                    data = []  
                 return render_template('aprovar_admins.html', admin_requests=data)
         
         data = get_data(table_name)
@@ -485,7 +485,6 @@ def update_data():
 @login_required
 def historico():
     try:
-        # Get the user object from the session
         user = current_user
         print(f"Página de Histórico: {user}")
         
@@ -495,13 +494,13 @@ def historico():
             return redirect(url_for('login'))
         connection = conectar_banco()
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM doacoes WHERE user_id = %s", (user.id,))
+            cursor.execute("SELECT * FROM doacoes WHERE user_id = %s", (user.cpf,))
             historico = cursor.fetchall()
             return render_template('historico.html', historico=historico)
     except Exception as e:
         print(f"Error getting doacoes: {e}")
         flash('Erro ao carregar doacoes.')
-        return redirect(url_for('logincliente'))
+        return redirect(url_for('login'))
     finally:
         if 'connection' in locals():
             connection.close()

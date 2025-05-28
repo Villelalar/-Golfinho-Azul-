@@ -39,8 +39,10 @@ $(document).ready(function() {
     document.addEventListener('DOMContentLoaded', function() {
         const messages = document.querySelectorAll('.popup');
         messages.forEach(message => {
-            message.classList.add('fade-out');
-            setTimeout(() => message.remove(), 300);
+            setTimeout(() => {
+                message.classList.add('fade-out');
+                setTimeout(() => message.remove(), 700); // 700ms igual ao CSS
+            }, 2000); // Mostra por 2 segundos antes de sumir
         });
     });
 
