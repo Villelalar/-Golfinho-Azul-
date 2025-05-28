@@ -13,10 +13,7 @@
     <header class="oceanoHeader">
         <nav class="navegacaoContainer">
             <div class="logoContainer">
-                <a href="javascript:history.back()" class="logoBtn">
-                    <i class="fas fa-arrow-left"></i>
-                    <span>ALTERAR PARA A LOGO SER AQUI</span>
-                </a>
+                    <img src="{{ url_for('static', filename='features/logotext.svg') }}" class="logo"/>
             </div>
             <div class="navegacaoButton">
             {% if current_user.is_authenticated %}
@@ -47,10 +44,14 @@
         </video>
             </div>
             <div class="slide fade">
-                <img src="{{ url_for('static', filename='features/ocean2.jpg') }}" alt="Ocean 2">
+                <video class="video-slide" autoplay loop muted>
+          <source src="{{ url_for('static', filename='features/animaisMarinhos.mp4') }}" type="video/mp4">
+        </video>
             </div>
             <div class="slide fade">
-                <img src="{{ url_for('static', filename='features/ocean3.jpg') }}" alt="Ocean 3">
+                <video class="video-slide" autoplay loop muted>
+          <source src="{{ url_for('static', filename='features/contatos.mp4') }}" type="video/mp4">
+        </video>
             </div>
 
             <button class="sliderBtn prev" onclick="changeSlide(-1)" title="Slide anterior" aria-label="Slide anterior"><i class="fas fa-chevron-left"></i></button>
