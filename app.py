@@ -3,6 +3,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import check_password_hash, generate_password_hash
 import pymysql
 import time
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'institutooceanoazulXunilasalle'
@@ -455,6 +456,7 @@ def update_data():
         for key in request.form.keys():
             if key not in ['id', 'table_name']:
                 updated_data[key] = request.form.get(key)
+                # ... depois salve normalmente no banco
 
         connection = conectar_banco()
         with connection.cursor() as cursor:
@@ -495,7 +497,6 @@ def historico():
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM doacoes WHERE user_id = %s", (user.id,))
             historico = cursor.fetchall()
-            
             return render_template('historico.html', historico=historico)
     except Exception as e:
         print(f"Error getting doacoes: {e}")
@@ -632,8 +633,14 @@ def search_data(table_name, search_query):
             
             cursor.execute(f"SELECT * FROM {table_name} WHERE {query}", (search_term,) * len(columns))
             results = cursor.fetchall()
+
+            # Formatar campos de data/hora para o padrão SQL
+            for row in results:
+                for key, value in row.items():
+                    if isinstance(value, datetime):
+                        row[key] = value.strftime('%Y-%m-%d %H:%M:%S')
+
             print(results)
-            
             return app.response_class(
                 response=json.dumps({'status': 'success', 'results': results}),
                 status=200,
