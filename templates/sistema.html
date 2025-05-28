@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema - Golfinho Azul</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='features/logo1.svg') }}">
+    <link rel="icon" href="{{ url_for('static', filename='features/icon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -13,30 +13,23 @@
     <header class="oceanoHeader">
         <nav class="navegacaoContainer">
             <div class="logoContainer">
-                    <a href="javascript:history.back()" class="logoBtn">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Voltar</span>
-                    </a>
+                <a href="javascript:history.back()" class="logoBtn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Voltar</span>
+                </a>
             </div>
             <div class="navegacaoButton">
-                {% if current_user.is_authenticated %}
-                    <div class="profile-dropdown">
-                        <button class="profile-btn">
-                            <div class="profile-icon">
-                                <img src="{{ url_for('static', filename='features/icon.jpg') }}" alt="Profile">
-                            </div>
-                            <span>Meu Perfil</span>
-                        </button>
-                        <div class="dropdownContent">
-                            <a href="{% if current_user.get_role() == 'admin' %}{{ url_for('tables') }}{% else %}{{ url_for('consultas_cliente') }}{% endif %}">Dashboard</a>
-                            <a href="{{ url_for('alterar_dados') }}">Alterar Dados</a>
-                            <a href="{{ url_for('logout') }}">Logout</a>
-                        </div>
+                <div class="profileDropdown">
+                    <button class="profileBtn">
+                        <div class="profileIcon" style="--profile-color: {{ current_user.profile_color }}; --profile-color-dark: {{ current_user.profile_color }}"></div>
+                        Meu Perfil
+                    </button>
+                    <div class="dropdownContent">
+                        <a href="{% if current_user.get_role() == 'admin' %}{{ url_for('tables') }}{% else %}{{ url_for('consultas_cliente') }}{% endif %}">Dashboard</a>
+                        <a href="{{ url_for('alterar_dados') }}">Alterar Dados</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
                     </div>
-                {% else %}
-                    <a href="{{ url_for('login') }}" class="navegacaoBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
-                    <a href="{{ url_for('register') }}" class="navegacaoBtn"><i class="fas fa-user-plus"></i> Registrar</a>
-                {% endif %}
+                </div>
             </div>
         </nav>
     </header>
