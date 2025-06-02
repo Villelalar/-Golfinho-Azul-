@@ -16,6 +16,11 @@ body {
     overflow-x: hidden;
 }
 
+.oceanBody {
+    background: linear-gradient(145deg, #a9e0ff 0%, #6bcdff 100%);
+    min-height: 100vh;
+}
+
 .oceanoHeader {
     background-color: #008bb4;
     padding: 0;
@@ -36,14 +41,25 @@ body {
     align-items: center;
 }
 
-/* Logo container for main pages (login, register, index) */
 .logoContainer {
     display: flex;
     align-items: center;
-    margin-left: 1rem;
+    margin-left: 0;
+    position: relative;
+    z-index: 100;
+    text-align: center;
+    height: 100px;
 }
 
-/* Logo container for inner pages (with back button) */
+.logoContainer .logo {
+    height: 70px;
+    width: auto;
+    max-width: none;
+    object-fit: contain;
+    margin-left: 20px;
+    margin-top: 0;
+}
+
 .navegacaoContainer .logoContainer {
     position: absolute;
     left: 5%;
@@ -92,16 +108,6 @@ body {
     transform: translateY(-2px);
 }
 
-.logoContainer img {
-    height: auto;
-    width: auto;
-    max-width: none;
-    object-fit: contain;
-    margin-left: 30px;
-    margin-top: 0;
-}
-
-/* Logo Sizes */
 .logoBig {
     height: 120px;
     width: auto;
@@ -121,10 +127,20 @@ body {
     object-fit: contain;
 }
 
-.logoBig {
-    height: 120px;
-    width: auto;
-    object-fit: contain;
+.loginContainer .logoContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.loginContainer .logoContainer .logo {
+    height: auto;
+    width: 240px;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .navegacaoButton {
@@ -134,8 +150,6 @@ body {
     height: 100%;
     padding: 0 10px;
     margin-left: auto;
-    display: flex;
-    align-items: center;
     justify-content: flex-end;
     flex: 1;
 }
@@ -153,12 +167,13 @@ body {
     font-weight: 500;
 }
 
-.profileBtn:hover {
+.profileBtn:hover, .profileBtn:focus {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-1px);
 }
 
 .profileBtn:active {
+    background: rgba(255, 255, 255, 0.3);
     transform: translateY(0);
 }
 
@@ -185,11 +200,13 @@ body {
     font-size: 14px;
 }
 
-.dropdownContent a:hover {
+.dropdownContent a:hover, .dropdownContent a:focus {
     background-color: #f5f5f5;
 }
 
-.profileDropdown:hover .dropdownContent {
+.profileDropdown:hover .dropdownContent,
+.profileDropdown:focus-within .dropdownContent,
+.profileDropdown.active .dropdownContent {
     display: block;
 }
 
@@ -232,7 +249,7 @@ body {
 .sliderContainer {
     position: relative;
     width: 100%;
-    height: calc(100vh - 150px);
+    height: calc(100vh - 120px);
     overflow: hidden;
 }
 
@@ -258,7 +275,8 @@ body {
 .video-slide{
   width: 100%;
   height: 100%;
-  object-fit: cover
+  object-fit:cover;
+
 }
 
 .sliderBtn {
@@ -311,9 +329,16 @@ body {
 }
 
 @keyframes fade {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
+    from {
+        opacity: 0;
+        transform: scale(1.05) translateY(-10px);
+        filter: brightness(1.2) blur(5px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: brightness(1) blur(0);
+    }
 }
 
 .about {
@@ -395,11 +420,6 @@ body {
     .aboutStats {
         flex-direction: column;
         align-items: center;
-    }
-
-    .statItem {
-        width: 100%;
-        max-width: 350px;
     }
 
     .aboutText p {
@@ -674,34 +694,50 @@ body, html {
     font-family: 'Poppins', sans-serif;
 }
 
+.loginPage {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 100px);
+    padding: 40px 20px;
+    background-color: transparent;
+}
+
 .loginContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
     width: 100%;
-    background-image: url('/static/features/loginPage.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    margin: 0;
-    padding: 0;
     position: relative;
-    overflow: hidden;
-}
-
-.loginContainer form {
-    position: relative;
+    overflow: visible;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    max-width: 480px;
+    min-height: 400px;
+    padding: 1rem;
+    margin: 0 auto;
     z-index: 2;
+    transition: all 0.3s ease;
 }
 
-.loginContainer .logoContainer {
-    position: relative;
-    z-index: 2;
+.loginContainer:hover{
+    transform: translateY(-10px);
 }
 
+.loginBox {
+    padding: 1rem 0;
+}
+
+.loginBox h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 35px;
+    font-size: 34px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+}
 
 .backgroundOverlay {
     position: fixed;
@@ -775,53 +811,6 @@ body, html {
     z-index: 1;
 }
 
-.loginContainer {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    width: 100%;
-    max-width: 480px;
-    min-height: 500px;
-    padding: 2.5rem;
-    margin: 1rem;
-    position: relative;
-    z-index: 2;
-    transition: all 0.3s ease;
-     margin: 0 !important; 
-
-}
-.loginContainer:hover{
-    transform: translateY(-10px);
-}
-
-.logoContainer {
-    text-align: center;
-    height: 100px;
-}
-
-.logo {
-    max-width: 230px !important; 
-    height: auto !important;
-    display: block;
-    object-fit: contain;
-    margin: 0 auto;
-    margin: 0 !important; 
-}
-
-.loginBox {
-    padding: 1rem 0;
-}
-
-.loginBox h2 {
-    color: #333;
-    text-align: center;
-    margin-bottom: 35px;
-    font-size: 34px;
-    font-weight: 600;
-    font-family: 'Poppins', sans-serif;
-}
-
 .inputGroup {
 position: relative;
 margin-bottom: 25px;
@@ -863,16 +852,8 @@ gap: 20px;
 }
 
 .inputGroup input {
-width: 100%;
-padding: 12px 0;
-font-size: 16px;
-color: #333;
-border: none;
-border-bottom: 2px solid #ddd;
-outline: none;
-background: transparent;
-font-family: 'Poppins', sans-serif;
-transition: border-color 0.3s ease;
+    width: 100%;
+    padding: 12px 0;
     font-size: 16px;
     color: #333;
     border: none;

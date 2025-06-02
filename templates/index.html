@@ -40,12 +40,12 @@
         <div class="slider">
             <div class="slide fade">
                  <video class="video-slide" autoplay loop muted>
-          <source src="{{ url_for('static', filename='features/A.mp4') }}" type="video/mp4">
+          <source src="{{ url_for('static', filename='features/Golfinho.mp4') }}" type="video/mp4">
         </video>
             </div>
             <div class="slide fade">
                 <video class="video-slide" autoplay loop muted>
-          <source src="{{ url_for('static', filename='features/animaisMarinhos.mp4') }}" type="video/mp4">
+          <source src="{{ url_for('static', filename='features/animaisMarinhoss.mp4') }}" type="video/mp4">
         </video>
             </div>
             <div class="slide fade">
@@ -114,45 +114,54 @@
             });
         });
 
-        let slideIndex = 0;
-  const slides = document.querySelectorAll('.slide');
-  const dots = document.querySelectorAll('.dot');
+        let slideIndex = 1;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const videos = document.querySelectorAll('.video-slide');
 
-  function showSlides() {
+        function showSlides(n) {
+            if (n > slides.length) {
+                slideIndex = 1;
+            }
+            if (n < 1) {
+                slideIndex = slides.length;
+            }
 
-    slides.forEach(slide => {
-      slide.style.display = 'none';
-    });
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+                dots[i].classList.remove("active");
+            }
 
-    dots.forEach(dot => {
-      dot.classList.remove('active');
-    });
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].classList.add("active");
 
-    slideIndex++;
-    if (slideIndex > slides.length) { slideIndex = 1; }
+            const currentVideo = slides[slideIndex - 1].querySelector('video');
+            if (currentVideo) {
+                currentVideo.currentTime = 0;
+            }
+        }
+        function changeSlide(n) {
+            showSlides(slideIndex += n);
+        }
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
 
-    slides[slideIndex - 1].style.display = 'block';
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => currentSlide(index + 1));
+        });
+        showSlides(slideIndex);
+        setInterval(() => {
+            changeSlide(1);
+        }, 8000);
 
-    dots[slideIndex - 1].classList.add('active');
-
-     if (videos[slideIndex - 1]) {
-    videos[slideIndex - 1].currentTime = 20;  // Set the video to 20 seconds
-  }
-  }
-  function changeSlide(n) {
-    slideIndex += n;
-    if (slideIndex > slides.length) { slideIndex = 1; }
-    if (slideIndex < 1) { slideIndex = slides.length; }
-    showSlides();
-  }
-  function currentSlide(n) {
-    slideIndex = n;
-    showSlides();
-  }
-
- 
-  showSlides();
-  setInterval(showSlides, 500000);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
     </script>
 </body>
 </html>
