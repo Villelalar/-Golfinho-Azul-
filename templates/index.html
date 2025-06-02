@@ -93,6 +93,59 @@
             </div>
         </div>
     </section>
+    <section class="donationSection">
+        <div class="donationContainer">
+            <div class="donationHeader">
+                <h2>FAÇA SUA DOAÇÃO</h2>
+                <p class="donationTagline">Sua doação salva vidas marinhas!</p>
+            </div>
+            
+            <div class="donationOptions">
+                <div class="donationCard">
+                    <div class="donationAmount">R$ 20</div>
+                    <p>Ajuda com alimentação para 5 animais por uma semana</p>
+                    <button class="donateBtn">DOAR AGORA</button>
+                </div>
+                
+                <div class="donationCard featured">
+                    <div class="popularBadge">MAIS POPULAR</div>
+                    <div class="donationAmount">R$ 50</div>
+                    <p>Fornece medicamentos e tratamento básico para um animal</p>
+                    <button class="donateBtn">DOAR AGORA</button>
+                </div>
+                
+                <div class="donationCard">
+                    <div class="donationAmount">R$ 100</div>
+                    <p>Garante um mês de cuidados completos para um animal marinho</p>
+                    <button class="donateBtn">DOAR AGORA</button>
+                </div>
+                
+                <div class="customDonation">
+                    <div class="donationAmount">Outro Valor</div>
+                    <div class="customInput">
+                        <span>R$</span>
+                        <input type="number" min="1" placeholder="Digite o valor">
+                    </div>
+                    <button class="donateBtn">DOAR AGORA</button>
+                </div>
+            </div>
+            
+            <div class="donationInfo">
+                <div class="infoItem">
+                    <i class="fas fa-lock"></i>
+                    <span>Pagamento Seguro</span>
+                </div>
+                <div class="infoItem">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Recibo para Dedução Fiscal</span>
+                </div>
+                <div class="infoItem">
+                    <i class="fas fa-heart"></i>
+                    <span>100% dos fundos para os animais</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}

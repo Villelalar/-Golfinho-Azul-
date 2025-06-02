@@ -1,4 +1,5 @@
 /* Estilos gerais */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -16,11 +17,209 @@ body {
     overflow-x: hidden;
 }
 
-.oceanBody {
-    background: linear-gradient(145deg, #a9e0ff 0%, #6bcdff 100%);
-    min-height: 100vh;
+h1, h2 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
 }
 
+/* Parte de Doação */
+.donationSection {
+    position: relative;
+    background: linear-gradient(145deg, #0079a1 0%, #00507a 100%);
+    color: white;
+    padding: 2rem 0;
+    margin: 6rem 0 4rem;
+    overflow: hidden;
+}
+.donationContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: white;
+}
+
+.donationHeader {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: white;
+}
+
+.donationHeader h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    color: white;
+}
+
+.donationTagline {
+    font-size: 1.2rem;
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.donationOptions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 3rem;
+}
+
+.donationCard, .customDonation {
+    background: rgba(255, 255, 255, 0.15);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 280px;
+}
+
+.donationCard:hover, .customDonation:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.donationCard.featured {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.1);
+    z-index: 2;
+    border: 2px solid white;
+}
+
+.donationCard.featured:hover {
+    transform: translateY(-10px) scale(1.1);
+}
+
+.popularBadge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff7b00;
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    box-shadow: 0 5px 15px rgba(255, 123, 0, 0.4);
+}
+
+.donationAmount {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.donationCard p, .customDonation p {
+    margin-bottom: 2rem;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.donateBtn {
+    background: linear-gradient(145deg, #00a8e8 0%, #0077cc 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 0;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 119, 204, 0.3);
+    letter-spacing: 1px;
+}
+
+.donateBtn:hover {
+    background: linear-gradient(145deg, #00b7ff 0%, #0088e8 100%);
+    box-shadow: 0 15px 25px rgba(0, 119, 204, 0.4);
+    transform: translateY(-3px);
+}
+
+.customInput {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0 2rem;
+}
+
+.customInput span {
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.customInput input {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    width: 100%;
+    outline: none;
+}
+
+.customInput input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.donationInfo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.infoItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.infoItem:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.infoItem i {
+    color: #ffdd00;
+}
+
+
+/* Parte de homepage body */
+.oceanBody {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, #b3e0ff 0%, #4fc3f7 100%);
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+/* Parte do header */
 .oceanoHeader {
     background-color: #008bb4;
     padding: 0;
@@ -127,6 +326,7 @@ body {
     object-fit: contain;
 }
 
+/* Parte do login */
 .loginContainer .logoContainer {
     display: flex;
     justify-content: center;
@@ -143,6 +343,7 @@ body {
     margin: 0 auto;
 }
 
+/* Parte do header */
 .navegacaoButton {
     display: flex;
     gap: 1rem;
@@ -166,16 +367,11 @@ body {
     gap: 0.8rem;
     font-weight: 500;
 }
-
-.profileBtn:hover, .profileBtn:focus {
+.navegacaoBtn:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
-.profileBtn:active {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(0);
-}
 
 .dropdownContent {
     display: none;
@@ -215,6 +411,7 @@ body {
     --default-profile-color-dark: #006994;
 }
 
+/* Parte do perfil */
 .profileBtn {
     background: none;
     border: none;
@@ -232,6 +429,15 @@ body {
     cursor: pointer;
     height: 40px;
 }
+.profileBtn:hover, .profileBtn:focus {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.profileBtn:active {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(0);
+}
 
 .profileIcon {
     background-image: url('/static/features/icon.jpg');
@@ -241,11 +447,7 @@ body {
 
 }
 
-.navegacaoBtn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-}
-
+/* Parte do slider */
 .sliderContainer {
     position: relative;
     width: 100%;
@@ -341,6 +543,7 @@ body {
     }
 }
 
+/* Parte do sobre no homepage */
 .about {
     padding: 80px 20px;
     background: linear-gradient(180deg, #f0f8ff 0%, #e6f3ff 100%);
@@ -416,96 +619,13 @@ body {
     line-height: 1.4;
 }
 
-@media screen and (max-width: 768px) {
-    .aboutStats {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .aboutText p {
-        font-size: 1.1rem;
-    }
-}
-
-.editBtn, .saveBtn, .cancelBtn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
+/* Botões */
 .buttonSpacer {
     display: inline-block;
     width: 12px;
 }
 
-.editBtn {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.saveBtn {
-    background-color: #2196F3;
-    color: white;
-}
-
-.cancelBtn {
-    background-color: #f44336;
-    color: white;
-}
-
-.editBtn:hover {
-    background-color: #45a049; 
-}
-
-.saveBtn:hover {
-    background-color: #1976D2; 
-}
-
-.cancelBtn:hover {
-    background-color: #d32f2f; 
-}
-
-h1, h2 {
-    text-align: center;
-    margin-top: 20px;
-    color: #333;
-}
-
-.postItem {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin: 10px;
-    background-color: #fff;
-    text-align: center;
-    width: 100%;
-    max-width: 300px;
-    flex: 1 1 300px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.postItem img {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-}
-
-.postItem a {
-    display: inline-block;
-    margin-top: 10px;
-    background-color: #007BFF;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.postItem a:hover {
-    background-color: #0056b3;
-}
-
+/* Tabelas */
 .postsTable {
     display: flex;
     flex-wrap: wrap;
@@ -515,55 +635,6 @@ h1, h2 {
     max-width: 1200px;
     margin: 0 auto;
 }
-
-
-@media screen and (max-width: 768px) {
-    h1 {
-        font-size: 24px;
-        padding: 0 15px;
-    }
-
-    .postItem {
-        margin: 8px;
-        padding: 12px;
-    }
-
-    .defaultTable {
-        width: 95%;
-        font-size: 14px;
-    }
-
-    input[type="text"], input[type="email"] {
-        width: 100%;
-        max-width: 250px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    h1 {
-        font-size: 20px;
-    }
-
-    .post-item {
-        margin: 5px;
-        padding: 10px;
-    }
-
-    .post-item a {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-
-    .users-table th, .users-table td {
-        padding: 8px;
-        font-size: 13px;
-    }
-
-    form {
-        margin: 10px;
-    }
-}
-
 .defaultTable {
     width: 80%;
     margin: 20px auto;
@@ -599,8 +670,119 @@ h1, h2 {
 #searchResults {
     margin-top: 20px;
 }
+.tablesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 0 auto 3rem;
+    max-width: 1000px;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+}
 
+.tableCard {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 96, 100, 0.15);
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.4s ease;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+}
 
+.tableCard::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.tableCard:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 96, 100, 0.25);
+}
+
+.tableCard:hover::before {
+    opacity: 1;
+}
+
+.tableIcon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.material-icon-large {
+    font-size: 100px !important;
+    color: #006994;
+}
+
+.tableCard:hover .tableIcon {
+    transform: scale(1.1);
+}
+
+.tableName {
+    font-size: 1.25rem;
+    color: #00546B;
+    margin-bottom: 1.8rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.viewTableBtn {
+    background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 0.75rem 1.8rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(2, 136, 209, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.viewTableBtn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+}
+
+.viewTableBtn:hover {
+    background: linear-gradient(135deg, #039be5 0%, #0288d1 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(2, 136, 209, 0.4);
+}
+
+.viewTableBtn:hover::after {
+    left: 100%;
+}
+/* Formulários */
 form {
     text-align: center;
     margin: 20px;
@@ -660,32 +842,6 @@ button:hover {
     background-color: #d32f2f;
     transform: translateY(-1px);
 }
-
-
-.popup {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
-    z-index: 1000;
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
-    background-color: #007BFF; 
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-}
-
-.popup.error {
-    background-color: red;
-}
-.popup.success {
-    background-color: green;
-}
-
-
 body, html {
     margin: 0;
     padding: 0;
@@ -826,8 +982,25 @@ margin-bottom: 25px;
     pointer-events: none;
 }
 
+/* Fix for alterar_dados form labels */
+.loginBox .inputGroup label {
+    position: relative;
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 14px;
+    pointer-events: auto;
+}
+
+.loginBox .inputGroup input[type="color"] {
+    height: 40px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 .inputGroup input:focus ~ label,
-.inputGroup input.filled ~ label {
+.inputGroup input.filled ~ label,
+.inputGroup input[value]:not([value=""]) ~ label {
     top: -20px;
     font-size: 14px;
     color: #007bff;
@@ -913,15 +1086,7 @@ gap: 20px;
     text-decoration: underline;
 }
 
-.oceanBody {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(180deg, #b3e0ff 0%, #4fc3f7 100%);
-    overflow-x: hidden;
-    min-height: 100vh;
-    position: relative;
-}
-
+/* Parte do Database */
 .databaseContainer {
     max-width: 1200px;
     margin: 0 auto;
@@ -950,153 +1115,8 @@ gap: 20px;
     z-index: 10;
 }
 
-.tablesGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
-    position: relative;
-    z-index: 10;
-}
 
-.tableCard {
-    background-color: rgba(255, 255, 255, 0.85);
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 96, 100, 0.15);
-    padding: 1.8rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: all 0.4s ease;
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    position: relative;
-    overflow: hidden;
-}
-
-.tableCard::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-.tableCard:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 96, 100, 0.25);
-}
-
-.tableCard:hover::before {
-    opacity: 1;
-}
-
-.tableIcon {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 1.5rem;
-    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-    transition: transform 0.3s ease;
-}
-
-.tableCard:hover .tableIcon {
-    transform: scale(1.1);
-}
-
-.tableName {
-    font-size: 1.25rem;
-    color: #00546B;
-    margin-bottom: 1.8rem;
-    text-align: center;
-    font-weight: 500;
-}
-
-.viewTableBtn {
-    background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 0.75rem 1.8rem;
-    font-size: 1rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(2, 136, 209, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.viewTableBtn::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: 0.5s;
-}
-
-.viewTableBtn:hover {
-    background: linear-gradient(135deg, #039be5 0%, #0288d1 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(2, 136, 209, 0.4);
-}
-
-.viewTableBtn:hover::after {
-    left: 100%;
-}
-
-.logoutContainer {
-    display: flex;
-    justify-content: center;
-    margin-top: 3rem;
-    position: relative;
-    z-index: 10;
-}
-
-.logoutBtn {
-    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 0.75rem 2rem;
-    font-size: 1rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
-    position: relative;
-    overflow: hidden;
-}  
-
-.logoutBtn::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: 0.5s;
-}
-
-.logoutBtn:hover {
-    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(211, 47, 47, 0.4);
-}
-
-.logoutBtn:hover::after {
-    left: 100%;
-}
-
+/* Parte de Login e Register input */
 .inputGroup label {
     position: absolute;
     top: 12px;
@@ -1154,6 +1174,7 @@ gap: 20px;
     background-color: #0056b3;
 }
 
+/* Parte de Register link utilizável no login tb*/
 .registerLink {
     text-align: center;
     margin-top: 20px;
@@ -1176,6 +1197,7 @@ gap: 20px;
     color: #2980b9;
 }
 
+/* Parte de Login e Register butão */
 .loginContainer form button {
     padding: 6px;
     background: linear-gradient(135deg, #3498db, #2980b9);
@@ -1198,6 +1220,7 @@ gap: 20px;
     box-shadow: 0 8px 20px rgba(52,152,219,0.4);
 }
 
+/* Animação de aparecimento do formulário */
 @keyframes formAppear {
     from {
         opacity: 0;
@@ -1208,129 +1231,15 @@ gap: 20px;
         transform: translateY(0);
     }
 }
-
-@media screen and (max-width: 480px) {
-    .loginContainer {
-        padding: 10px;
-    }
-
-    .logo {
-        max-width: 200px;
-    }
-
-    .loginContainer form {
-        padding: 20px;
-    }
-}
-
-.postItem {
-    margin: 2px 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.postItem.label {
-    font-size: 12px;
-    color: #666;
-    margin-bottom: 1px;
-    text-align: left;
-}
-
-.login-container h1 {
+.loginContainer h1 {
     color: #2c3e50;
     margin-bottom: 20px;
     font-size: 2.5em;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-}
-
-.loginContainer.postItem {
-    margin: 10px 0;
-    width: 100%;
-}
-
-.loginContainer.postItem.label {
-    display: block;
-    margin-bottom: 8px;
     font-weight: 600;
-    color: #008bb4;
-    text-align: left;
-    font-size: 0.95em;
 }
 
-.loginContainer.postItem.input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1em;
-    transition: all 0.3s ease;
-    outline: none;
-}
 
-.loginContainer.postItem.input:focus {
-    border-color: #008bb4;
-    box-shadow: 0 0 0 2px rgba(0, 139, 180, 0.2);
-}
-
-.loginContainer.postItem.button {
-    width: 100%;
-    padding: 12px;
-    background: #008bb4;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.login-container .post-item button:hover {
-    background: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(52,152,219,0.3);
-}
-
-.loginContainer.postItem a {
-    display: inline-block;
-    margin-top: 15px;
-    color: #7f8c8d;
-    text-decoration: none;
-    font-size: 0.9em;
-    transition: color 0.3s ease;
-}
-
-.loginContainer.postItem a:hover {
-    color: #3498db;
-}
-
-@media screen and (max-width: 480px) {
-    .loginContainer {
-        padding: 15px;
-    }
-
-    .loginContainer h1 {
-        font-size: 2em;
-        margin-bottom: 20px;
-    }
-
-    .loginContainer form {
-        padding: 20px;
-    }
-
-    .loginContainer .postItem {
-        margin: 15px 0;
-    }
-
-    .loginContainer .postItem input,
-    .loginContainer .postItem button {
-        padding: 10px;
-    }
-}
-
+ /* Parte de Popup */
 .popup {
     position: fixed;
     top: 20px;
@@ -1343,6 +1252,8 @@ gap: 20px;
     z-index: 1000;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
+    background-color: #007BFF; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .popup.error {
@@ -1352,7 +1263,7 @@ gap: 20px;
 .popup.success {
     background-color: green;
 }
-
+/* parte de Logout do sistema*/
 .logoutButtonContainer {
     display: flex;
     justify-content: center;
@@ -1375,4 +1286,202 @@ gap: 20px;
 
 .logoutButton:hover {
     background-color: #c82333; 
+}
+
+/* parte de Logout botão do header */
+.logoutBtn {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
+    position: relative;
+    overflow: hidden;
+}  
+
+.logoutBtn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+}
+
+.logoutBtn:hover {
+    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(211, 47, 47, 0.4);
+}
+
+.logoutBtn:hover::after {
+    left: 100%;
+}
+
+.logoutContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* Media queries  */
+@media screen and (max-width: 1100px) {
+    .donationOptions {
+        gap: 15px;
+    }
+    
+    .donationCard, .customDonation {
+        width: 220px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .donationCard.featured {
+        transform: scale(1.05);
+    }
+    
+    .donationCard.featured:hover {
+        transform: translateY(-10px) scale(1.05);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .donationOptions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .donationCard, .customDonation {
+        width: 80%;
+        max-width: 320px;
+    }
+    
+    .donationCard.featured {
+        transform: scale(1);
+    }
+    
+    .donationCard.featured:hover {
+        transform: translateY(-10px) scale(1);
+    }
+    h1 {
+        font-size: 24px;
+        padding: 0 15px;
+    }
+
+    .postItem {
+        margin: 8px;
+        padding: 12px;
+    }
+
+    .defaultTable {
+        width: 95%;
+        font-size: 14px;
+    }
+
+    input[type="text"], input[type="email"] {
+        width: 100%;
+        max-width: 250px;
+    }
+    .aboutStats {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .aboutText p {
+        font-size: 1.1rem;
+    }
+}
+@media screen and (max-width: 480px) {
+    .loginContainer h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .loginContainer .postItem {
+        margin: 15px 0;
+    }
+
+    .loginContainer .postItem input,
+    .loginContainer .postItem button {
+        padding: 10px;
+
+    }
+    .loginContainer {
+        padding: 10px;
+    }
+
+    .logo {
+        max-width: 200px;
+    }
+
+    .loginContainer form {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 20px;
+    }
+
+    .post-item {
+        margin: 5px;
+        padding: 10px;
+    }
+
+    .post-item a {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .users-table th, .users-table td {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    form {
+        margin: 10px;
+    }
+}
+
+/* Logout Button Styles */
+.logoutContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.logoutBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e53935, #c62828);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(198, 40, 40, 0.3);
+    transition: all 0.3s ease;
+}
+
+.logoutBtn .material-icons {
+    margin-right: 8px;
+}
+
+.logoutBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(198, 40, 40, 0.4);
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+}
+
+.logoutBtn:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 10px rgba(198, 40, 40, 0.3);
 }

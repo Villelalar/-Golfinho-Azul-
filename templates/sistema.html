@@ -8,6 +8,7 @@
     <link rel="icon" href="{{ url_for('static', filename='features/icon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body class="oceanBody">
     <header class="oceanoHeader">
@@ -48,43 +49,41 @@
     {% endwith %}
 
     <div class="databaseContainer fullPage">
-        <h1 class="databaseTitle">Tabelas Disponíveis no Banco de Dados</h1>
+        <h1 class="databaseTitle">Serviços Disponíveis no Sistema</h1>
         
         <div class="tablesGrid">
             {% for table in tables %}
+                {% if table != 'imagens_homepage' and table != 'instagram_posts' %}
                 <div class="tableCard">
                     {% if table == 'aprovar_admins' %}
                         <div class="tableIcon admin-icon">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="50" cy="35" r="25" fill="#999"/>
-                                <path d="M50 45 L50 45 Q25 45 25 75 L75 75 Q75 45 50 45" fill="#999"/>
-                                <circle cx="70" cy="60" r="15" fill="#8BC34A"/>
-                                <path d="M65 60 L68 63 L75 56" stroke="white" stroke-width="3" fill="none"/>
-                            </svg>
+                            <span class="material-icons material-icon-large">
+                                admin_panel_settings
+                            </span>
                         </div>
                     {% elif table == 'consultas' %}
                         <div class="tableIcon document-icon">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M30 15 L70 15 L85 30 L85 85 L30 85 Z" fill="#E0E0E0"/>
-                                <path d="M70 15 L70 30 L85 30" fill="#BDBDBD"/>
-                                <line x1="40" y1="40" x2="75" y2="40" stroke="#555" stroke-width="3"/>
-                                <line x1="40" y1="50" x2="75" y2="50" stroke="#555" stroke-width="3"/>
-                                <line x1="40" y1="60" x2="75" y2="60" stroke="#555" stroke-width="3"/>
-                                <line x1="40" y1="70" x2="75" y2="70" stroke="#555" stroke-width="3"/>
-                            </svg>
+                            <span class="material-icons material-icon-large">
+                                description
+                            </span>
                         </div>
                     {% elif table == 'users' %}
                         <div class="tableIcon user-icon">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="50" cy="40" r="20" fill="#999"/>
-                                <path d="M50 60 L50 60 Q20 60 20 90 L80 90 Q80 60 50 60" fill="#999"/>
-                            </svg>
+                            <span class="material-icons material-icon-large">
+                                people
+                            </span>
+                        </div>
+                    {% elif table == 'doacoes' %}
+                        <div class="tableIcon donation-icon">
+                            <span class="material-icons material-icon-large">
+                                volunteer_activism
+                            </span>
                         </div>
                     {% else %}
                         <div class="tableIcon default-icon">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="25" y="25" width="50" height="50" fill="#999"/>
-                            </svg>
+                            <span class="material-icons material-icon-large">
+                                table_chart
+                            </span>
                         </div>
                     {% endif %}
                     
@@ -102,11 +101,15 @@
                     
                     <a href="{{ url_for('view_table', table_name=table) }}" class="viewTableBtn">Ver Tabela</a>
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
         
         <div class="logoutContainer">
-            <a href="{{ url_for('logout') }}" class="logoutBtn">Logout</a>
+            <a href="{{ url_for('logout') }}" class="logoutBtn">
+                <span class="material-icons">logout</span>
+                Logout
+            </a>
         </div>
     </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

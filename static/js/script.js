@@ -59,6 +59,11 @@ $(document).ready(function() {
         }
         
         $('body').append(popup);
+        
+        setTimeout(() => {
+            popup.addClass('fade-out');
+            setTimeout(() => popup.remove(), 700); 
+        }, 3000);
     }
 
     // Admin functionality
@@ -136,11 +141,22 @@ $(document).ready(function() {
             });
         });
 
-        // Clear search results when search query is cleared
+        // Clear search results when search query is cleared 
         $('#search_query').on('input', function() {
             if (!this.value) {
                 $('#searchTable tbody').empty();
+                $('#searchResults').hide();
+                showPopup('Pesquisa limpa', false);
             }
+        });
+        
+       
+        $('#searchForm').append('<button type="button" id="clearSearch" class="btn btn-danger">Limpar</button>');
+        $('#clearSearch').on('click', function() {
+            $('#search_query').val('');
+            $('#searchTable tbody').empty();
+            $('#searchResults').hide();
+            showPopup('Pesquisa limpa', false);
         });
 
         // Edit button functionality
