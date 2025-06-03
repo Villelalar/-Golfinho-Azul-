@@ -10,4 +10,5 @@ Para rodar o projeto, você precisará instalar as seguintes dependências Pytho
 pip install cryptography
 pip install pymysql
 pip install flask
+pip install flask_login
 ```
