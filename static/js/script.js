@@ -82,6 +82,8 @@ $(document).ready(function() {
                 <button class="save-btn btn btn-primary">Salvar</button>
                 <span class="button-spacer"></span>
                 <button class="cancel-btn btn btn-secondary">Cancelar</button>
+                <span class="button-spacer"></span>
+                <button class="delete-btn btn btn-danger">Excluir</button>
             `);
         }
 
@@ -169,6 +171,44 @@ $(document).ready(function() {
         $(document).on('click', '.cancel-btn', function() {
             const row = $(this).closest('tr');
             disableEditMode(row);
+        });
+
+        // Delete row functionality
+        $(document).on('click', '.delete-btn', function() {
+            if (!confirm('Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            const row = $(this).closest('tr');
+            const id = row.data('id');
+            const tableName = window.location.pathname.split('/').pop();
+
+            $.ajax({
+                url: `/admin/delete_data`,
+                type: 'POST',
+                data: { 
+                    table_name: tableName,
+                    id: id
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        showPopup('Registro excluído com sucesso!', false);
+                        row.fadeOut(400, function() {
+                            row.remove();
+                        });
+                    } else {
+                        showPopup('Erro ao excluir registro: ' + (response.message || 'Erro desconhecido'), true);
+                    }
+                },
+                error: function(xhr) {
+                    try {
+                        const response = xhr.responseJSON || {};
+                        showPopup('Erro: ' + (response.error || 'Erro ao processar a requisição'), true);
+                    } catch (e) {
+                        showPopup('Erro ao processar a resposta do servidor', true);
+                    }
+                }
+            });
         });
 
         // Save edited data
@@ -272,6 +312,8 @@ $(document).ready(function() {
         }
         return datetimeLocal;
     }
+
+
 });
 //fazer o dropdownContent aparecer e desaparecer ao clicar no botão de "meu perfil"
 document.addEventListener('DOMContentLoaded', function() {

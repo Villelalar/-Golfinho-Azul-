@@ -124,7 +124,8 @@
     <!-- Formulário para adicionar dados -->
     {% if table_name not in ['users', 'aprovar_admins'] %}
     <h2>Adicionar Novo Registro</h2>
-    <form id="addDataForm" onsubmit="return validateAddForm()">
+    <form id="addDataForm">
+        <input type="hidden" name="table_name" value="{{ table_name }}">
         {% for column in data[0].keys() %}
             {% if not column.lower().startswith('id') and column.lower() != 'created_at' %}
                 <input type="text" id="{{ column }}" name="{{ column }}" placeholder="{{ column }}" required>
@@ -134,6 +135,36 @@
     </form>
     {% endif %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#addDataForm').on('submit', function(e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+            
+            $.ajax({
+                url: '{{ url_for("add_data") }}',
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    if (response.status === 'success') {
+                        showPopup('Dados adicionados com sucesso!', false);
+                        setTimeout(() => window.location.reload(), 1500);
+                    } else {
+                        showPopup('Erro: ' + (response.message || 'Erro desconhecido'), true);
+                    }
+                },
+                error: function(xhr) {
+                    try {
+                        const response = xhr.responseJSON || {};
+                        showPopup('Erro: ' + (response.error || 'Erro ao processar a requisição'), true);
+                    } catch (e) {
+                        showPopup('Erro ao processar a resposta do servidor', true);
+                    }
+                }
+            });
+        });
+    });
+    </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

@@ -680,6 +680,28 @@ def search_data(table_name, search_query):
         if 'connection' in locals():
             connection.close()
 
+# Route to delete data from a table
+@app.route('/admin/delete_data', methods=['POST'])
+@login_required
+def route_delete_data():
+    if current_user.role != 'admin':
+        return json.dumps({'status': 'error', 'message': 'Acesso negado'}), 403, {'Content-Type': 'application/json'}
+    
+    try:
+        table_name = request.form.get('table_name')
+        row_id = request.form.get('id')
+        
+        if not table_name or not row_id:
+            return json.dumps({'status': 'error', 'message': 'Nome da tabela ou ID não fornecidos'}), 400
+            
+        # Call the delete_data helper function
+        result = delete_data(table_name, row_id)
+        return json.dumps({'status': 'success'}), 200, {'Content-Type': 'application/json'}
+        
+    except Exception as e:
+        print(f"Error deleting data: {e}")
+        return json.dumps({'status': 'error', 'message': str(e)}), 500, {'Content-Type': 'application/json'}
+
 # Test route to verify database connection
 @app.route('/test_db')
 def test_db():
