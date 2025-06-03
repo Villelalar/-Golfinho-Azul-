@@ -237,13 +237,14 @@ def alterar_dados():
         name = request.form.get('name')
         email = request.form.get('email')
         phone = request.form.get('phone')
-        
+        profile_color = request.form.get('profile_color')
+
         try:
             connection = conectar_banco()
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "UPDATE users SET name = %s, email = %s, phone = %s WHERE id = %s",
-                    (name, email, phone, current_user.cpf)
+                    "UPDATE users SET name = %s, email = %s, phone = %s, profile_color = %s WHERE id = %s",
+                    (name, email, phone, profile_color, current_user.cpf)
                 )
                 connection.commit()
                 flash('Dados atualizados com sucesso!', 'success')
