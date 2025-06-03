@@ -433,10 +433,18 @@ def add_data():
     
     try:
         result = add_data(table_name, data)
-        return result
+        return app.response_class(
+            response=json.dumps({'status': 'success'}),
+            status=200,
+            mimetype='application/json'
+        )
     except Exception as e:
         print(f"Error ao inserir data: {e}")
-        return json.dumps({'error': str(e)}), 500, {'Content-Type': 'application/json'}
+        return app.response_class(
+            response=json.dumps({'status': 'error', 'message': str(e)}),
+            status=500,
+            mimetype='application/json'
+        )
 
 @app.route('/add_doacao/<valor>', methods=['POST'])
 @login_required

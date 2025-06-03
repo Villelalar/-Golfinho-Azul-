@@ -183,6 +183,11 @@ $(document).ready(function() {
             const id = row.data('id');
             const tableName = window.location.pathname.split('/').pop();
 
+            // If in edit mode, exit edit mode first
+            if (row.hasClass('editing')) {
+                disableEditMode(row);
+            }
+
             $.ajax({
                 url: `/admin/delete_data`,
                 type: 'POST',

@@ -136,6 +136,26 @@
     {% endif %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+    // Move the showPopup function here to ensure it's available
+    function showPopup(message, isError) {
+        const popup = $('<div>')
+            .addClass('popup')
+            .text(message);
+        
+        if (isError) {
+            popup.addClass('error');
+        } else {
+            popup.addClass('success');
+        }
+        
+        $('body').append(popup);
+        
+        setTimeout(() => {
+            popup.addClass('fade-out');
+            setTimeout(() => popup.remove(), 700); 
+        }, 3000);
+    }
+
     $(document).ready(function() {
         $('#addDataForm').on('submit', function(e) {
             e.preventDefault();
@@ -145,10 +165,11 @@
                 url: '{{ url_for("add_data") }}',
                 type: 'POST',
                 data: formData,
+                dataType: 'json',
                 success: function(response) {
                     if (response.status === 'success') {
                         showPopup('Dados adicionados com sucesso!', false);
-                        setTimeout(() => window.location.reload(), 1500);
+                        setTimeout(() => window.location.reload(), 500);
                     } else {
                         showPopup('Erro: ' + (response.message || 'Erro desconhecido'), true);
                     }
