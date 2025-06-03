@@ -79,11 +79,11 @@ $(document).ready(function() {
 
             const actionCell = row.find('td:last-child');
             actionCell.html(`
-                <button class="save-btn btn btn-primary">Salvar</button>
+                <button class="save-btn btn btn-success"><i class="fas fa-save"></i></button>
                 <span class="button-spacer"></span>
-                <button class="cancel-btn btn btn-secondary">Cancelar</button>
+                <button class="cancel-btn btn btn-warning"><i class="fas fa-times"></i></button>
                 <span class="button-spacer"></span>
-                <button class="delete-btn btn btn-danger">Excluir</button>
+                <button class="delete-btn btn btn-danger"><i class="fas fa-trash-alt"></i></button>
             `);
         }
 
