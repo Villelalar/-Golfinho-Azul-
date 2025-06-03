@@ -431,6 +431,21 @@ def add_data():
         print(f"Error ao inserir data: {e}")
         return json.dumps({'error': str(e)}), 500, {'Content-Type': 'application/json'}
 
+@app.route('/add_doacao/<valor>', methods=['POST'])
+@login_required
+def add_data():   
+    try:
+        connection = conectar_banco()
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO doacoes (user_id, valor, data) VALUES (%s, %s, %s)",
+                           (current_user.cpf, valor, datetime.now()))
+            connection.commit()
+        return json.dumps({'status': 'success', 'message': 'Doação registrada com sucesso!'}), 200, {'Content-Type': 'application/json'}
+    except pymysql.IntegrityError as e:
+        print(f"Integrity error: {e}")
+        return json.dumps({'error': 'Doação já registrada para este usuário.'}), 400, {'Content-Type': 'application/json'}
+
+
 # rota interna que possibilita alterar linhas
 @app.route('/admin/update_data', methods=['POST'])
 @login_required
