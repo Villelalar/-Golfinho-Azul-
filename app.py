@@ -1,3 +1,4 @@
+import os 
 from flask import Flask, render_template, request, redirect, url_for, flash, json, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
