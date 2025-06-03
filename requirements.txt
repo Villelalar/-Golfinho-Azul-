@@ -1,4 +1,1 @@
-pip install cryptography
-pip install pymysql
-pip install flask
-pip install flask_login
+
