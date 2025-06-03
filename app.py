@@ -31,7 +31,7 @@ def conectar_banco(database_name='defaultdb'):
 
 # modelo de usuário
 class User(UserMixin):
-    def __init__(self, id, email, name, phone, role, profile_color='#008bb4', profile_picture=None):
+    def __init__(self, id, email, name, phone, role, profile_color='#008bb4'):
         self.cpf = id
         self.email = email
         self.name = name
@@ -174,7 +174,7 @@ def register():
         password = request.form.get('password')
         name = request.form.get('name')
         phone = request.form.get('phone')
-        role = request.form.get('role')  
+        role = request.form.get('role')
         
         try:
             connection = conectar_banco()
@@ -252,7 +252,7 @@ def alterar_dados():
         except pymysql.Error as e:
             connection.rollback()
             flash(f'Erro ao atualizar dados: {str(e)}', 'error')
-            return redirect(request.url)
+            
         finally:
             if connection:
                 connection.close()
