@@ -214,7 +214,7 @@ h1, h2 {
 .oceanBody {
     margin: 0;
     padding: 0;
-    background: linear-gradient(180deg, #b3e0ff 0%, #4fc3f7 100%);
+    background-color: #b3e0ff;
     overflow-x: hidden;
     min-height: 100vh;
     position: relative;
