@@ -8,6 +8,41 @@
     <link rel="icon" href="{{ url_for('static', filename='features/icon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+.donationConfirm {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    padding: 32px 24px 24px 24px;
+    text-align: center;
+    min-width: 280px;
+    max-width: 90vw;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+.donationConfirm p {
+    margin: 0 0 12px 0;
+    font-size: 1.1em;
+}
+.donationConfirm .closeBtn {
+    margin-top: 10px;
+    padding: 8px 24px;
+    background: #0099cc;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.2s;
+}
+.donationConfirm .closeBtn:hover {
+    background: #0077aa;
+}
+</style>
 </head>
 <body>
     <header class="oceanoHeader">
@@ -223,9 +258,10 @@
             const confirmMessage = document.createElement("div");
             confirmMessage.className = "donationConfirm";
             confirmMessage.innerHTML = `
-                <p>Obrigado pela sua doação!</p>
-                <p>Você está ajudando a salvar vidas marinhas.</p>
-                <button class="closeBtn">Fechar</button>
+                <p>🐟Ajude nossa organização🐟</p>
+                <p>Doe e salve vidas marinhas!</p>
+                <button class="donationBtn">Doar</button>
+                <button class="closeBtn">Cancelar</button>
             `;
             document.body.appendChild(confirmMessage);
 
@@ -233,11 +269,16 @@
             closeBtn.addEventListener("click", () => {
                 confirmMessage.remove();
             });
-
+           
+            setTimeout(() => {
+                confirmMessage.remove();
+            }, 5000);
 
         }
+buttonDonation.forEach(btn => {
+    btn.addEventListener("click", donationConfirm);
+});
 
-        document.addEventListener
 
     </script>
 </body>
