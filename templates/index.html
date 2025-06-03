@@ -139,33 +139,45 @@
                 <div class="donationCard">
                     <div class="donationAmount">R$ 20</div>
                     <p>Ajuda com alimentação para 5 animais por uma semana</p>
-                    {% if current_user.is_authenticated %} <button class="donateBtn">DOAR AGORA!</button>
-                    {% else %} <button class="donateBtn"> LOGIN </button> {% endif %}
+                    {% if current_user.is_authenticated %}
+                        <button class="donateBtn" data-amount="20">DOAR AGORA!</button>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="donateBtn">LOGIN</a>
+                    {% endif %}
                 </div>
                 
                 <div class="donationCard featured">
                     <div class="popularBadge">MAIS POPULAR</div>
                     <div class="donationAmount">R$ 50</div>
                     <p>Fornece medicamentos e tratamento básico para um animal</p>
-                    {% if current_user.is_authenticated %} <button class="donateBtn">DOAR AGORA!</button>
-                    {% else %} <button class="donateBtn"> LOGIN </button> {% endif %}
+                    {% if current_user.is_authenticated %}
+                        <button class="donateBtn" data-amount="50">DOAR AGORA!</button>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="donateBtn">LOGIN</a>
+                    {% endif %}
                 </div>
                 
                 <div class="donationCard">
                     <div class="donationAmount">R$ 100</div>
                     <p>Garante um mês de cuidados completos para um animal marinho</p>
-                    {% if current_user.is_authenticated %} <button class="donateBtn">DOAR AGORA!</button>
-                    {% else %} <button class="donateBtn"> LOGIN </button> {% endif %}
+                    {% if current_user.is_authenticated %}
+                        <button class="donateBtn" data-amount="100">DOAR AGORA!</button>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="donateBtn">LOGIN</a>
+                    {% endif %}
                 </div>
                 
                 <div class="customDonation">
                     <div class="donationAmount">Outro Valor</div>
                     <div class="customInput">
                         <span>R$</span>
-                        <input type="number" min="1" placeholder="Digite o valor">
+                        <input type="number" min="1" placeholder="Digite o valor" id="customDonationInput">
                     </div>
-                    {% if current_user.is_authenticated %} <button class="donateBtn">DOAR AGORA!</button>
-                    {% else %} <button class="donateBtn"> LOGIN </button> {% endif %}
+                    {% if current_user.is_authenticated %}
+                        <button class="donateBtn" id="customDonateBtn">DOAR AGORA!</button>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="donateBtn">LOGIN</a>
+                    {% endif %}
                 </div>
             </div>
             
@@ -255,35 +267,198 @@
             }
         });
 
-        /* Donation donateBtn */
-        const buttonDonation = document.querySelectorAll(".donateBtn");
-
-        function donationConfirm (){
+        // Initialize variables
+        let donateButtons, customDonateBtn, customDonationInput;
+        
+        // Function to handle donation button click
+        function handleDonationButtonClick(event) {
+            event.preventDefault();
+            const button = event.currentTarget;
+            let amount;
+            
+            if (button.id === 'customDonateBtn') {
+                const inputValue = document.getElementById('customDonationInput')?.value;
+                amount = parseFloat(inputValue);
+                if (isNaN(amount) || amount <= 0) {
+                    showAlert('Por favor, insira um valor válido para doação.', 'error');
+                    document.getElementById('customDonationInput')?.focus();
+                    return;
+                }
+            } else {
+                amount = parseFloat(button.getAttribute('data-amount'));
+            }
+            
+            showDonationModal(amount);
+        }
+        
+        // Function to show donation modal
+        function showDonationModal(amount) {
             const confirmMessage = document.createElement("div");
             confirmMessage.className = "donationConfirm";
             confirmMessage.innerHTML = `
-                <p>🐟Ajude nossa organização🐟</p>
-                <p>Doe e salve vidas marinhas!</p>
-                <button class="donationBtn">Doar</button>
-                <button class="closeBtn">Cancelar</button>
+                <div class="donation-modal">
+                    <h3>Confirmar Doação</h3>
+                    <div class="donation-amount">R$ ${amount.toFixed(2)}</div>
+                    
+                    <div class="payment-methods">
+                        <h4>Selecione a forma de pagamento:</h4>
+                        
+                        <label class="payment-method">
+                            <input type="radio" name="payment" value="pix" checked>
+                            <span class="payment-method-label">
+                                <i class="fas fa-qrcode payment-method-icon"></i>
+                                <span>PIX</span>
+                            </span>
+                        </label>
+                        
+                        <label class="payment-method">
+                            <input type="radio" name="payment" value="boleto">
+                            <span class="payment-method-label">
+                                <i class="fas fa-barcode payment-method-icon"></i>
+                                <span>Boleto</span>
+                            </span>
+                        </label>
+                        
+                        <label class="payment-method">
+                            <input type="radio" name="payment" value="cartao">
+                            <span class="payment-method-label">
+                                <i class="far fa-credit-card payment-method-icon"></i>
+                                <span>Cartão de Crédito</span>
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <div class="modal-buttons">
+                        <button class="cancel-btn">Cancelar</button>
+                        <button class="confirm-donation">Confirmar Doação</button>
+                    </div>
+                </div>
             `;
+            
             document.body.appendChild(confirmMessage);
 
-            const closeBtn = confirmMessage.querySelector(".closeBtn");
+            // Handle close button
+            const closeBtn = confirmMessage.querySelector(".cancel-btn");
             closeBtn.addEventListener("click", () => {
                 confirmMessage.remove();
             });
-           
-            setTimeout(() => {
-                confirmMessage.remove();
-            }, 5000);
 
+            // Handle donation confirmation
+            const confirmBtn = confirmMessage.querySelector(".confirm-donation");
+            confirmBtn.addEventListener("click", async () => {
+                const paymentMethod = confirmMessage.querySelector('input[name="payment"]:checked').value;
+                
+                try {
+                    const response = await fetch(`/add_doacao/${amount}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `metodo=${paymentMethod}`
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        showAlert('Doação realizada com sucesso! Obrigado pelo seu apoio.', 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        showAlert('Erro ao processar a doação: ' + (data.error || 'Tente novamente mais tarde.'), 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert('Erro ao processar a doação. Por favor, tente novamente.', 'error');
+                } finally {
+                    confirmMessage.remove();
+                }
+            });
+
+            // Close on outside click
+            confirmMessage.addEventListener('click', (e) => {
+                if (e.target === confirmMessage) {
+                    confirmMessage.remove();
+                }
+            });
         }
-buttonDonation.forEach(btn => {
-    btn.addEventListener("click", donationConfirm);
-});
-
-
+        
+        // Function to show alert message
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            document.body.appendChild(alertDiv);
+            
+            // Position the alert
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = '20px';
+            alertDiv.style.left = '50%';
+            alertDiv.style.transform = 'translateX(-50%)';
+            alertDiv.style.padding = '15px 25px';
+            alertDiv.style.borderRadius = '5px';
+            alertDiv.style.zIndex = '2000';
+            alertDiv.style.color = 'white';
+            alertDiv.style.fontWeight = 'bold';
+            alertDiv.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+            
+            // Style based on type
+            if (type === 'success') {
+                alertDiv.style.backgroundColor = '#4CAF50';
+            } else if (type === 'error') {
+                alertDiv.style.backgroundColor = '#f44336';
+            } else {
+                alertDiv.style.backgroundColor = '#2196F3';
+            }
+            
+            // Remove alert after 5 seconds
+            setTimeout(() => {
+                alertDiv.style.opacity = '0';
+                alertDiv.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        document.body.removeChild(alertDiv);
+                    }
+                }, 500);
+            }, 5000);
+        }
+        
+        // Initialize event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get donation buttons
+            donateButtons = document.querySelectorAll('.donateBtn[data-amount]');
+            customDonateBtn = document.getElementById('customDonateBtn');
+            customDonationInput = document.getElementById('customDonationInput');
+            
+            // Add event listeners to donation buttons
+            if (donateButtons.length > 0) {
+                donateButtons.forEach(button => {
+                    button.addEventListener('click', handleDonationButtonClick);
+                });
+            }
+            
+            // Add event listener to custom donation button
+            if (customDonateBtn) {
+                customDonateBtn.addEventListener('click', handleDonationButtonClick);
+            }
+            
+            // Add animation to payment method selection
+            document.addEventListener('click', function(e) {
+                const paymentMethod = e.target.closest('.payment-method');
+                if (paymentMethod) {
+                    // Remove selected class from all payment methods
+                    document.querySelectorAll('.payment-method').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    // Add to clicked
+                    paymentMethod.classList.add('selected');
+                    // Check the radio input
+                    const radio = paymentMethod.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                }
+            });
+        });
     </script>
 </body>
 </html>

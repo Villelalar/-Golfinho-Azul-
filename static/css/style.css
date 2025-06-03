@@ -1467,3 +1467,124 @@ gap: 20px;
     transform: translateY(1px);
     box-shadow: 0 3px 10px rgba(198, 40, 40, 0.3);
 }
+
+/* Donation Modal Styles */
+.donation-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.donation-modal {
+    background: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    padding: 2rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.donation-modal h3 {
+    color: #0079a1;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.donation-amount {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #00507a;
+    text-align: center;
+    margin: 1rem 0 2rem;
+}
+
+.payment-methods {
+    margin: 1.5rem 0;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-method:hover {
+    border-color: #0079a1;
+    background-color: #f5f9ff;
+}
+
+.payment-method.selected {
+    border-color: #0079a1;
+    background-color: #e6f3ff;
+}
+
+.payment-method input[type="radio"] {
+    margin-right: 1rem;
+    width: 18px;
+    height: 18px;
+}
+
+.payment-method-label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.payment-method-icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    color: #0079a1;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.cancel-btn, .confirm-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background-color: #f5f5f5;
+    color: #666;
+}
+
+.cancel-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.confirm-btn {
+    background: linear-gradient(135deg, #0079a1, #00507a);
+    color: white;
+}
+
+.confirm-btn:hover {
+    background: linear-gradient(135deg, #0099c7, #0079a1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.confirm-btn:active {
+    transform: translateY(0);
+}
