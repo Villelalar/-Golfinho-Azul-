@@ -434,7 +434,7 @@ def add_data():
 
 @app.route('/add_doacao/<valor>', methods=['POST'])
 @login_required
-def add_data():   
+def add_doacao():   
     try:
         connection = conectar_banco()
         with connection.cursor() as cursor:
