@@ -1,3 +1,4 @@
+import os 
 from flask import Flask, render_template, request, redirect, url_for, flash, json, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -431,6 +432,21 @@ def add_data():
         print(f"Error ao inserir data: {e}")
         return json.dumps({'error': str(e)}), 500, {'Content-Type': 'application/json'}
 
+@app.route('/add_doacao/<valor>', methods=['POST'])
+@login_required
+def add_doacao():   
+    try:
+        connection = conectar_banco()
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO doacoes (user_id, valor, data) VALUES (%s, %s, %s)",
+                           (current_user.cpf, valor, datetime.now()))
+            connection.commit()
+        return json.dumps({'status': 'success', 'message': 'Doação registrada com sucesso!'}), 200, {'Content-Type': 'application/json'}
+    except pymysql.IntegrityError as e:
+        print(f"Integrity error: {e}")
+        return json.dumps({'error': 'Doação já registrada para este usuário.'}), 400, {'Content-Type': 'application/json'}
+
+
 # rota interna que possibilita alterar linhas
 @app.route('/admin/update_data', methods=['POST'])
 @login_required
@@ -674,5 +690,5 @@ def test_db():
         if 'connection' in locals():
             connection.close()
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 10000)))
