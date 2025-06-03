@@ -175,18 +175,20 @@ $(document).ready(function() {
 
         // Delete row functionality
         $(document).on('click', '.delete-btn', function() {
+            const row = $(this).closest('tr');
+            
+            // First disable edit mode to close the menu
+            if (row.find('.cancel-btn').length) {
+                disableEditMode(row);
+                return; // Return here, user will need to click delete again to confirm
+            }
+            
             if (!confirm('Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.')) {
                 return;
             }
 
-            const row = $(this).closest('tr');
             const id = row.data('id');
             const tableName = window.location.pathname.split('/').pop();
-
-            // If in edit mode, exit edit mode first
-            if (row.hasClass('editing')) {
-                disableEditMode(row);
-            }
 
             $.ajax({
                 url: `/admin/delete_data`,

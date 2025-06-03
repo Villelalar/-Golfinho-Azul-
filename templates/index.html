@@ -43,31 +43,113 @@
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-            padding: 32px 24px 24px 24px;
+            padding: 24px;
             text-align: center;
-            min-width: 280px;
-            max-width: 90vw;
+            min-width: 300px;
+            max-width: 400px;
+            width: 90%;
             font-family: 'Poppins', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-        .donationConfirm p {
+        
+        .donationConfirm h3 {
+            color: #008bb4;
+            margin: 0 0 16px 0;
+            font-size: 1.5em;
+        }
+        
+        .donation-amount {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #0099cc;
+            margin: 0;
+        }
+        
+        .payment-methods {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .payment-methods h4 {
             margin: 0 0 12px 0;
+            color: #333;
             font-size: 1.1em;
         }
-        .donationConfirm .closeBtn {
-            margin-top: 10px;
-            padding: 8px 24px;
-            background: #0099cc;
-            color: #fff;
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .payment-method:hover {
+            background-color: #f0f8ff;
+        }
+        
+        .payment-method input[type="radio"] {
+            display: none;
+        }
+        
+        .payment-method-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        
+        .payment-method-icon {
+            font-size: 1.5em;
+            color: #008bb4;
+        }
+        
+        .payment-method input[type="radio"]:checked + .payment-method-label {
+            background-color: #e6f3ff;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+        
+        .modal-buttons button {
+            padding: 10px 20px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 1em;
-            transition: background 0.2s;
+            font-weight: 500;
+            transition: background-color 0.2s;
         }
-        .donationConfirm .closeBtn:hover {
-            background: #0077aa;
+        
+        .cancel-btn {
+            background-color: #f0f0f0;
+            color: #666;
         }
-</style>
+        
+        .cancel-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .confirm-donation {
+            background-color: #0099cc;
+            color: white;
+        }
+        
+        .confirm-donation:hover {
+            background-color: #0077aa;
+        }
+    </style>
 </head>
 <body>
     <header class="oceanoHeader">
@@ -321,7 +403,6 @@
             const confirmMessage = document.createElement("div");
             confirmMessage.className = "donationConfirm";
             confirmMessage.innerHTML = `
-                <div class="donation-modal">
                     <h3>Confirmar Doação</h3>
                     <div class="donation-amount">R$ ${amount.toFixed(2)}</div>
                     
@@ -357,7 +438,6 @@
                         <button class="cancel-btn">Cancelar</button>
                         <button class="confirm-donation">Confirmar Doação</button>
                     </div>
-                </div>
             `;
             
             document.body.appendChild(confirmMessage);

@@ -1303,6 +1303,39 @@ gap: 20px;
     box-shadow: 0 6px 15px rgba(211, 47, 47, 0.4);
 }
 
+/* Edit mode buttons */
+.save-btn {
+    background: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+.save-btn:hover {
+    background: #218838 !important;
+    border-color: #1e7e34 !important;
+}
+
+.delete-btn {
+    background: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+
+.delete-btn:hover {
+    background: #c82333 !important;
+    border-color: #bd2130 !important;
+}
+
+.cancel-btn {
+    background: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.cancel-btn:hover {
+    background: #e0a800 !important;
+    border-color: #d39e00 !important;
+    color: #212529 !important;
+}
+
 .logoutBtn:hover::after {
     left: 100%;
 }

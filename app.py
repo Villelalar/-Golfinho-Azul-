@@ -450,10 +450,14 @@ def add_data():
 @login_required
 def add_doacao(valor):
     try:
+        metodo = request.form.get('metodo')  # Get the payment method from the form
+        if not metodo:
+            return json.dumps({'error': 'Método de pagamento não fornecido'}), 400, {'Content-Type': 'application/json'}
+            
         connection = conectar_banco()
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO doacoes (user_id, valor, data, status) VALUES (%s, %s, %s)",
-                           (current_user.cpf, valor, datetime.now(), 'pendente'))
+            cursor.execute("INSERT INTO doacoes (user_id, valor, metodo, status, created_at) VALUES (%s, %s, %s, %s, %s)",
+                           (current_user.cpf, valor, metodo, 'pendente', datetime.now()))
             connection.commit()
         return json.dumps({'status': 'success', 'message': 'Doação registrada com sucesso!'}), 200, {'Content-Type': 'application/json'}
     except pymysql.IntegrityError as e:
