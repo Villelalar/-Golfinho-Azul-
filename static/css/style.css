@@ -400,11 +400,6 @@ h1, h2 {
     background-color: #f5f5f5;
 }
 
-.profileDropdown:hover .dropdownContent,
-.profileDropdown:focus-within .dropdownContent,
-.profileDropdown.active .dropdownContent {
-    display: block;
-}
 
 :root {
     --default-profile-color: #008bb4;
@@ -429,9 +424,13 @@ h1, h2 {
     cursor: pointer;
     height: 40px;
 }
-.profileBtn:hover, .profileBtn:focus {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
+
+.dropdownContent {
+    display: none;
+}
+
+.dropdownContent.show-profile-btn {
+    display: block;
 }
 
 .profileBtn:active {

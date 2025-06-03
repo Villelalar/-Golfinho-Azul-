@@ -273,3 +273,25 @@ $(document).ready(function() {
         return datetimeLocal;
     }
 });
+//fazer o dropdownContent aparecer e desaparecer ao clicar no botão de "meu perfil"
+document.addEventListener('DOMContentLoaded', function() {
+    const profileBtn = document.querySelector('.profileBtn');
+    const dropdownContent = document.querySelector('.dropdownContent');
+    if (profileBtn && dropdownContent) {
+        // Alterna a visibilidade ao clicar no botão
+        profileBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Evita propagação do clique
+            dropdownContent.classList.toggle('show-profile-btn');
+        });
+
+        // Fecha o dropdown se clicar fora dele
+        document.addEventListener('click', function(event) {
+            if (
+                !dropdownContent.contains(event.target) &&
+                event.target !== profileBtn
+            ) {
+                dropdownContent.classList.remove('show-profile-btn');
+            }
+        });
+    }
+});
