@@ -89,9 +89,7 @@ def index():
 # LOGIN UNIFICADO
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Checa se ja esta logado
     if current_user.is_authenticated:
-        # If coming from acesso_negado, we need to clear the session
         if 'from_acesso_negado' in request.args:
             logout_user()
             session.clear()
@@ -176,6 +174,7 @@ def register():
         phone = request.form.get('phone')
         role = request.form.get('role')
         
+        print(f"Registrando usuário - ID: {id}, Email: {email}, Role: {role}")
         try:
             connection = conectar_banco()
             with connection.cursor() as cursor:
@@ -198,6 +197,10 @@ def register():
                         (id, email, password_hash, name, phone, 'client')
                     )
                     flash('Cliente registrado com sucesso!', 'success')
+                    cursor.execute("SELECT id FROM users WHERE id = %s", (id,))
+                    user = cursor.fetchone()
+                    print(f"Usuário registrado: {user}")
+                    connection.commit()
                     return redirect(url_for('login'))
                 else:  # role == 'admin'
                     cursor.execute(
@@ -232,6 +235,21 @@ def register():
 @app.route('/alterar_dados', methods=['GET', 'POST'])
 @login_required
 def alterar_dados():
+    if request.method == 'GET':
+        try:
+            connection = conectar_banco()
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM users WHERE id = %s", (current_user.cpf,))
+                user_data = cursor.fetchone()
+                if user_data:
+                    return render_template('alterar_dados.html', user=user_data)
+                else:
+                    flash('Usuário não encontrado.', 'error')
+                    return redirect(url_for('index'))
+        except Exception as e:
+            print(f"Error fetching user data: {e}")
+            flash('Erro ao carregar dados do usuário.', 'error')
+            return redirect(url_for('index'))
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
