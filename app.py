@@ -38,7 +38,6 @@ class User(UserMixin):
         self.phone = phone
         self.role = role
         self.profile_color = profile_color
-        self.profile_picture = profile_picture
         self._authenticated = False
 
     def is_authenticated(self):
@@ -238,39 +237,25 @@ def alterar_dados():
         email = request.form.get('email')
         phone = request.form.get('phone')
         profile_color = request.form.get('profile_color')
-        profile_picture = request.files.get('profile_picture')
-        
-        connection = conectar_banco()
-        with connection.cursor() as cursor:
-            update_query = "UPDATE users SET name = %s, email = %s, phone = %s, profile_color = %s"
-            update_params = [name, email, phone, profile_color]
-            
-            if profile_picture and profile_picture.filename:
-                # Save the uploaded image to the static/profile_pictures directory
-                filename = f"{current_user.get_id()}_{profile_picture.filename}"
-                profile_picture.save(f"static/profile_pictures/{filename}")
-                update_query += ", profile_picture = %s"
-                update_params.append(filename)
-            
-            update_query += " WHERE id = %s"
-            update_params.append(current_user.get_id())
-            
-            cursor.execute(update_query, tuple(update_params))
-            connection.commit()
-            
-            # Update the current user object
-            current_user.name = name
-            current_user.email = email
-            current_user.phone = phone
-            current_user.profile_color = profile_color
-            if profile_picture and profile_picture.filename:
-                current_user.profile_picture = filename
-            
-            flash('Dados atualizados com sucesso!', 'success')
-            return redirect(url_for('alterar_dados'))
-    
-    return render_template('alterar_dados.html')
 
+        try:
+            connection = conectar_banco()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "UPDATE users SET name = %s, email = %s, phone = %s, profile_color = %s WHERE id = %s",
+                    (name, email, phone, profile_color, current_user.cpf)
+                )
+                connection.commit()
+                flash('Dados atualizados com sucesso!', 'success')
+                return redirect(request.url)
+                
+        except pymysql.Error as e:
+            connection.rollback()
+            flash(f'Erro ao atualizar dados: {str(e)}', 'error')
+            return redirect(request.url)
+        finally:
+            if connection:
+                connection.close()
 
 # ------------------- R O T A S &&& P A G I N A S -----------------------------------------------
 
@@ -336,8 +321,9 @@ def logout():
 @login_required
 def tables():
     if current_user.role != 'admin':
-        return redirect(url_for('acesso_negado'))
-    
+        print(f"Accesso negado. - user role: {current_user.role}")
+        flash('Acesso negado')
+        return redirect(url_for('login')) 
     tables = get_tables('defaultdb')
     return render_template('sistema.html', tables=tables)
 
@@ -346,7 +332,9 @@ def tables():
 @login_required
 def view_table(table_name):
     if current_user.role != 'admin':
-        return redirect(url_for('acesso_negado'))
+        print(f"Accesso negado. - user role: {current_user.role}")
+        flash('Acesso negado')
+        return redirect(url_for('login')) 
     
     # para rota "aprovar admins" é necessário alterar a página!
     try:
@@ -438,14 +426,16 @@ def add_doacao(valor):
     try:
         connection = conectar_banco()
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO doacoes (user_id, valor, data) VALUES (%s, %s, %s)",
-                           (current_user.cpf, valor, datetime.now()))
+            cursor.execute("INSERT INTO doacoes (user_id, valor, data, status) VALUES (%s, %s, %s)",
+                           (current_user.cpf, valor, datetime.now(), 'pendente'))
             connection.commit()
         return json.dumps({'status': 'success', 'message': 'Doação registrada com sucesso!'}), 200, {'Content-Type': 'application/json'}
     except pymysql.IntegrityError as e:
         print(f"Integrity error: {e}")
         return json.dumps({'error': 'Doação já registrada para este usuário.'}), 400, {'Content-Type': 'application/json'}
-
+    except Exception as e:
+        print(f"Error ao inserir data: {e}")
+        return json.dumps({'error': str(e)}), 500, {'Content-Type': 'application/json'}
 
 # rota interna que possibilita alterar linhas
 @app.route('/admin/update_data', methods=['POST'])
