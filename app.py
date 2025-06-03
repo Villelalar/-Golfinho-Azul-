@@ -438,8 +438,8 @@ def add_doacao(valor):
     try:
         connection = conectar_banco()
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO doacoes (user_id, valor, data) VALUES (%s, %s, %s)",
-                           (current_user.cpf, valor, datetime.now()))
+            cursor.execute("INSERT INTO doacoes (user_id, valor, data, status) VALUES (%s, %s, %s)",
+                           (current_user.cpf, valor, datetime.now(), 'pendente'))
             connection.commit()
         return json.dumps({'status': 'success', 'message': 'Doação registrada com sucesso!'}), 200, {'Content-Type': 'application/json'}
     except pymysql.IntegrityError as e:
