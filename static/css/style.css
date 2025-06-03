@@ -1508,7 +1508,7 @@ gap: 20px;
     box-shadow: 0 3px 10px rgba(198, 40, 40, 0.3);
 }
 
-/* Donation Modal Styles */
+/* Doação card de pagamentos */
 .donation-modal-overlay {
     position: fixed;
     top: 0;
@@ -1559,17 +1559,32 @@ gap: 20px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .payment-method:hover {
     border-color: #0079a1;
     background-color: #f5f9ff;
+    transform: translateY(-2px);
 }
 
 .payment-method.selected {
     border-color: #0079a1;
     background-color: #e6f3ff;
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 100, 130, 0.15);
+    animation: lift 0.2s ease-in-out;
+}
+@keyframes lift {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+    100% {
+        transform: translateY(0);
+    }
 }
 
 .payment-method input[type="radio"] {
