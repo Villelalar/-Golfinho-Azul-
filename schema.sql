@@ -37,7 +37,7 @@ CREATE TABLE doacoes (
     user_id VARCHAR(14) NOT NULL,
     status VARCHAR(50) DEFAULT 'pendente',
     valor DECIMAL(10,2) NOT NULL,
-    data DATETIME,
+    created_at DATETIME,
     FOREIGN KEY (user_id) REFERENCES users(id)
     ON DELETE RESTRICT
 );
