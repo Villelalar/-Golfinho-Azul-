@@ -38,7 +38,6 @@ class User(UserMixin):
         self.phone = phone
         self.role = role
         self.profile_color = profile_color
-        self.profile_picture = profile_picture
         self._authenticated = False
 
     def is_authenticated(self):
@@ -248,10 +247,12 @@ def alterar_dados():
                 )
                 connection.commit()
                 flash('Dados atualizados com sucesso!', 'success')
+                return redirect(request.url)
                 
         except pymysql.Error as e:
             connection.rollback()
             flash(f'Erro ao atualizar dados: {str(e)}', 'error')
+            return redirect(request.url)
         finally:
             if connection:
                 connection.close()
