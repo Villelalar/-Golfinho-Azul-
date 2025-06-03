@@ -8,6 +8,31 @@
     <link rel="icon" href="{{ url_for('static', filename='features/icon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Profile dropdown functionality
+            $('.profileBtn').click(function(e) {
+                e.stopPropagation();
+                $('.dropdownContent').toggleClass('show-profile-btn');
+            });
+
+            // Close dropdown when clicking outside
+            $(document).click(function() {
+                $('.dropdownContent').removeClass('show-profile-btn');
+            });
+
+            // Prevent dropdown from closing when clicking inside
+            $('.dropdownContent').click(function(e) {
+                e.stopPropagation();
+            });
+
+            // Close dropdown when clicking on links
+            $('.dropdownContent a').click(function() {
+                $('.dropdownContent').removeClass('show-profile-btn');
+            });
+        });
+    </script>
     <style>
         .donationConfirm {
             position: fixed;
@@ -460,5 +485,6 @@
             });
         });
     </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
