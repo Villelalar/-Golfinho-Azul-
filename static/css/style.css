@@ -484,26 +484,33 @@ h1, h2 {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 1rem;
-    border: none;
-    cursor: pointer;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    opacity: 0.8;
 }
 
 .sliderBtn:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    transform: translateY(-50%) scale(1.1);
+    opacity: 1;
 }
 
 .prev {
-    left: 20px;
+    left: 15px;
 }
 
 .next {
-    right: 20px;
+    right: 15px;
 }
 
 .sliderDots {
