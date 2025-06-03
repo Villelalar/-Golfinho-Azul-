@@ -53,7 +53,7 @@
             <div class="navegacaoButton">
             {% if current_user.is_authenticated %}
                 <div class="profileDropdown">
-                    <button class="profileBtn">
+                    <button class="profileBtn navegacaoBtn">
                         <div class="profileIcon" style="--profile-color: {{ current_user.profile_color }}; --profile-color-dark: {{ current_user.profile_color }}"></div>
                         Meu Perfil
                     </button>

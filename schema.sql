@@ -1,24 +1,20 @@
--- Create USERS database
-CREATE DATABASE IF NOT EXISTS defaultdb;
 USE defaultdb;
 
--- Drop and recreate tables
 DROP TABLE IF EXISTS doacoes;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS aprovar_admins;
 
--- tabela para aprovar admins -> codigo deleta e bota em users com role admin
 DROP TABLE IF EXISTS aprovar_admins;
 CREATE TABLE aprovar_admins (
     id VARCHAR(14) PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,  -- senhas em hash geradas automaticamente
+    password_hash VARCHAR(255) NOT NULL,
     name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
-    profile_color VARCHAR(20) DEFAULT '#008bb4'  -- cor do perfil
+    profile_color VARCHAR(20) DEFAULT '#008bb4'  
 );
 
--- Tabela de usuarios -> ID == CPF
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id VARCHAR(14) PRIMARY KEY,
@@ -30,7 +26,7 @@ CREATE TABLE users (
     profile_color VARCHAR(20) DEFAULT '#008bb4'  
 );
 
--- Create consultas table with auto-incrementing ID
+
 DROP TABLE IF EXISTS doacoes;
 CREATE TABLE doacoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -43,7 +39,6 @@ CREATE TABLE doacoes (
     ON DELETE RESTRICT
 );
 
--- Insert test admin (senha é "senha")
 INSERT INTO users (id, email, password_hash, name, phone, role, profile_color) VALUES (
     'admin',
     'admin@admin.com',
@@ -54,7 +49,6 @@ INSERT INTO users (id, email, password_hash, name, phone, role, profile_color) V
     '#008bb4'
 );
 
--- Insert test client (senha é "senha")
 INSERT INTO users (id, email, password_hash, name, phone, role, profile_color) VALUES (
     'testclient',
     'test@client.com',
@@ -62,5 +56,13 @@ INSERT INTO users (id, email, password_hash, name, phone, role, profile_color) V
     'Cliente Teste',
     '(11) 99999-9999',
     'client',
-    '#008bb4'  -- cor do perfil padrão
+    '#008bb4'
+);
+
+INSERT INTO doacoes (user_id, status, metodo, valor, created_at) VALUES (
+    'testclient',
+    'pendente',
+    'pix',
+    50.00,
+    CURRENT_TIMESTAMP
 );

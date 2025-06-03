@@ -40,12 +40,3 @@ CREATE TABLE doacoes (
     ON DELETE RESTRICT
 );
 
--- Example donation for testclient
-INSERT INTO doacoes (user_id, status, metodo, valor, created_at) VALUES (
-    'testclient',
-    'pendente',
-    'pix',
-    50.00,
-    CURRENT_TIMESTAMP
-)
-VALUES ('testclient', 'pendente', 'pix', 100.00, NOW());

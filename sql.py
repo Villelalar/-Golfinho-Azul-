@@ -50,4 +50,4 @@ def executar_arquivo_sql(arquivo_sql):
 
 if __name__ == "__main__":
     # Substitua 'script.sql' pelo seu arquivo
-    executar_arquivo_sql("metodo.sql")
+    executar_arquivo_sql("schema.sql")
