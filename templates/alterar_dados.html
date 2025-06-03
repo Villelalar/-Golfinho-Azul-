@@ -54,27 +54,27 @@
                 <form method="POST" action="{{ url_for('alterar_dados') }}">
                     <div class="inputGroup">
                         <input type="text" id="id" name="id" value="{{ current_user.id }}" readonly>
-                        <label for="id">CPF</label>
+                        <label for="identifier">CPF</label>
                     </div>
                     
                     <div class="inputGroup">
                         <input type="text" id="name" name="name" value="{{ current_user.name }}" required>
-                        <label for="name">Nome</label>
+                        <label for="identifier">Nome</label>
                     </div>
                     
                     <div class="inputGroup">
                         <input type="email" id="email" name="email" value="{{ current_user.email }}" required>
-                        <label for="email">Email</label>
+                        <label for="identifier">Email</label>
                     </div>
                     
                     <div class="inputGroup">
                         <input type="tel" id="phone" name="phone" value="{{ current_user.phone }}" required>
-                        <label for="phone">Telefone</label>
+                        <label for="identifier">Telefone</label>
                     </div>
                     
                     <div class="inputGroup">
                         <input type="color" id="profile_color" name="profile_color" value="{{ current_user.profile_color }}" required>
-                        <label for="profile_color">Cor do Ícone</label>
+                        <label for="identifier">Cor do Ícone</label>
                     </div>
                     
                     <div class="buttonGroup">
@@ -85,5 +85,34 @@
             </div>
         </div>
     </div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.inputGroup input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value) {
+                        this.classList.add('filled');
+                    } else {
+                        this.classList.remove('filled');
+                    }
+                });
+            });
+        });
+
+        function showPasswordMessage() {
+            alert('Funcionalidade de alteração de senha em desenvolvimento.');
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.popup');
+            messages.forEach(message => {
+                setTimeout(() => {
+                    message.classList.add('fade-out');
+                    setTimeout(() => message.remove(), 300);
+                }, 3000);
+            });
+        });
+    </script>
 </body>
 </html>
