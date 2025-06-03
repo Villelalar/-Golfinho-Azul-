@@ -13,9 +13,9 @@
     <header class="oceanoHeader">
         <nav class="navegacaoContainer">
             <div class="logoContainer">
-                <a href="{{ url_for('index') }}" class="logoBtn" title="Return to Home">
+                <a href="javascript:history.back()" class="logoBtn">
                     <i class="fas fa-arrow-left"></i>
-                    <span>Voltar</span>
+                    <span>ALTERAR PARA A LOGO SER AQUI</span>
                 </a>
             </div>
             <div class="navegacaoButton">
@@ -53,28 +53,28 @@
                 <h2>Editar Dados Pessoais</h2>
                 <form method="POST" action="{{ url_for('alterar_dados') }}">
                     <div class="inputGroup">
+                        <input type="text" id="id" name="id" value="{{ current_user.id }}" readonly>
                         <label for="id">CPF</label>
-                        <input type="text" id="id" name="id" value="{{ current_user.id }}" readonly class="filled">
                     </div>
                     
                     <div class="inputGroup">
+                        <input type="text" id="name" name="name" value="{{ current_user.name }}" required>
                         <label for="name">Nome</label>
-                        <input type="text" id="name" name="name" value="{{ current_user.name }}" required class="filled">
                     </div>
                     
                     <div class="inputGroup">
+                        <input type="email" id="email" name="email" value="{{ current_user.email }}" required>
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="{{ current_user.email }}" required class="filled">
                     </div>
                     
                     <div class="inputGroup">
+                        <input type="tel" id="phone" name="phone" value="{{ current_user.phone }}" required>
                         <label for="phone">Telefone</label>
-                        <input type="tel" id="phone" name="phone" value="{{ current_user.phone }}" required class="filled">
                     </div>
                     
                     <div class="inputGroup">
-                        <label for="profile_color">Cor do Ícone</label>
                         <input type="color" id="profile_color" name="profile_color" value="{{ current_user.profile_color }}" required>
+                        <label for="profile_color">Cor do Ícone</label>
                     </div>
                     
                     <div class="buttonGroup">

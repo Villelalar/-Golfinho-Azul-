@@ -982,25 +982,8 @@ margin-bottom: 25px;
     pointer-events: none;
 }
 
-/* Fix for alterar_dados form labels */
-.loginBox .inputGroup label {
-    position: relative;
-    display: block;
-    margin-bottom: 5px;
-    color: #555;
-    font-size: 14px;
-    pointer-events: auto;
-}
-
-.loginBox .inputGroup input[type="color"] {
-    height: 40px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
 .inputGroup input:focus ~ label,
-.inputGroup input.filled ~ label,
-.inputGroup input[value]:not([value=""]) ~ label {
+.inputGroup input.filled ~ label {
     top: -20px;
     font-size: 14px;
     color: #007bff;
