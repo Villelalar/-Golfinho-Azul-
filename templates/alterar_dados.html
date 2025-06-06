@@ -79,7 +79,7 @@
                 <h2>Editar Dados Pessoais</h2>
                 <form method="POST" action="{{ url_for('alterar_dados') }}">
                     <div class="inputGroup">
-                        <input type="text" id="cpf" name="cpf" value="{{ current_user.id }}" readonly>
+                        <input type="text" id="cpf" name="cpf" value="{{ current_user.cpf }}" readonly>
                         <label for="cpf">CPF</label>
                     </div>
                     
@@ -105,13 +105,13 @@
                     
                     <div class="buttonGroup">
                         <button type="submit" class="loginBtn">Salvar Alterações</button>
-                        <button type="button" class="loginBtn" onclick="showPasswordMessage()">Alterar Senha</button>
+                        <button type="button" onclick="window.location.href='{{ url_for('alterar_senha') | safe }}'" class="loginBtn">Alterar Senha</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-      <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const inputs = document.querySelectorAll('.inputGroup input');
             inputs.forEach(input => {
@@ -127,10 +127,6 @@
                 });
             });
         });
-
-        function showPasswordMessage() {
-            alert('Funcionalidade de alteração de senha em desenvolvimento.');
-        }
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

@@ -71,26 +71,14 @@
                     </p>
                 </div>
                 <div class="registerLink">
+                    <p>Esqueceu sua senha? <a href="{{ url_for('alterar_senha') }}">Clique aqui para alterar</a></p>
+                </div>
+                <div class="registerLink">
                     <p><a href="{{ url_for('index') }}">Voltar para Página Inicial</a></p>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('.inputGroup input');
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    if (this.value) {
-                        this.classList.add('filled');
-                    } else {
-                        this.classList.remove('filled');
-                    }
-                });
-            });
-        });
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const messages = document.querySelectorAll('.popup');
