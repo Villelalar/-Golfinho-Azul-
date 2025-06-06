@@ -136,11 +136,19 @@
             $('.mobileMenuToggle').click(function(e) {
                 e.stopPropagation();
                 $('.navegacaoButton').toggleClass('show');
+                console.log('Mobile menu toggled');
             });
             
             // Close mobile menu when clicking on links
             $('.navegacaoButton a').click(function() {
                 $('.navegacaoButton').removeClass('show');
+            });
+            
+            // Ensure mobile menu works on touch devices
+            $('.mobileMenuToggle').on('touchstart', function(e) {
+                e.stopPropagation();
+                $('.navegacaoButton').toggleClass('show');
+                console.log('Mobile menu touched');
             });
         });
     </script>
