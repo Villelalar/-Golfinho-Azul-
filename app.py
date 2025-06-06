@@ -467,6 +467,68 @@ def add_doacao(valor):
         print(f"Error ao inserir data: {e}")
         return json.dumps({'error': str(e)}), 500, {'Content-Type': 'application/json'}
 
+@app.route('/alterar_senha', methods=['GET', 'POST'])
+def alterar_senha():
+    if request.method == 'GET':
+        return render_template('alterar_senha.html')
+    
+    connection = None
+    try:
+        # Get form data
+        cpf = request.form.get('cpf')
+        email = request.form.get('email')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # If user is logged in, use their info
+        if current_user.is_authenticated:
+            cpf = current_user.cpf
+            email = current_user.email
+        
+        # Validate required fields
+        if not all([cpf, email, new_password, confirm_password]):
+            flash('Por favor, preencha todos os campos.', 'error')
+            return redirect(url_for('alterar_senha'))
+            
+        if new_password != confirm_password:
+            flash('As senhas não coincidem.', 'error')
+            return redirect(url_for('alterar_senha'))
+            
+        connection = conectar_banco()
+        with connection.cursor() as cursor:
+            # Check if user exists and get current password hash
+            cursor.execute("SELECT password_hash FROM users WHERE id = %s AND email = %s", (cpf, email))
+            user = cursor.fetchone()
+            
+            if not user:
+                flash('CPF e/ou e-mail incorretos. Por favor, verifique os dados informados.', 'error')
+                return redirect(url_for('alterar_senha'))
+                
+            # Check if new password is different from current
+            if check_password_hash(user['password_hash'], new_password):
+                flash('Por favor, use uma senha diferente da anterior.', 'error')
+                return redirect(url_for('alterar_senha'))
+                
+            # Update password
+            hash_nova = generate_password_hash(new_password)
+            cursor.execute("UPDATE users SET password_hash = %s WHERE id = %s", (hash_nova, cpf))
+            connection.commit()
+            
+            if current_user.is_authenticated:
+                flash('Senha alterada com sucesso!', 'success')
+                return redirect(url_for('alterar_dados'))
+            else:
+                flash('Senha alterada com sucesso! Faça login com a nova senha.', 'success')
+                return redirect(url_for('login'))
+    
+    except Exception as e:
+        print(f"Erro ao alterar senha: {e}")
+        flash(f'Ocorreu um erro ao processar sua solicitação: {str(e)}', 'error')
+        return redirect(url_for('alterar_senha'))
+    finally:
+        if connection:
+            connection.close()
+
 # rota interna que possibilita alterar linhas
 @app.route('/admin/update_data', methods=['POST'])
 @login_required

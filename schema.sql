@@ -66,3 +66,11 @@ INSERT INTO doacoes (user_id, status, metodo, valor, created_at) VALUES (
     50.00,
     CURRENT_TIMESTAMP
 );
+
+CREATE TABLE animais (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    especie VARCHAR(50) NOT NULL,
+    sexo CHAR(1) NOT NULL,
+    data_resgate DATE NOT NULL
+);

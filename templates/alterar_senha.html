@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Senha - Golfinho Azul</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='features/icon.svg') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="oceanoHeader">
+        <nav class="navegacaoContainer">
+            <div class="logoContainer">
+                <a href="{{ url_for('index') }}" class="logoBtn" title="Voltar">
+                    <i class="fas fa-arrow-left"></i><span>Voltar</span>
+                </a>
+            </div>
+            <div class="navegacaoButton">
+            {% if current_user.is_authenticated %}
+                <div class="profileDropdown">
+                    <button class="profileBtn" title="Menu">
+                        <div class="profileIcon" style="--profile-color: {{ current_user.profile_color }}; --profile-color-dark: {{ current_user.profile_color }}"></div>
+                        Meu Perfil
+                    </button>
+                    <div class="dropdownContent">
+                        <a href="{{ url_for('login') }}">Dashboard</a>
+                        <a href="{{ url_for('alterar_dados') }}">Alterar Dados</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="navegacaoBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="{{ url_for('register') }}" class="navegacaoBtn"><i class="fas fa-user-plus"></i> Registrar</a>
+            {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="popup {{ category if category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="loginPage">
+        <div class="loginContainer">
+            <div class="loginBox">
+                <h2>Alterar Senha</h2>
+                <form id="changePasswordForm" method="POST" action="{{ url_for('alterar_senha') }}">
+                    <div class="inputGroup">
+                        <input type="text" id="cpf" name="cpf" 
+                               value="{{ current_user.cpf if current_user.is_authenticated else '' }}"
+                               {{ 'readonly' if current_user.is_authenticated else 'required' }}>
+                        <label for="cpf">CPF</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="email" id="email" name="email" 
+                               value="{{ current_user.email if current_user.is_authenticated else '' }}"
+                               {{ 'readonly' if current_user.is_authenticated else 'required' }}>
+                        <label for="email">E-mail</label>
+                    </div>
+
+                    <div class="inputGroup">
+                        <input type="password" id="new_password" name="new_password" required>
+                        <label for="new_password">Nova Senha</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                        <label for="confirm_password">Confirmar Nova Senha</label>
+                    </div>
+
+                    <button type="submit" class="loginBtn">Salvar Nova Senha</button>
+                </form>
+                <div class="registerLink">
+                    {% if current_user.is_authenticated %}
+                    <p><a href="{{ url_for('alterar_dados') }}">Voltar para Alterar Dados</a></p>
+                    {% else %}
+                    <p><a href="{{ url_for('login') }}">Voltar ao Login</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle input focus/blur effects
+            document.querySelectorAll('.inputGroup input').forEach(input => {
+                if (input.value) input.classList.add('filled');
+                input.addEventListener('focus', () => input.classList.add('focused'));
+                input.addEventListener('blur', () => {
+                    input.classList.remove('focused');
+                    input.classList.toggle('filled', !!input.value);
+                });
+            });
+
+            // Handle form submission with client-side validation
+            const form = document.getElementById('changePasswordForm');
+            form?.addEventListener('submit', (e) => {
+                const newPassword = document.getElementById('new_password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                
+                if (newPassword !== confirmPassword) {
+                    e.preventDefault();
+                    const messagesDiv = document.createElement('div');
+                    messagesDiv.className = 'popup error';
+                    messagesDiv.textContent = 'As senhas não coincidem!';
+                    document.body.appendChild(messagesDiv);
+                    
+                    // Remove the message after 3 seconds
+                    setTimeout(() => {
+                        messagesDiv.classList.add('fade-out');
+                        setTimeout(() => messagesDiv.remove(), 300);
+                    }, 3000);
+                }
+            });
+
+            // Auto-close flash messages after 3 seconds
+            const messages = document.querySelectorAll('.popup');
+            messages.forEach(message => {
+                setTimeout(() => {
+                    message.classList.add('fade-out');
+                    setTimeout(() => message.remove(), 300);
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>

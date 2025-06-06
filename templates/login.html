@@ -75,34 +75,36 @@
                     </p>
                 </div>
                 <div class="registerLink">
+                    <p>Esqueceu sua senha? <a href="{{ url_for('alterar_senha') }}">Clique aqui para alterar</a></p>
+                </div>
+                <div class="registerLink">
                     <p><a href="{{ url_for('index') }}">Voltar para Página Inicial</a></p>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('.inputGroup input');
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    if (this.value) {
-                        this.classList.add('filled');
-                    } else {
-                        this.classList.remove('filled');
-                    }
-                });
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+            // Handle popup messages
             const messages = document.querySelectorAll('.popup');
             messages.forEach(message => {
                 setTimeout(() => {
                     message.classList.add('fade-out');
                     setTimeout(() => message.remove(), 300);
                 }, 3000);
+            });
+
+            // Handle input focus/blur effects
+            document.querySelectorAll('.inputGroup input').forEach(input => {
+                // Check if input has content on page load
+                if (input.value) input.classList.add('filled');
+                
+                // Add focus/blur event listeners
+                input.addEventListener('focus', () => input.classList.add('focused'));
+                input.addEventListener('blur', () => {
+                    input.classList.remove('focused');
+                    input.classList.toggle('filled', !!input.value);
+                });
             });
         });
     </script>
