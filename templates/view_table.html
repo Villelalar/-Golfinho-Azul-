@@ -133,6 +133,19 @@
         <button type="submit">Adicionar</button>
     </form>
     {% endif %}
+
+    <!-- Confirmation Modal -->
+    <div id="deleteConfirmationModal" class="donation-modal-overlay" style="display: none;">
+        <div class="donation-modal">
+            <h3>Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.</p>
+            <div class="modal-buttons">
+                <button id="cancelDeleteBtn" class="cancel-btn">Cancelar</button>
+                <button id="confirmDeleteBtn" class="confirm-btn">Confirmar Exclusão</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
     // Move the showPopup function here to ensure it's available

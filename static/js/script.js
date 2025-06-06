@@ -174,34 +174,40 @@ $(document).ready(function() {
         });
 
         // Delete row functionality
-        $(document).on('click', '.delete-btn', function() {
-            const row = $(this).closest('tr');
+        let currentRowToDelete = null;
+        let currentTableName = '';
+        
+        // Show delete confirmation modal
+        function showDeleteConfirmation(row, tableName) {
+            currentRowToDelete = row;
+            currentTableName = tableName;
+            $('#deleteConfirmationModal').fadeIn(200);
+        }
+        
+        // Handle delete confirmation
+        $('#confirmDeleteBtn').on('click', function() {
+            if (!currentRowToDelete) return;
             
-            // First disable edit mode to close the menu
-            if (row.find('.cancel-btn').length) {
-                disableEditMode(row);
-                return; // Return here, user will need to click delete again to confirm
-            }
-            
-            if (!confirm('Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.')) {
+            const id = currentRowToDelete.data('id');
+            if (!id) {
+                console.error('ID not found for the row');
+                showPopup('Erro: Não foi possível identificar o registro para exclusão', true);
+                $('#deleteConfirmationModal').fadeOut(200);
                 return;
             }
-
-            const id = row.data('id');
-            const tableName = window.location.pathname.split('/').pop();
-
+            
             $.ajax({
-                url: `/admin/delete_data`,
+                url: '/admin/delete_data',
                 type: 'POST',
                 data: { 
-                    table_name: tableName,
+                    table_name: currentTableName,
                     id: id
                 },
                 success: function(response) {
                     if (response.status === 'success') {
                         showPopup('Registro excluído com sucesso!', false);
-                        row.fadeOut(400, function() {
-                            row.remove();
+                        currentRowToDelete.fadeOut(400, function() {
+                            currentRowToDelete.remove();
                         });
                     } else {
                         showPopup('Erro ao excluir registro: ' + (response.message || 'Erro desconhecido'), true);
@@ -214,8 +220,47 @@ $(document).ready(function() {
                     } catch (e) {
                         showPopup('Erro ao processar a resposta do servidor', true);
                     }
+                },
+                complete: function() {
+                    $('#deleteConfirmationModal').fadeOut(200);
+                    currentRowToDelete = null;
+                    currentTableName = '';
                 }
             });
+        });
+        
+        // Handle cancel button
+        $('#cancelDeleteBtn').on('click', function() {
+            $('#deleteConfirmationModal').fadeOut(200);
+            currentRowToDelete = null;
+            currentTableName = '';
+        });
+        
+        // Close modal when clicking outside
+        $(document).on('click', '#deleteConfirmationModal', function(e) {
+            if (e.target === this) {
+                $(this).fadeOut(200);
+                currentRowToDelete = null;
+                currentTableName = '';
+            }
+        });
+        
+        // Handle delete button click
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const row = $(this).closest('tr');
+            const id = row.data('id');
+            const tableName = window.location.pathname.split('/').pop();
+            
+            if (!id) {
+                console.error('ID not found for the row');
+                showPopup('Erro: Não foi possível identificar o registro para exclusão', true);
+                return;
+            }
+            
+            showDeleteConfirmation(row, tableName);
         });
 
         // Save edited data
