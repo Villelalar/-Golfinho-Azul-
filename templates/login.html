@@ -81,12 +81,26 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Handle popup messages
             const messages = document.querySelectorAll('.popup');
             messages.forEach(message => {
                 setTimeout(() => {
                     message.classList.add('fade-out');
                     setTimeout(() => message.remove(), 300);
                 }, 3000);
+            });
+
+            // Handle input focus/blur effects
+            document.querySelectorAll('.inputGroup input').forEach(input => {
+                // Check if input has content on page load
+                if (input.value) input.classList.add('filled');
+                
+                // Add focus/blur event listeners
+                input.addEventListener('focus', () => input.classList.add('focused'));
+                input.addEventListener('blur', () => {
+                    input.classList.remove('focused');
+                    input.classList.toggle('filled', !!input.value);
+                });
             });
         });
     </script>
