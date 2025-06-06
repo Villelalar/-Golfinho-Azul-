@@ -8,6 +8,7 @@
     <link rel="icon" href="{{ url_for('static', filename='features/icon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header class="oceanoHeader">
@@ -18,6 +19,9 @@
                     <span>Voltar</span>
                 </a>
             </div>
+            <button class="mobileMenuToggle" aria-label="Menu de navegação">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="navegacaoButton">
             {% if current_user.is_authenticated %}
                 <div class="profileDropdown">
@@ -99,6 +103,42 @@
                     message.classList.add('fade-out');
                     setTimeout(() => message.remove(), 300);
                 }, 3000);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Profile dropdown functionality
+            $('.profileBtn').click(function(e) {
+                e.stopPropagation();
+                $('.dropdownContent').toggleClass('show-profile-btn');
+            });
+
+            // Close dropdown when clicking outside
+            $(document).click(function() {
+                $('.dropdownContent').removeClass('show-profile-btn');
+                $('.navegacaoButton').removeClass('show');
+            });
+
+            // Prevent dropdown from closing when clicking inside
+            $('.dropdownContent').click(function(e) {
+                e.stopPropagation();
+            });
+
+            // Close dropdown when clicking on links
+            $('.dropdownContent a').click(function() {
+                $('.dropdownContent').removeClass('show-profile-btn');
+            });
+            
+            // Mobile menu toggle
+            $('.mobileMenuToggle').click(function(e) {
+                e.stopPropagation();
+                $('.navegacaoButton').toggleClass('show');
+            });
+            
+            // Close mobile menu when clicking on links
+            $('.navegacaoButton a').click(function() {
+                $('.navegacaoButton').removeClass('show');
             });
         });
     </script>

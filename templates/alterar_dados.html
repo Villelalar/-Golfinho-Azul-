@@ -20,6 +20,7 @@
             // Close dropdown when clicking outside
             $(document).click(function() {
                 $('.dropdownContent').removeClass('show-profile-btn');
+                $('.navegacaoButton').removeClass('show');
             });
 
             // Prevent dropdown from closing when clicking inside
@@ -30,6 +31,17 @@
             // Close dropdown when clicking on links
             $('.dropdownContent a').click(function() {
                 $('.dropdownContent').removeClass('show-profile-btn');
+            });
+            
+            // Mobile menu toggle
+            $('.mobileMenuToggle').click(function(e) {
+                e.stopPropagation();
+                $('.navegacaoButton').toggleClass('show');
+            });
+            
+            // Close mobile menu when clicking on links
+            $('.navegacaoButton a').click(function() {
+                $('.navegacaoButton').removeClass('show');
             });
         });
     </script>
@@ -42,6 +54,9 @@
                     <img src="{{ url_for('static', filename='features/logotext.svg') }}" class="logo" alt="Golfinho Azul"/>
                 </a>
             </div>
+            <button class="mobileMenuToggle" aria-label="Menu de navegação">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="navegacaoButton">
             {% if current_user.is_authenticated %}
                 <div class="profileDropdown">
