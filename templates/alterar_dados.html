@@ -94,7 +94,7 @@
                 <h2>Editar Dados Pessoais</h2>
                 <form method="POST" action="{{ url_for('alterar_dados') }}">
                     <div class="inputGroup">
-                        <input type="text" id="id" name="id" value="{{ current_user.id }}" readonly>
+                        <input type="text" id="id" name="id" value="{{ current_user.cpf }}" readonly>
                         <label for="id">CPF</label>
                     </div>
                     
